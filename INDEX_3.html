@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Benchi — Aprende diferente</title>
+<meta name="description" content="Benchi convierte el esfuerzo en recompensas. Prototipo visual de plataforma educativa gamificada.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --ink:#172033;
+  --muted:#687189;
+  --surface:#ffffff;
+  --surface-2:#f6f7fb;
+  --line:#e8eaf2;
+  --primary:#635bff;
+  --primary-2:#8b5cf6;
+  --cyan:#28c6e8;
+  --pink:#ff5a9d;
+  --yellow:#ffc857;
+  --green:#35c77f;
+  --shadow:0 18px 55px rgba(32,34,64,.10);
+  --shadow-soft:0 10px 28px rgba(32,34,64,.08);
+  --radius:24px;
+  --radius-sm:16px;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--ink);
+  background:#fff;
+  line-height:1.5;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.icon{width:20px;height:20px;display:inline-block;flex:none}
+svg{display:block}
+.app{min-height:100vh}
+.hidden{display:none!important}
+
+/* ---------- Shared ---------- */
+.container{width:min(1180px,calc(100% - 40px));margin:0 auto}
+.section{padding:90px 0}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border:1px solid rgba(99,91,255,.14);
+  background:rgba(99,91,255,.06);color:var(--primary);
+  border-radius:999px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase
+}
+.section-title{font-size:clamp(32px,4vw,54px);line-height:1.02;margin:14px 0 16px;letter-spacing:-.04em}
+.section-copy{color:var(--muted);font-size:18px;max-width:680px}
+.gradient-text{
+  background:linear-gradient(100deg,#635bff 10%,#9b5cff 48%,#ff5a9d 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.btn{
+  border:0;border-radius:15px;padding:14px 20px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{
+  color:white;background:linear-gradient(105deg,#635bff,#895cf6 55%,#ff5a9d);
+  box-shadow:0 12px 25px rgba(99,91,255,.25)
+}
+.btn-light{background:#fff;border:1px solid var(--line);color:var(--ink);box-shadow:var(--shadow-soft)}
+.btn-ghost{background:transparent;color:var(--muted)}
+.btn-full{width:100%}
+
+.card{
+  background:rgba(255,255,255,.94);border:1px solid rgba(28,34,61,.07);
+  box-shadow:var(--shadow-soft);border-radius:var(--radius)
+}
+.glass{
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.76);
+  backdrop-filter:blur(18px);
+  box-shadow:0 20px 55px rgba(47,37,101,.11);
+}
+
+/* ---------- Landing ---------- */
+.landing{overflow:hidden;background:#fff}
+.topbar{
+  position:sticky;top:0;z-index:30;
+  background:rgba(255,255,255,.82);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(232,234,242,.75);
+  padding-top:env(safe-area-inset-top,0px)
+}
+.topbar-inner{height:74px;display:flex;align-items:center;justify-content:space-between}
+.brand{
+  display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.05em;font-size:25px
+}
+.brand-mark{
+  width:34px;height:34px;border-radius:12px;
+  background:linear-gradient(135deg,#635bff,#8b5cf6 55%,#ff5a9d);
+  position:relative;overflow:hidden;box-shadow:0 8px 18px rgba(99,91,255,.23)
+}
+.brand-mark:before,.brand-mark:after{
+  content:"";position:absolute;border-radius:50%;background:#fff;opacity:.95
+}
+.brand-mark:before{width:10px;height:10px;left:7px;top:8px}
+.brand-mark:after{width:7px;height:7px;right:7px;bottom:7px}
+.nav-actions{display:flex;gap:8px;align-items:center}
+
+.hero{
+  position:relative;min-height:690px;display:flex;align-items:center;
+  background:
+    radial-gradient(circle at 10% 18%,rgba(40,198,232,.24),transparent 29%),
+    radial-gradient(circle at 92% 12%,rgba(255,90,157,.23),transparent 31%),
+    radial-gradient(circle at 75% 82%,rgba(99,91,255,.24),transparent 32%),
+    linear-gradient(135deg,#f8fbff 0%,#faf7ff 55%,#fff7fb 100%);
+}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
+.orb-a{width:190px;height:190px;background:linear-gradient(135deg,#63d8ff,#635bff);left:-70px;bottom:70px;opacity:.18}
+.orb-b{width:280px;height:280px;background:linear-gradient(135deg,#ff6aa8,#ffc2d8);right:-90px;bottom:0;opacity:.20}
+.orb-c{width:130px;height:130px;background:linear-gradient(135deg,#ffc857,#ff8b45);right:28%;top:84px;opacity:.18}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;position:relative;z-index:2}
+.hero h1{
+  font-size:clamp(58px,7.4vw,98px);line-height:.93;letter-spacing:-.065em;margin:18px 0 23px;max-width:770px
+}
+.hero p{font-size:19px;color:#646d84;max-width:630px;margin-bottom:32px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero-proof{display:flex;gap:20px;flex-wrap:wrap;margin-top:28px;color:#667086;font-size:13px;font-weight:750}
+.proof{display:flex;align-items:center;gap:7px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(53,199,127,.1)}
+
+.hero-visual{position:relative;min-height:530px}
+.float-card{
+  position:absolute;border-radius:22px;box-shadow:0 22px 55px rgba(28,26,65,.14);
+  border:1px solid rgba(255,255,255,.82);backdrop-filter:blur(14px);
+}
+.profile-card{
+  width:335px;right:5%;top:65px;padding:24px;background:rgba(255,255,255,.92)
+}
+.avatar-xl{
+  width:78px;height:78px;border-radius:26px;display:grid;place-items:center;
+  background:linear-gradient(145deg,#d9d4ff,#f8d9e8);border:4px solid #fff;box-shadow:0 8px 24px rgba(99,91,255,.15)
+}
+.avatar-head{width:34px;height:34px;border-radius:50%;background:#ffd7b6;position:relative}
+.avatar-head:before,.avatar-head:after{content:"";position:absolute;top:2px;width:13px;height:13px;border-radius:50%;background:#362f57}
+.avatar-head:before{left:0}.avatar-head:after{right:0}
+.avatar-body{width:47px;height:22px;border-radius:20px 20px 14px 14px;background:#635bff;margin-top:-2px}
+.profile-row{display:flex;align-items:center;gap:13px;margin-bottom:20px}
+.profile-name{font-weight:900}.small-muted{color:var(--muted);font-size:12px}
+.points-box{
+  background:linear-gradient(135deg,#f5f3ff,#fff0f7);border-radius:19px;padding:18px;border:1px solid rgba(99,91,255,.1)
+}
+.points-label{font-size:11px;color:#767b95;text-transform:uppercase;font-weight:900;letter-spacing:.05em}
+.points-num{font-size:40px;font-weight:950;letter-spacing:-.05em;margin-top:2px}
+.progress{height:9px;background:#ececf4;border-radius:999px;overflow:hidden}
+.progress > span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#635bff,#9e62f7,#ff5a9d)}
+.progress-meta{display:flex;justify-content:space-between;color:#71788d;font-size:11px;font-weight:700;margin-top:8px}
+
+.reward-float{
+  width:190px;left:2%;top:44px;padding:17px;background:linear-gradient(135deg,#fff,#fff5ff)
+}
+.reward-art{
+  height:100px;border-radius:17px;background:linear-gradient(135deg,#635bff,#c16bff);
+  position:relative;overflow:hidden;margin-bottom:13px
+}
+.reward-art:before,.reward-art:after{content:"";position:absolute;border-radius:50%;background:#fff;opacity:.15}
+.reward-art:before{width:125px;height:125px;right:-25px;top:-40px}
+.reward-art:after{width:75px;height:75px;left:-20px;bottom:-25px}
+.reward-chip{font-size:11px;font-weight:900;display:inline-flex;padding:5px 8px;border-radius:999px;background:#fff;border:1px solid rgba(255,255,255,.6);position:absolute;right:10px;bottom:10px}
+.reward-name{font-weight:900;font-size:14px}.reward-cost{font-size:12px;color:#777d91;margin-top:2px}
+
+.level-float{width:225px;right:-4%;bottom:68px;padding:18px;background:linear-gradient(135deg,#fff,#effcff)}
+.level-number{font-size:34px;font-weight:950;line-height:1}
+.level-accent{font-size:12px;color:var(--muted);font-weight:800;margin:3px 0 15px}
+
+.points-float{width:165px;left:10%;bottom:35px;padding:15px;background:linear-gradient(135deg,#f0fffb,#fff)}
+.plus{font-size:28px;font-weight:950;letter-spacing:-.04em;color:#14a76b}
+.plus-caption{font-size:12px;color:var(--muted);font-weight:750}
+
+.section-soft{background:linear-gradient(180deg,#fbfbfe,#f7f8fc)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:42px;position:relative}
+.step{
+  padding:25px;border-radius:23px;background:white;border:1px solid var(--line);box-shadow:0 10px 25px rgba(31,32,66,.05);position:relative
+}
+.step-no{font-weight:950;font-size:13px;color:var(--primary);margin-bottom:30px}
+.step h3{margin:0 0 8px;font-size:20px}.step p{margin:0;color:var(--muted);font-size:14px}
+.step-icon{
+  width:50px;height:50px;border-radius:17px;display:grid;place-items:center;margin-bottom:24px;
+  background:linear-gradient(135deg,#eef2ff,#fef0fa);color:#635bff
+}
+.connector{position:absolute;top:50%;height:1px;background:linear-gradient(90deg,#d6d8ef,#eef0f8);left:10%;right:10%;z-index:0}
+.step{z-index:1}
+
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:42px}
+.feature-panel{min-height:500px;padding:38px;position:relative;overflow:hidden}
+.feature-panel.teacher{background:linear-gradient(135deg,#f7f4ff,#eef9ff)}
+.feature-panel.student{background:linear-gradient(135deg,#fff8ef,#fff0f8)}
+.feature-panel h3{font-size:30px;letter-spacing:-.03em;margin:16px 0 9px}
+.feature-panel p{color:var(--muted);max-width:500px}
+.mock-window{
+  position:absolute;right:28px;bottom:-20px;width:80%;max-width:440px;border-radius:22px;background:white;border:1px solid rgba(0,0,0,.06);box-shadow:0 25px 55px rgba(36,30,72,.14);overflow:hidden
+}
+.mock-top{height:36px;background:#fbfbfd;border-bottom:1px solid #eeeef4;display:flex;align-items:center;gap:5px;padding:0 13px}
+.mock-dot{width:7px;height:7px;border-radius:50%;background:#dfe2ee}
+.mock-body{padding:18px}.mock-line{height:9px;background:#eceef4;border-radius:99px;margin-bottom:10px}
+.mock-line.short{width:42%}.mock-line.mid{width:66%}
+.mock-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.mock-mini{height:86px;border-radius:15px;background:linear-gradient(145deg,#f5f2ff,#fff);border:1px solid #eceaf5;padding:12px}
+.mini-num{font-size:24px;font-weight:950}.mini-label{font-size:10px;color:#767d91;font-weight:750}
+.mock-progress{margin-top:12px;height:8px;background:#eeeef5;border-radius:999px;overflow:hidden}.mock-progress span{display:block;width:72%;height:100%;background:linear-gradient(90deg,#635bff,#ff5a9d);border-radius:999px}
+
+.cta{
+  padding:75px 0;background:
+    radial-gradient(circle at 12% 20%,rgba(40,198,232,.23),transparent 28%),
+    radial-gradient(circle at 90% 10%,rgba(255,90,157,.2),transparent 31%),
+    linear-gradient(135deg,#6259ff,#835cf7 48%,#f45d9f);
+  color:white;overflow:hidden;position:relative
+}
+.cta-inner{display:flex;justify-content:space-between;align-items:center;gap:30px}.cta h2{font-size:clamp(34px,4.2vw,56px);letter-spacing:-.05em;line-height:1.02;margin:0 0 12px}.cta p{max-width:660px;color:rgba(255,255,255,.84);font-size:17px}
+.btn-white{background:white;color:#4439d1;box-shadow:0 12px 27px rgba(0,0,0,.12)}
+.footer{padding:32px 0;border-top:1px solid var(--line);color:#70788d;font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px}
+
+/* ---------- App ---------- */
+.screen{display:none;min-height:100vh;background:#f7f8fc}
+.screen.active{display:block}
+.app-shell{display:grid;grid-template-columns:255px 1fr;min-height:100vh}
+.sidebar{
+  background:#fff;border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column
+}
+.sidebar .brand{padding:0 11px 25px}
+.side-nav{display:grid;gap:6px}
+.nav-item{
+  border:0;background:transparent;padding:12px 13px;border-radius:14px;color:#737b90;display:flex;align-items:center;gap:11px;font-weight:800;text-align:left;width:100%
+}
+.nav-item.active{color:#4d45d0;background:linear-gradient(135deg,#f0efff,#fff1fa)}
+.nav-item:hover{background:#f6f7fb}
+.side-spacer{flex:1}
+.user-mini{padding:12px;border:1px solid var(--line);border-radius:18px;display:flex;align-items:center;gap:10px}
+.user-mini .avatar-sm{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#d8d3ff,#ffd9e9);display:grid;place-items:center}
+.main{min-width:0}
+.top-mobile{
+  display:none;padding:15px 18px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;justify-content:space-between;align-items:center
+}
+.content{padding:34px 36px;max-width:1400px}
+.page-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:28px}
+.page-head h1{font-size:42px;letter-spacing:-.05em;line-height:1;margin:0 0 8px}.page-head p{color:var(--muted);margin:0}
+.head-actions{display:flex;gap:10px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.stat{padding:20px;border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:0 7px 20px rgba(31,32,66,.04);position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;right:-55px;top:-55px;background:linear-gradient(135deg,rgba(99,91,255,.14),rgba(255,90,157,.09))}
+.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:900;color:#7a8196}.stat-num{font-size:32px;font-weight:950;letter-spacing:-.05em;margin-top:5px}.stat-note{font-size:12px;color:#7b8191;margin-top:2px}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 8px 25px rgba(31,32,66,.04);padding:22px}
+.panel-title{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px}.panel-title h2{margin:0;font-size:19px;letter-spacing:-.025em}.panel-title button{border:0;background:none;color:#5d55d9;font-weight:800}
+
+.class-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.class-card{padding:20px;border-radius:21px;border:1px solid var(--line);position:relative;overflow:hidden;background:linear-gradient(145deg,#fff,#fbfaff)}
+.class-banner{height:82px;border-radius:16px;margin-bottom:15px;position:relative;overflow:hidden}
+.class-banner:before,.class-banner:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.22)}
+.class-banner:before{width:150px;height:150px;right:-40px;top:-65px}.class-banner:after{width:80px;height:80px;left:-18px;bottom:-28px}
+.banner-purple{background:linear-gradient(135deg,#635bff,#a162ff)}
+.banner-cyan{background:linear-gradient(135deg,#25c4e4,#5d7cf7)}
+.banner-pink{background:linear-gradient(135deg,#ff5a9d,#ff8f70)}
+.class-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.class-name{font-weight:950;font-size:19px}.class-sub{font-size:12px;color:var(--muted);margin-top:3px}.pill{font-size:10px;font-weight:900;padding:6px 8px;border-radius:999px;background:#f1efff;color:#5b50d0}.class-foot{display:flex;justify-content:space-between;align-items:center;margin-top:17px;font-size:12px;color:#7a8092}.enter-link{color:#5b50d0;font-weight:900}
+
+.student-hero{
+  background:
+   radial-gradient(circle at 8% 5%,rgba(40,198,232,.19),transparent 26%),
+   radial-gradient(circle at 94% 7%,rgba(255,90,157,.2),transparent 26%),
+   linear-gradient(135deg,#f4f5ff,#fff);
+  border-radius:28px;padding:28px;display:grid;grid-template-columns:1fr 350px;gap:25px;align-items:center;margin-bottom:20px;border:1px solid rgba(99,91,255,.08)
+}
+.profile-big{display:flex;align-items:center;gap:17px}.avatar-big{width:92px;height:92px;border-radius:31px;background:linear-gradient(145deg,#d9d4ff,#ffdcec);display:grid;place-items:center;box-shadow:0 12px 25px rgba(99,91,255,.13);border:4px solid white}.level-badge{display:inline-flex;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid #eceaf7;color:#6559cf;font-size:11px;font-weight:900}.student-name{font-size:30px;font-weight:950;letter-spacing:-.04em}.student-sub{color:var(--muted);font-size:13px}.hero-points{padding:22px;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.8);border-radius:22px}.hero-points .points-num{font-size:48px}.market-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.product{padding:14px;border:1px solid var(--line);border-radius:20px;background:#fff}.product-art{height:140px;border-radius:16px;position:relative;overflow:hidden;margin-bottom:13px}.product-art.a{background:linear-gradient(135deg,#635bff,#cf6dff)}.product-art.b{background:linear-gradient(135deg,#26c5e6,#5f72ff)}.product-art.c{background:linear-gradient(135deg,#ff5a9d,#ffbd63)}.product-art.d{background:linear-gradient(135deg,#35c77f,#66d9d0)}
+.product-art:before{content:"";position:absolute;width:145px;height:145px;border-radius:50%;right:-40px;top:-45px;background:rgba(255,255,255,.16)}.product-art:after{content:"";position:absolute;width:80px;height:80px;border-radius:50%;left:-22px;bottom:-27px;background:rgba(255,255,255,.16)}
+.product-icon{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:18px;background:rgba(255,255,255,.88);box-shadow:0 10px 22px rgba(0,0,0,.12);display:grid;place-items:center;color:#5b50d0}
+.product-name{font-weight:950}.product-meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.price{font-size:12px;color:#6f7689;font-weight:800}.buy{border:0;background:#f0efff;color:#5148c8;padding:8px 11px;border-radius:12px;font-size:11px;font-weight:900}
+.activity{display:grid;gap:11px}.activity-item{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px;border:1px solid #eef0f5;border-radius:15px}.activity-left{display:flex;align-items:center;gap:11px}.activity-dot{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#edf9f4;color:#1aab6a;font-weight:950}.activity-dot.out{background:#fff0f4;color:#ef547c}.activity-main{font-weight:800;font-size:13px}.activity-date{font-size:11px;color:#858b9d;margin-top:2px}.activity-points{font-weight:950}.plus-p{color:#15aa6b}.minus-p{color:#e95078}
+
+/* ---------- Auth ---------- */
+.auth-screen{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr}
+.auth-art{
+  padding:55px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  background:
+   radial-gradient(circle at 10% 15%,rgba(40,198,232,.28),transparent 27%),
+   radial-gradient(circle at 95% 10%,rgba(255,90,157,.28),transparent 30%),
+   linear-gradient(135deg,#6259ff,#865ef5 52%,#e85e9e)
+}
+.auth-copy{color:white;max-width:560px;position:relative;z-index:2}.auth-copy h1{font-size:clamp(45px,6vw,80px);letter-spacing:-.065em;line-height:.95;margin:18px 0}.auth-copy p{font-size:18px;color:rgba(255,255,255,.83);max-width:470px}.auth-orb{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.20);width:390px;height:390px;right:-130px;top:-120px}.auth-orb.second{width:230px;height:230px;left:-95px;bottom:30px}
+.auth-box-wrap{display:grid;place-items:center;padding:32px;background:#fbfbfe}.auth-box{width:min(470px,100%)}.auth-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.back{border:0;background:none;color:#72798b;font-weight:800}.auth-box h2{font-size:36px;letter-spacing:-.05em;margin:0 0 8px}.auth-box p{color:var(--muted);margin:0 0 24px}.form{display:grid;gap:14px}.field{display:grid;gap:7px}.field label{font-weight:850;font-size:12px;color:#4d5569}.field input,.field select{border:1px solid #dde1eb;background:white;border-radius:14px;padding:13px 14px;outline:none;transition:border-color .18s,box-shadow .18s}.field input:focus,.field select:focus{border-color:#8c84ff;box-shadow:0 0 0 4px rgba(99,91,255,.10)}.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.role-card{border:1px solid var(--line);background:#fff;border-radius:20px;padding:20px;text-align:left;transition:.18s}.role-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}.role-card.selected{border-color:#8e86ff;box-shadow:0 0 0 4px rgba(99,91,255,.09)}.role-title{font-weight:950;font-size:18px;margin-top:13px}.role-sub{font-size:12px;color:var(--muted);margin-top:4px}.auth-links{display:flex;justify-content:space-between;gap:12px;margin-top:15px;font-size:12px;color:#6b7286}.auth-links button{border:0;background:none;color:#5a51ca;font-weight:800;padding:0}
+
+/* ---------- Modal & toast ---------- */
+.modal-back{position:fixed;inset:0;background:rgba(20,18,40,.44);backdrop-filter:blur(6px);z-index:90;display:none;align-items:center;justify-content:center;padding:18px}
+.modal-back.show{display:flex}
+.modal{width:min(560px,100%);background:#fff;border-radius:26px;padding:26px;box-shadow:0 30px 80px rgba(30,25,70,.22);max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.modal-head h3{margin:0;font-size:23px;letter-spacing:-.03em}
+.modal-close{border:0;background:#f4f5fa;width:36px;height:36px;border-radius:12px;font-size:19px;color:#565c72}
+.toast{position:fixed;right:20px;bottom:20px;z-index:99;transform:translateY(16px);opacity:0;pointer-events:none;transition:.25s;background:#171b2c;color:#fff;padding:14px 18px;border-radius:15px;box-shadow:0 20px 45px rgba(15,15,35,.3);font-size:13px;font-weight:800;max-width:320px}
+.toast.show{opacity:1;transform:translateY(0)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+@media(max-width:480px){.grid-2{grid-template-columns:1fr}}
+
+/* ---------- Market categories ---------- */
+.mkt-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.mkt-tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;font-weight:800;font-size:13px;color:var(--muted)}
+.mkt-tab.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.rareza-pill{font-size:9px;font-weight:950;letter-spacing:.03em;text-transform:uppercase;padding:3px 8px;border-radius:999px;display:inline-block;margin-bottom:8px}
+.rareza-comun{background:#eef0f5;color:#6d7488}
+.rareza-raro{background:#eef0ff;color:#5b50d0}
+.rareza-epico{background:#fff3da;color:#b8790f}
+.class-select{border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 13px;font-weight:700;font-size:13px}
+.empty-note{color:var(--muted);font-size:13px;font-style:italic;padding:16px 0}
+.join-box{border:2px dashed var(--line);border-radius:20px;padding:18px;text-align:center;color:var(--muted);font-weight:800;background:none;width:100%;cursor:pointer}
+.small-row{display:flex;align-items:center;gap:10px;justify-content:space-between}
+
+/* Mobile */
+@media(max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:20px}.hero-visual{min-height:500px}.profile-card{right:5%}
+  .steps{grid-template-columns:1fr 1fr}.connector{display:none}
+  .feature-grid{grid-template-columns:1fr}
+  .cta-inner{flex-direction:column;align-items:flex-start}
+  .app-shell{grid-template-columns:1fr}.sidebar{display:none}.top-mobile{display:flex}.content{padding:24px 18px}
+  .stats{grid-template-columns:1fr 1fr}.class-grid{grid-template-columns:1fr 1fr}.market-grid{grid-template-columns:1fr 1fr}
+  .student-hero{grid-template-columns:1fr}
+  .auth-screen{grid-template-columns:1fr}.auth-art{min-height:340px;padding:35px}.auth-copy h1{font-size:58px}.auth-box-wrap{padding:28px 18px}
+}
+@media(max-width:650px){
+  .container{width:min(100% - 28px,1180px)}.nav-actions .btn-light{display:none}.topbar-inner{height:66px}
+  .hero{min-height:auto;padding:76px 0 30px}.hero h1{font-size:60px}.hero p{font-size:16px}
+  .hero-visual{transform:scale(.9);transform-origin:top center;min-height:470px;margin-bottom:-20px}.profile-card{right:1%;top:65px}.reward-float{left:-4%;top:40px}.level-float{right:-6%;bottom:52px}.points-float{left:4%;bottom:15px}
+  .section{padding:65px 0}.steps{grid-template-columns:1fr}.feature-panel{min-height:530px;padding:24px}.mock-window{width:92%;right:4%}
+  .footer-inner{flex-direction:column}.page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:34px}.stats{grid-template-columns:1fr 1fr}.class-grid,.market-grid{grid-template-columns:1fr}
+  .profile-big{align-items:flex-start}.student-name{font-size:25px}.auth-copy h1{font-size:50px}.role-grid{grid-template-columns:1fr}
+}
+
+/* tiny utility visuals */
+.pulse{animation:pulse 3.8s ease-in-out infinite}@keyframes pulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.float{animation:float 6s ease-in-out infinite}@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(-.6deg)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SVG icon sprites -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.8 12 3l9 7.8v9.1a1.1 1.1 0 0 1-1.1 1.1H4.1A1.1 1.1 0 0 1 3 19.9Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 21v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-shop" viewBox="0 0 24 24"><path d="M4 10h16v10H4zM6 10 7.5 4h9L18 10M8.5 14h7M8 20v-4M16 20v-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7H8.2A2.2 2.2 0 1 1 10 4c.8 1 2 3 2 3Zm0 0h3.8A2.2 2.2 0 1 0 14 4c-.8 1-2 3-2 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="m12 3 1.2 1.9 2.2.4.8 2 1.8 1.2-.4 2.2 1.1 1.9-1.1 1.9.4 2.2-1.8 1.2-.8 2-2.2.4L12 21l-1.2-1.9-2.2-.4-.8-2L6 15.5l.4-2.2L5.3 12l1.1-1.9L6 7.9l1.8-1.2.8-2 2.2-.4Z" fill="none" stroke="currentColor" stroke-width="1.45"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 16l4-4 3 2 5-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.7 6.3.9-4.6 4.4 1.1 6.2-5.5-2.9-5.5 2.9 1.1-6.2L3 9.6l6.3-.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<!-- LANDING -->
+<section id="landing" class="landing screen active">
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#" class="brand" onclick="showLanding();return false;"><span class="brand-mark"></span>BENCHI</a>
+      <div class="nav-actions">
+        <button class="btn btn-light" onclick="showAuth('login')">Iniciar sesión</button>
+        <button class="btn btn-primary" onclick="showRoleChoice()">Crear cuenta <svg class="icon"><use href="#i-arrow"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <span class="hero-orb orb-a"></span><span class="hero-orb orb-b"></span><span class="hero-orb orb-c"></span>
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Gamificación educativa</span>
+        <h1>Aprende <span class="gradient-text">diferente.</span></h1>
+        <p>Convierte el esfuerzo, la participación y el trabajo diario en puntos, niveles y recompensas. Benchi conecta la motivación del aula con una experiencia que engancha.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="showRoleChoice()">Empezar ahora <svg class="icon"><use href="#i-arrow"/></svg></button>
+          <button class="btn btn-light" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Descubrir Benchi</button>
+        </div>
+        <div class="hero-proof">
+          <span class="proof"><span class="dot"></span> Para docentes y estudiantes</span>
+          <span class="proof"><span class="dot" style="background:#635bff"></span> Aulas personalizables</span>
+          <span class="proof"><span class="dot" style="background:#ff5a9d"></span> Recompensas que motivan</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="float-card reward-float float">
+          <div class="reward-art"><span class="reward-chip">DESBLOQUEADO</span></div>
+          <div class="reward-name">Skin Aurora</div>
+          <div class="reward-cost">500 puntos</div>
+        </div>
+
+        <div class="float-card profile-card pulse">
+          <div class="profile-row">
+            <div class="avatar-xl"><div><div class="avatar-head"></div><div class="avatar-body"></div></div></div>
+            <div><div class="profile-name">Alex Moreno</div><div class="small-muted">Nivel 8 · 4º ESO</div></div>
+          </div>
+          <div class="points-box">
+            <div class="points-label">Puntos disponibles</div>
+            <div class="points-num">1.250</div>
+            <div class="progress"><span style="width:78%"></span></div>
+            <div class="progress-meta"><span>78% hasta nivel 9</span><span>250 XP</span></div>
+          </div>
+        </div>
+
+        <div class="float-card level-float float">
+          <div class="level-number">+100</div><div class="level-accent">Puntos por participación</div>
+          <div class="progress"><span style="width:64%"></span></div>
+        </div>
+
+        <div class="float-card points-float pulse">
+          <div class="plus">+50 XP</div><div class="plus-caption">Actividad completada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="how" class="section section-soft">
+    <div class="container">
+      <span class="eyebrow">Así funciona</span>
+      <h2 class="section-title">Cada pequeño logro <span class="gradient-text">cuenta.</span></h2>
+      <p class="section-copy">Una experiencia sencilla para reconocer el trabajo que ocurre dentro del aula y convertirlo en motivación visible.</p>
+      <div class="steps">
+        <div class="connector"></div>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-user"/></svg></div><div class="step-no">01</div><h3>Participa</h3><p>El alumno trabaja, participa y se implica en clase.</p></article>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-star"/></svg></div><div class="step-no">02</div><h3>Consigue puntos</h3><p>El profesor reconoce ese esfuerzo con puntos.</p></article>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-chart"/></svg></div><div class="step-no">03</div><h3>Sube de nivel</h3><p>Los puntos se convierten en progreso y logros.</p></article>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-gift"/></svg></div><div class="step-no">04</div><h3>Canjea</h3><p>El alumno utiliza sus puntos para obtener recompensas.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Una plataforma, dos experiencias</span>
+      <h2 class="section-title">Diseñada para <span class="gradient-text">motivar.</span></h2>
+      <div class="feature-grid">
+        <article class="card feature-panel teacher">
+          <span class="eyebrow">Docentes</span>
+          <h3>Gestiona el aula sin perder de vista lo importante.</h3>
+          <p>Crea aulas, reconoce el esfuerzo, visualiza el progreso y convierte tus propias recompensas en dinámicas de clase.</p>
+          <div class="mock-window">
+            <div class="mock-top"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
+            <div class="mock-body">
+              <div class="mock-line short"></div><div class="mock-line mid"></div>
+              <div class="mock-grid"><div class="mock-mini"><div class="mini-num">26</div><div class="mini-label">Alumnos</div></div><div class="mock-mini"><div class="mini-num">4.8K</div><div class="mini-label">Puntos dados</div></div></div>
+              <div class="mock-line mid" style="margin-top:17px"></div><div class="mock-progress"><span></span></div>
+            </div>
+          </div>
+        </article>
+        <article class="card feature-panel student">
+          <span class="eyebrow">Alumnado</span>
+          <h3>Tu esfuerzo tiene una forma de verse.</h3>
+          <p>Consulta tus puntos, evoluciona tu perfil, desbloquea skins y utiliza el mercado para convertir tus logros en recompensas.</p>
+          <div class="mock-window">
+            <div class="mock-top"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
+            <div class="mock-body">
+              <div class="mock-line short"></div><div class="mock-line mid"></div>
+              <div class="mock-grid"><div class="mock-mini"><div class="mini-num">1.250</div><div class="mini-label">Puntos</div></div><div class="mock-mini"><div class="mini-num">8</div><div class="mini-label">Nivel</div></div></div>
+              <div class="mock-line mid" style="margin-top:17px"></div><div class="mock-progress"><span style="width:78%"></span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container cta-inner">
+      <div><h2>Haz que cada punto cuente.</h2><p>Benchi convierte la motivación del aula en una experiencia visual, sencilla y divertida.</p></div>
+      <button class="btn btn-white" onclick="showRoleChoice()">Crear mi cuenta <svg class="icon"><use href="#i-arrow"/></svg></button>
+    </div>
+  </section>
+  <footer class="footer"><div class="container footer-inner"><span>© 2026 Benchi</span><span>Aprende diferente.</span></div></footer>
+</section>
+
+<!-- AUTH -->
+<section id="auth" class="screen">
+  <div class="auth-screen">
+    <div class="auth-art">
+      <div class="auth-orb"></div><div class="auth-orb second"></div>
+      <div class="auth-copy">
+        <div class="brand" style="color:#fff"><span class="brand-mark"></span>BENCHI</div>
+        <span class="eyebrow" style="margin-top:45px;color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22)">Aprende diferente</span>
+        <h1>El esfuerzo también se puede <span style="color:#ffd9f0">celebrar.</span></h1>
+        <p>Entra en tu espacio Benchi y sigue construyendo tu experiencia de aula.</p>
+      </div>
+    </div>
+    <div class="auth-box-wrap">
+      <div class="auth-box">
+        <div class="auth-header">
+          <button class="back" onclick="showLanding()"><svg class="icon" style="vertical-align:middle"><use href="#i-back"/></svg> Volver</button>
+          <span class="small-muted">Demo visual</span>
+        </div>
+        <div id="auth-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHER APP -->
+<section id="teacher" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" onclick="showDashboard('teacher','home');return false;" href="#"><span class="brand-mark"></span>BENCHI</a>
+      <nav class="side-nav">
+        <button class="nav-item active" data-route="teacher-home" onclick="showDashboard('teacher','home')"><svg class="icon"><use href="#i-home"/></svg>Inicio</button>
+        <button class="nav-item" data-route="teacher-classes" onclick="showDashboard('teacher','classes')"><svg class="icon"><use href="#i-grid"/></svg>Mis aulas</button>
+        <button class="nav-item" data-route="teacher-create" onclick="showDashboard('teacher','create')"><svg class="icon"><use href="#i-plus"/></svg>Crear aula</button>
+        <button class="nav-item" data-route="teacher-profile" onclick="showDashboard('teacher','profile')"><svg class="icon"><use href="#i-user"/></svg>Mi perfil</button>
+        <button class="nav-item" data-route="teacher-settings" onclick="showDashboard('teacher','settings')"><svg class="icon"><use href="#i-settings"/></svg>Configuración</button>
+      </nav>
+      <div class="side-spacer"></div>
+      <div class="user-mini"><div class="avatar-sm"><svg class="icon"><use href="#i-user"/></svg></div><div><div style="font-weight:900;font-size:12px">Manuel García</div><div class="small-muted">Profesor</div></div></div>
+    </aside>
+    <div class="main">
+      <div class="top-mobile"><span class="brand"><span class="brand-mark"></span>BENCHI</span><button class="btn btn-light" onclick="logout()">Salir</button></div>
+      <div id="teacher-content" class="content"></div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT APP -->
+<section id="student" class="screen">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" onclick="showDashboard('student','home');return false;" href="#"><span class="brand-mark"></span>BENCHI</a>
+      <nav class="side-nav">
+        <button class="nav-item active" data-route="student-home" onclick="showDashboard('student','home')"><svg class="icon"><use href="#i-home"/></svg>Inicio</button>
+        <button class="nav-item" data-route="student-classes" onclick="showDashboard('student','classes')"><svg class="icon"><use href="#i-grid"/></svg>Mis clases</button>
+        <button class="nav-item" data-route="student-rewards" onclick="showDashboard('student','rewards')"><svg class="icon"><use href="#i-gift"/></svg>Recompensas</button>
+        <button class="nav-item" data-route="student-market" onclick="showDashboard('student','market')"><svg class="icon"><use href="#i-shop"/></svg>Mercado</button>
+        <button class="nav-item" data-route="student-profile" onclick="showDashboard('student','profile')"><svg class="icon"><use href="#i-user"/></svg>Mi perfil</button>
+      </nav>
+      <div class="side-spacer"></div>
+      <div class="user-mini"><div class="avatar-sm"><svg class="icon"><use href="#i-user"/></svg></div><div><div style="font-weight:900;font-size:12px">Alex Moreno</div><div class="small-muted">Alumno · Nivel 8</div></div></div>
+    </aside>
+    <div class="main">
+      <div class="top-mobile"><span class="brand"><span class="brand-mark"></span>BENCHI</span><button class="btn btn-light" onclick="logout()">Salir</button></div>
+      <div id="student-content" class="content"></div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-back" id="modal-back"><div class="modal"><div class="modal-head"><h3 id="modal-title"></h3><button class="modal-close" onclick="closeModal()">×</button></div><div id="modal-body"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ICON = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+
+/* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE ============ */
+const SUPABASE_URL = "PEGA_AQUI_TU_PROJECT_URL";
+const SUPABASE_ANON_KEY = "PEGA_AQUI_TU_ANON_KEY";
+/* ===================================================================== */
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const LEVEL_SIZE = 250;
+function levelInfo(points){
+  const p = Math.max(0, points|0);
+  const level = Math.floor(p / LEVEL_SIZE) + 1;
+  const inLevel = p % LEVEL_SIZE;
+  const pct = Math.round(inLevel / LEVEL_SIZE * 100);
+  const toNext = LEVEL_SIZE - inLevel;
+  return { level, pct, toNext };
+}
+function fmt(n){ return (n||0).toLocaleString('es-ES'); }
+
+const state = { session:null, profile:null, myClasses:[], marketClassId:null, teacherClassId:null };
+
+/* ---------- toast / modal ---------- */
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(window._toastT); window._toastT=setTimeout(()=>t.classList.remove('show'),2400);
+}
+function modal(title, body){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').innerHTML=body;
+  document.getElementById('modal-back').classList.add('show');
+}
+function closeModal(){ document.getElementById('modal-back').classList.remove('show'); }
+
+/* ---------- screens ---------- */
+function showOnly(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showLanding(){ showOnly('landing'); }
+function showRoleChoice(){ showAuth('register','choose'); }
+function showAuth(mode='login', role=null){ showOnly('auth'); renderAuth(mode, role); }
+
+function renderAuth(mode, role){
+  const box=document.getElementById('auth-content');
+  if(mode==='login'){
+    box.innerHTML=`
+      <h2>Bienvenido de nuevo.</h2>
+      <p>Entra en tu espacio Benchi.</p>
+      <form class="form" onsubmit="doLogin(event)">
+        <div class="field"><label>Correo electrónico</label><input id="loginEmail" type="email" placeholder="tu@correo.com" required></div>
+        <div class="field"><label>Contraseña</label><input id="loginPass" type="password" placeholder="••••••••" required></div>
+        <div id="authError" style="color:#e0446b;font-size:12px;font-weight:700;"></div>
+        <button class="btn btn-primary btn-full">Iniciar sesión ${ICON('i-arrow')}</button>
+      </form>
+      <div class="auth-links"><button onclick="showAuth('register','choose')">Crear una cuenta</button><button onclick="toast('Función no disponible en esta demo')">¿Has olvidado tu contraseña?</button></div>`;
+    return;
+  }
+  if(role==='choose'){
+    box.innerHTML=`
+      <h2>Empieza con Benchi.</h2>
+      <p>Elige cómo quieres utilizar la plataforma.</p>
+      <div class="role-grid">
+        <button class="role-card" onclick="renderAuth('register','teacher')"><div class="step-icon">${ICON('i-user')}</div><div class="role-title">Soy profesor</div><div class="role-sub">Crea aulas y convierte el esfuerzo en recompensas.</div></button>
+        <button class="role-card" onclick="renderAuth('register','student')"><div class="step-icon">${ICON('i-grid')}</div><div class="role-title">Soy alumno</div><div class="role-sub">Consigue puntos, sube de nivel y desbloquea.</div></button>
+      </div>`;
+    return;
+  }
+  const isTeacher = role==='teacher';
+  box.innerHTML=`
+    <h2>${isTeacher?'Crea tu espacio docente.':'Crea tu perfil de alumno.'}</h2>
+    <p>${isTeacher?'Gestiona tus aulas desde Benchi.':'Empieza a acumular puntos y recompensas.'}</p>
+    <form class="form" onsubmit="doRegister(event,'${role}')">
+      <div class="field"><label>Nombre completo</label><input id="regName" required placeholder="Nombre y apellidos"></div>
+      <div class="field"><label>Alias</label><input id="regAlias" required placeholder="Cómo aparecerás en Benchi"></div>
+      ${isTeacher?`<div class="field"><label>Centro educativo</label><input id="regCentro" required placeholder="Nombre del centro"></div>`:''}
+      <div class="field"><label>Correo electrónico</label><input id="regEmail" type="email" required placeholder="tu@correo.com"></div>
+      <div class="field"><label>Contraseña</label><input id="regPass" type="password" required placeholder="Crea una contraseña"></div>
+      <div class="field"><label>Confirmar contraseña</label><input id="regPass2" type="password" required placeholder="Repite la contraseña"></div>
+      <div id="authError" style="color:#e0446b;font-size:12px;font-weight:700;"></div>
+      <button class="btn btn-primary btn-full">Crear cuenta ${ICON('i-arrow')}</button>
+    </form>
+    <div class="auth-links"><button onclick="renderAuth('register','choose')">Cambiar tipo de cuenta</button><button onclick="renderAuth('login')">Ya tengo cuenta</button></div>`;
+}
+function authErr(msg){ const e=document.getElementById('authError'); if(e) e.textContent=msg; }
+
+async function doLogin(e){
+  e.preventDefault();
+  const email=document.getElementById('loginEmail').value.trim();
+  const password=document.getElementById('loginPass').value;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if(error) return authErr(error.message);
+  await bootAfterAuth();
+}
+async function doRegister(e, role){
+  e.preventDefault();
+  const name=document.getElementById('regName').value.trim();
+  const alias=document.getElementById('regAlias').value.trim();
+  const centro=role==='teacher'?document.getElementById('regCentro').value.trim():null;
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const pass2=document.getElementById('regPass2').value;
+  if(pass!==pass2) return authErr('Las contraseñas no coinciden.');
+  const { data, error } = await sb.auth.signUp({ email, password: pass });
+  if(error) return authErr(error.message);
+  const uid=data.user.id;
+  const { error:e2 } = await sb.from('profiles').insert({ id:uid, role: role==='teacher'?'profesor':'alumno', name, alias, centro });
+  if(e2) return authErr(e2.message);
+  await bootAfterAuth();
+}
+async function logout(){ await sb.auth.signOut(); state.session=null; state.profile=null; showLanding(); }
+
+async function bootAfterAuth(){
+  const { data:{ session } } = await sb.auth.getSession();
+  state.session=session;
+  if(!session) return showLanding();
+  const { data:profile } = await sb.from('profiles').select('*').eq('id',session.user.id).single();
+  if(!profile) return showLanding();
+  state.profile=profile;
+  const type = profile.role==='profesor' ? 'teacher' : 'student';
+  document.querySelectorAll(`#${type} .user-mini`).forEach(u=>{
+    u.querySelector('div:last-child > div:first-child').textContent = profile.name;
+    u.querySelector('.small-muted').textContent = profile.role==='profesor' ? 'Profesor' : 'Alumno';
+  });
+  await showDashboard(type,'home');
+}
+
+async function loadMyClasses(){
+  if(state.profile.role==='profesor'){
+    const { data } = await sb.from('classes').select('*').eq('teacher_id', state.profile.id).order('created_at');
+    state.myClasses = data || [];
+  } else {
+    const { data } = await sb.from('class_members').select('points,class_id,classes(*)').eq('student_id', state.profile.id);
+    state.myClasses = (data||[]).map(r => ({ ...r.classes, points:r.points }));
+  }
+}
+
+async function showDashboard(type, route='home', arg){
+  showOnly(type);
+  updateNav(type, route);
+  const contentId = type==='teacher' ? 'teacher-content' : 'student-content';
+  document.getElementById(contentId).innerHTML = '<div class="panel">Cargando…</div>';
+  await loadMyClasses();
+  if(type==='teacher') await renderTeacher(route, arg); else await renderStudent(route);
+}
+function updateNav(type, route){
+  const prefix = type==='teacher' ? 'teacher' : 'student';
+  const root = document.getElementById(type);
+  root.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.route===`${prefix}-${route}`));
+}
+
+/* ================= TEACHER ================= */
+function teacherHeader(title,sub,actions=''){
+  return `<div class="page-head"><div><h1>${title}</h1><p>${sub}</p></div><div class="head-actions">${actions}</div></div>`;
+}
+async function renderTeacher(route, arg){
+  const c=document.getElementById('teacher-content');
+  if(route==='home'){
+    const ids=state.myClasses.map(x=>x.id);
+    let students=0, pointsGiven=0, rewards=0;
+    if(ids.length){
+      const { data:mem } = await sb.from('class_members').select('student_id,points').in('class_id', ids);
+      students = new Set((mem||[]).map(m=>m.student_id)).size;
+      pointsGiven = (mem||[]).reduce((a,m)=>a+m.points,0);
+      const { count } = await sb.from('market_items').select('id',{count:'exact',head:true}).in('class_id', ids);
+      rewards = count||0;
+    }
+    c.innerHTML=teacherHeader(`Hola, ${state.profile.name.split(' ')[0]}.`,'¿Listo para hacer que hoy cuente?','<button class="btn btn-primary" onclick="showDashboard(\'teacher\',\'create\')">'+ICON('i-plus')+' Crear aula</button>')+
+    `<div class="stats">
+      <div class="stat"><div class="stat-label">Aulas activas</div><div class="stat-num">${state.myClasses.length}</div></div>
+      <div class="stat"><div class="stat-label">Alumnos</div><div class="stat-num">${students}</div></div>
+      <div class="stat"><div class="stat-label">Puntos dados</div><div class="stat-num">${fmt(pointsGiven)}</div></div>
+      <div class="stat"><div class="stat-label">Recompensas</div><div class="stat-num">${rewards}</div></div>
+    </div>
+    <div class="panel"><div class="panel-title"><h2>Mis aulas</h2><button onclick="showDashboard('teacher','classes')">Ver todas</button></div>
+      <div class="class-grid">${state.myClasses.length? await teacherClassCards() : '<div class="empty-note">Todavía no has creado ninguna aula.</div>'}</div>
+    </div>`;
+  }else if(route==='classes'){
+    c.innerHTML=teacherHeader('Mis aulas','Gestiona tus clases y entra en cada espacio.','<button class="btn btn-primary" onclick="showDashboard(\'teacher\',\'create\')">'+ICON('i-plus')+' Crear aula</button>')+
+      `<div class="class-grid">${state.myClasses.length? await teacherClassCards() : '<div class="empty-note">Todavía no has creado ninguna aula.</div>'}</div>`;
+  }else if(route==='create'){
+    c.innerHTML=teacherHeader('Crear nueva aula','Configura el espacio de tu grupo.')+
+      `<div class="panel" style="max-width:720px">
+        <div class="form">
+          <div class="field"><label>Nombre del aula</label><input id="newClassName" placeholder="Ej. Economía · 4º ESO"></div>
+          <div class="field"><label>Curso</label><input id="newClassCourse" placeholder="Ej. 4º ESO"></div>
+          <div class="field"><label>Descripción</label><input id="newClassDesc" placeholder="Una breve descripción del aula"></div>
+          <div class="field"><label>Imagen del aula</label><select id="newClassColor"><option value="banner-purple">Gradiente violeta</option><option value="banner-cyan">Gradiente turquesa</option><option value="banner-pink">Gradiente coral</option></select></div>
+          <button class="btn btn-primary" onclick="createClass()">Crear aula ${ICON('i-arrow')}</button>
+        </div>
+      </div>`;
+  }else if(route==='classdetail'){
+    await renderClassDetail(arg);
+  }else if(route==='profile'){
+    c.innerHTML=teacherHeader('Mi perfil','Personaliza tu identidad docente.')+
+      `<div class="panel" style="max-width:760px"><div class="profile-big">
+        <div class="avatar-big">${ICON('i-user')}</div><div><div class="student-name">${state.profile.name}</div><div class="student-sub">Profesor · ${state.profile.centro||''}</div></div>
+      </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px">
+        <div class="field"><label>Nombre completo</label><input id="pfName" value="${state.profile.name}"></div>
+        <div class="field"><label>Alias</label><input id="pfAlias" value="${state.profile.alias||''}"></div>
+        <div class="field"><label>Centro educativo</label><input id="pfCentro" value="${state.profile.centro||''}"></div>
+        <div class="field"><label>Correo</label><input value="${state.session.user.email}" disabled></div>
+      </div><button class="btn btn-primary" style="margin-top:18px" onclick="saveProfile()">Guardar cambios</button></div>`;
+  }else{
+    c.innerHTML=teacherHeader('Configuración','Preferencias generales de tu cuenta.')+
+      `<div class="panel" style="max-width:760px"><div class="field"><label>Notificaciones</label><select><option>Activadas</option><option>Solo importantes</option><option>Desactivadas</option></select></div><div class="field" style="margin-top:15px"><label>Apariencia</label><select><option>Benchi claro</option><option>Benchi automático</option></select></div><button class="btn btn-primary" style="margin-top:18px" onclick="toast('Configuración guardada')">Guardar</button></div>`;
+  }
+}
+async function teacherClassCards(){
+  const rows = await Promise.all(state.myClasses.map(async (x,i)=>{
+    const { data:mem } = await sb.from('class_members').select('points').eq('class_id', x.id);
+    const students=(mem||[]).length, pts=(mem||[]).reduce((a,m)=>a+m.points,0);
+    return `<article class="class-card"><div class="class-banner ${x.color||'banner-purple'}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${students} alumnos · ${x.curso||'Aula activa'}</div></div><span class="pill">${x.code}</span></div><div class="class-foot"><span>${fmt(pts)} puntos dados</span><button class="enter-link" onclick="showDashboard('teacher','classdetail','${x.id}')">Entrar →</button></div></article>`;
+  }));
+  return rows.join('');
+}
+async function createClass(){
+  const name=document.getElementById('newClassName').value.trim();
+  const curso=document.getElementById('newClassCourse').value.trim();
+  const descripcion=document.getElementById('newClassDesc').value.trim();
+  const color=document.getElementById('newClassColor').value;
+  if(!name) return toast('Ponle un nombre a tu aula');
+  const code='BEN-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  const { error } = await sb.from('classes').insert({ code, name, curso, descripcion, color, teacher_id: state.profile.id });
+  if(error) return toast(error.message);
+  toast('Aula creada: '+name);
+  showDashboard('teacher','classes');
+}
+async function saveProfile(){
+  const name=document.getElementById('pfName').value.trim();
+  const alias=document.getElementById('pfAlias').value.trim();
+  const centro=document.getElementById('pfCentro')?document.getElementById('pfCentro').value.trim():state.profile.alias;
+  const { error } = await sb.from('profiles').update({ name, alias, centro }).eq('id', state.profile.id);
+  if(error) return toast(error.message);
+  state.profile.name=name; state.profile.alias=alias; state.profile.centro=centro;
+  toast('Perfil guardado');
+}
+
+async function renderClassDetail(classId){
+  const c=document.getElementById('teacher-content');
+  state.teacherClassId=classId;
+  const cls = state.myClasses.find(x=>x.id===classId);
+  const [{data:members},{data:behaviors},{data:market},{data:avatars},{data:log}] = await Promise.all([
+    sb.from('class_members').select('student_id,points,profiles(name,alias)').eq('class_id',classId),
+    sb.from('behaviors').select('*').eq('class_id',classId),
+    sb.from('market_items').select('*').eq('class_id',classId),
+    sb.from('avatar_items').select('*').eq('class_id',classId),
+    sb.from('points_log').select('*').eq('class_id',classId).order('created_at',{ascending:false}).limit(25)
+  ]);
+  window._cd={members:members||[],behaviors:behaviors||[],market:market||[],avatars:avatars||[]};
+  const behaviorOpts=(behaviors||[]).map(b=>`<option value="${b.id}">${b.name} (${b.value>0?'+':''}${b.value})</option>`).join('');
+  const studentRows=(members||[]).map(m=>{
+    const lv=levelInfo(m.points);
+    return `<div class="small-row" style="padding:10px 0;border-bottom:1px solid var(--line)">
+      <div style="flex:1;"><b>${m.profiles.name}</b><div class="small-muted">@${m.profiles.alias||''} · Nivel ${lv.level} · ${fmt(m.points)} pts</div></div>
+      <select data-beh="${m.student_id}" style="max-width:170px">${behaviorOpts}</select>
+      <button class="btn btn-light" onclick="applyBehavior('${classId}','${m.student_id}')">Aplicar</button>
+      <input type="number" placeholder="±pts" style="width:70px" id="custom-${m.student_id}">
+      <button class="btn btn-light" onclick="applyCustom('${classId}','${m.student_id}')">Custom</button>
+    </div>`;
+  }).join('') || '<div class="empty-note">Todavía no se ha unido ningún alumno con el código de aula.</div>';
+  const behaviorRows=(behaviors||[]).map(b=>`<div class="small-row"><span>${b.name} <span class="pill">${b.value>0?'+':''}${b.value}</span></span><button class="btn btn-light" onclick="deleteRow('behaviors','${b.id}','${classId}')">Eliminar</button></div>`).join('')||'<div class="empty-note">Sin comportamientos.</div>';
+  const marketRows=(market||[]).map(m=>`<div class="small-row"><span>${m.name} <span class="pill">${m.cost} pts</span>${m.destacado?' <span class="pill">★</span>':''}</span><button class="btn btn-light" onclick="deleteRow('market_items','${m.id}','${classId}')">Eliminar</button></div>`).join('')||'<div class="empty-note">Sin recompensas.</div>';
+  const avatarRows=(avatars||[]).map(a=>`<div class="small-row"><span>${a.name} <span class="pill">${a.slot}</span> <span class="pill">${a.rareza}</span> ${a.cost>0?`<span class="pill">${a.cost} pts</span>`:`<span class="pill">${a.unlock_type}</span>`}</span><button class="btn btn-light" onclick="deleteRow('avatar_items','${a.id}','${classId}')">Eliminar</button></div>`).join('')||'<div class="empty-note">Sin skins.</div>';
+  const logRows=(log||[]).map(l=>{
+    const s=(members||[]).find(m=>m.student_id===l.student_id);
+    return `<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${s?s.profiles.name:'—'} · ${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString('es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`;
+  }).join('')||'<div class="empty-note">Sin movimientos.</div>';
+
+  c.innerHTML = `<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('teacher','classes')">${ICON('i-back')} Mis aulas</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''} · Código ${cls?cls.code:''}</p></div></div>
+    <div class="panel"><div class="panel-title"><h2>Alumnado</h2></div>${studentRows}</div>
+    <div class="grid-2" style="margin-top:16px">
+      <div class="panel"><div class="panel-title"><h2>Comportamientos</h2></div>${behaviorRows}
+        <div class="grid-2" style="margin-top:10px"><input id="newBehName" placeholder="Nombre"><input id="newBehValue" type="number" placeholder="± valor"></div>
+        <button class="btn btn-light" style="margin-top:8px" onclick="addBehavior('${classId}')">Añadir comportamiento</button></div>
+      <div class="panel"><div class="panel-title"><h2>Recompensas</h2></div>${marketRows}
+        <div class="grid-2" style="margin-top:10px"><input id="newMName" placeholder="Nombre"><input id="newMCost" type="number" placeholder="Coste"></div>
+        <label class="small-muted" style="display:flex;gap:6px;align-items:center;margin-top:6px"><input type="checkbox" id="newMFeatured"> Destacada</label>
+        <button class="btn btn-light" style="margin-top:8px" onclick="addMarketItem('${classId}')">Añadir recompensa</button></div>
+    </div>
+    <div class="panel" style="margin-top:16px"><div class="panel-title"><h2>Tienda de skins</h2></div>${avatarRows}
+      <div class="grid-2" style="margin-top:10px">
+        <input id="newAvName" placeholder="Nombre">
+        <select id="newAvSlot"><option value="fondo">fondo</option><option value="cara">cara</option><option value="sombrero">sombrero</option><option value="accesorio">accesorio</option></select>
+        <input id="newAvEmoji" placeholder="Símbolo (ej. ★)">
+        <input id="newAvCost" type="number" placeholder="Coste">
+        <select id="newAvRareza"><option value="comun">Común</option><option value="raro">Rara</option><option value="epico">Épica</option></select>
+        <label class="small-muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="newAvFeatured"> Destacada</label>
+      </div>
+      <button class="btn btn-light" style="margin-top:8px" onclick="addAvatarItem('${classId}')">Añadir skin</button></div>
+    <div class="panel" style="margin-top:16px"><div class="panel-title"><h2>Historial del aula</h2></div><div class="activity">${logRows}</div></div>`;
+}
+async function applyBehavior(classId, studentId){
+  const sel=document.querySelector(`[data-beh="${studentId}"]`);
+  const b=window._cd.behaviors.find(x=>x.id===sel.value);
+  if(!b) return;
+  const { error } = await sb.rpc('apply_points',{ p_student:studentId, p_class:classId, p_delta:b.value, p_reason:b.name, p_type:'puntuacion' });
+  if(error) return toast(error.message);
+  toast(`${b.value>0?'+':''}${b.value} puntos aplicados`);
+  renderTeacher('classdetail', classId);
+}
+async function applyCustom(classId, studentId){
+  const input=document.getElementById('custom-'+studentId);
+  const val=parseInt(input.value,10);
+  if(!val) return;
+  const { error } = await sb.rpc('apply_points',{ p_student:studentId, p_class:classId, p_delta:val, p_reason:'Ajuste manual', p_type:'puntuacion' });
+  if(error) return toast(error.message);
+  renderTeacher('classdetail', classId);
+}
+async function addBehavior(classId){
+  const name=document.getElementById('newBehName').value.trim();
+  const value=parseInt(document.getElementById('newBehValue').value,10);
+  if(!name||!value) return;
+  await sb.from('behaviors').insert({ class_id:classId, name, value });
+  renderTeacher('classdetail', classId);
+}
+async function addMarketItem(classId){
+  const name=document.getElementById('newMName').value.trim();
+  const cost=parseInt(document.getElementById('newMCost').value,10);
+  const destacado=document.getElementById('newMFeatured').checked;
+  if(!name||!cost) return;
+  await sb.from('market_items').insert({ class_id:classId, name, cost, destacado });
+  renderTeacher('classdetail', classId);
+}
+async function addAvatarItem(classId){
+  const name=document.getElementById('newAvName').value.trim();
+  const slot=document.getElementById('newAvSlot').value;
+  const emoji=document.getElementById('newAvEmoji').value.trim()||'✦';
+  const cost=parseInt(document.getElementById('newAvCost').value,10)||0;
+  const rareza=document.getElementById('newAvRareza').value;
+  const destacado=document.getElementById('newAvFeatured').checked;
+  if(!name) return;
+  await sb.from('avatar_items').insert({ class_id:classId, slot, name, emoji, cost, rareza, destacado, unlock_type: cost>0?'compra':'gratis' });
+  renderTeacher('classdetail', classId);
+}
+async function deleteRow(table,id,classId){
+  await sb.from(table).delete().eq('id',id);
+  renderTeacher('classdetail', classId);
+}
+
+/* ================= STUDENT ================= */
+function studentHeader(title,sub,action=''){
+  return `<div class="page-head"><div><h1>${title}</h1><p>${sub}</p></div>${action?`<div class="head-actions">${action}</div>`:''}</div>`;
+}
+function studentHero(){
+  const total=state.myClasses.reduce((a,c)=>a+(c.points||0),0);
+  const lv=levelInfo(total);
+  return `<section class="student-hero">
+    <div>
+      <div class="profile-big"><div class="avatar-big">${ICON('i-user')}</div><div><span class="level-badge">NIVEL ${lv.level}</span><div class="student-name">${state.profile.name}</div><div class="student-sub">${state.myClasses.length} aula${state.myClasses.length===1?'':'s'} activa${state.myClasses.length===1?'':'s'}</div></div></div>
+      <div style="margin-top:22px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:850;color:#70778b;margin-bottom:7px"><span>Progreso hacia nivel ${lv.level+1}</span><span>${lv.pct}%</span></div><div class="progress"><span style="width:${lv.pct}%"></span></div></div>
+    </div>
+    <div class="hero-points"><div class="points-label">Puntos totales</div><div class="points-num">${fmt(total)}</div><div style="font-size:12px;color:#6f7689;margin-top:2px">${lv.toNext} puntos para el siguiente nivel</div></div>
+  </section>`;
+}
+async function renderStudent(route){
+  const c=document.getElementById('student-content');
+  if(route==='home'){
+    const { data:log } = await sb.from('points_log').select('*').eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(6);
+    c.innerHTML=studentHero()+studentHeader('Tu espacio Benchi','Sigue acumulando puntos y desbloqueando recompensas.')+
+      `<div class="feature-grid" style="grid-template-columns:1.1fr .9fr;margin-top:0">
+       <div class="panel"><div class="panel-title"><h2>Mis clases</h2><button onclick="showDashboard('student','classes')">Ver todas</button></div><div class="class-grid">${state.myClasses.length?state.myClasses.map(studentClassCard).join(''):joinBox()}</div></div>
+       <div class="panel"><div class="panel-title"><h2>Actividad reciente</h2><button onclick="showDashboard('student','rewards')">Ver historial</button></div>${activityHTML(log)}</div>
+      </div>`;
+  }else if(route==='classes'){
+    c.innerHTML=studentHeader('Mis clases','Consulta tus puntos y el progreso de cada aula.','<button class="btn btn-primary" onclick="openJoinClass()">'+ICON('i-plus')+' Unirme a una aula</button>')+
+      `<div class="class-grid">${state.myClasses.map(studentClassCard).join('')}${joinBox()}</div>`;
+  }else if(route==='rewards'){
+    const { data:log } = await sb.from('points_log').select('*').eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(40);
+    const total=state.myClasses.reduce((a,x)=>a+(x.points||0),0);
+    c.innerHTML=studentHeader('Recompensas','Todo lo que has conseguido y gastado en Benchi.')+
+      `<div class="panel"><div class="panel-title"><h2>Historial de puntos</h2><span class="pill">${fmt(total)} disponibles</span></div>${activityHTML(log)}</div>`;
+  }else if(route==='market'){
+    await renderMarket();
+  }else{
+    const total=state.myClasses.reduce((a,x)=>a+(x.points||0),0);
+    const lv=levelInfo(total);
+    const { data:skins } = await sb.from('student_avatar_inventory').select('avatar_items(name,emoji,rareza)').eq('student_id',state.profile.id);
+    const skinCards=(skins||[]).map(s=>`<article class="product"><div class="product-art a"><div class="product-icon" style="font-size:22px">${s.avatar_items.emoji}</div></div><div class="product-name">${s.avatar_items.name}</div><div class="product-meta"><span class="rareza-pill rareza-${s.avatar_items.rareza}">${s.avatar_items.rareza}</span></div></article>`).join('')||'<div class="empty-note">Todavía no tienes skins.</div>';
+    c.innerHTML=studentHeader('Mi perfil','Tu identidad y tu colección.')+
+      `<div class="panel"><div class="profile-big"><div class="avatar-big">${ICON('i-user')}</div><div><span class="level-badge">NIVEL ${lv.level}</span><div class="student-name">${state.profile.name}</div><div class="student-sub">@${state.profile.alias||''}</div></div></div>
+      <div class="stats" style="margin-top:25px"><div class="stat"><div class="stat-label">Puntos</div><div class="stat-num">${fmt(total)}</div></div><div class="stat"><div class="stat-label">Nivel</div><div class="stat-num">${lv.level}</div></div><div class="stat"><div class="stat-label">Aulas</div><div class="stat-num">${state.myClasses.length}</div></div><div class="stat"><div class="stat-label">Skins</div><div class="stat-num">${(skins||[]).length}</div></div></div>
+      <div class="panel-title" style="margin-top:20px"><h2>Mi colección</h2></div><div class="market-grid">${skinCards}</div></div>`;
+  }
+}
+function joinBox(){ return `<button class="join-box" onclick="openJoinClass()">${ICON('i-plus')} Unirme a una aula</button>`; }
+function studentClassCard(x,i){
+  const lv=levelInfo(x.points||0);
+  return `<article class="class-card"><div class="class-banner ${x.color||['banner-purple','banner-cyan','banner-pink'][i%3]}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${x.curso||''}</div></div><span class="pill">Nvl ${lv.level}</span></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#757c8e;font-weight:800;margin-bottom:6px"><span>Progreso</span><span>${lv.pct}%</span></div><div class="progress"><span style="width:${lv.pct}%"></span></div></div><div class="class-foot"><span>${fmt(x.points||0)} puntos</span><button class="enter-link" onclick="enterMarketClass('${x.id}')">Ir al mercado →</button></div></article>`;
+}
+function enterMarketClass(classId){ state.marketClassId=classId; showDashboard('student','market'); }
+function openJoinClass(){
+  modal('Unirme a una aula', `
+    <p class="small-muted">Introduce el código de clase que te ha dado tu profesor.</p>
+    <div class="field"><label>Código de aula</label><input id="joinCode" placeholder="Ej. BEN-7X2K" style="text-transform:uppercase"></div>
+    <div id="joinError" style="color:#e0446b;font-size:12px;font-weight:700;margin-bottom:10px"></div>
+    <button class="btn btn-primary btn-full" onclick="doJoinClass()">Unirme ${ICON('i-arrow')}</button>`);
+}
+async function doJoinClass(){
+  const code=document.getElementById('joinCode').value.trim().toUpperCase();
+  if(!code) return;
+  const { data:found, error:e0 } = await sb.from('classes').select('*').eq('code',code).single();
+  if(e0||!found){ document.getElementById('joinError').textContent='Código de aula no encontrado.'; return; }
+  const { error } = await sb.from('class_members').insert({ student_id:state.profile.id, class_id:found.id, points:0 });
+  if(error){ document.getElementById('joinError').textContent = error.message.includes('duplicate')?'Ya estás en esta aula.':error.message; return; }
+  closeModal(); toast('Te has unido a '+found.name);
+  showDashboard('student','classes');
+}
+function activityHTML(rows){
+  if(!rows||!rows.length) return '<div class="empty-note">Todavía no hay movimientos.</div>';
+  return `<div class="activity">${rows.map(l=>`<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString('es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`).join('')}</div>`;
+}
+async function renderMarket(){
+  const c=document.getElementById('student-content');
+  if(!state.myClasses.length){
+    c.innerHTML=studentHeader('Mercado','Todavía no perteneces a ninguna aula.')+`<div class="panel">${joinBox()}</div>`;
+    return;
+  }
+  if(!state.marketClassId || !state.myClasses.find(x=>x.id===state.marketClassId)) state.marketClassId=state.myClasses[0].id;
+  const cls=state.myClasses.find(x=>x.id===state.marketClassId);
+  const [{data:market},{data:avatars},{data:myMarketInv},{data:myAvInv}] = await Promise.all([
+    sb.from('market_items').select('*').eq('class_id',state.marketClassId),
+    sb.from('avatar_items').select('*').eq('class_id',state.marketClassId),
+    sb.from('student_market_inventory').select('item_id').eq('student_id',state.profile.id),
+    sb.from('student_avatar_inventory').select('item_id').eq('student_id',state.profile.id)
+  ]);
+  window._mkt={market:market||[],avatars:avatars||[]};
+  const ownedM=new Set((myMarketInv||[]).map(x=>x.item_id));
+  const ownedA=new Set((myAvInv||[]).map(x=>x.item_id));
+  const classOpts=state.myClasses.map(x=>`<option value="${x.id}" ${x.id===state.marketClassId?'selected':''}>${x.name}</option>`).join('');
+
+  function cardMarket(m){
+    return `<article class="product"><div class="product-art b"><div class="product-icon">${ICON('i-gift')}</div></div><div class="product-name">${m.name}</div><div class="product-meta"><span class="price">${m.cost} puntos</span><button class="buy" ${ownedM.has(m.id)?'disabled':''} onclick="buyMarket('${m.id}')">${ownedM.has(m.id)?'Ya la tienes':'Canjear'}</button></div></article>`;
+  }
+  function cardAvatar(a){
+    return `<article class="product"><div class="product-art a"><div class="product-icon" style="font-size:24px">${a.emoji}</div></div><div class="rareza-pill rareza-${a.rareza}">${a.rareza}</div><div class="product-name">${a.name}</div><div class="product-meta"><span class="price">${a.cost>0?a.cost+' puntos':a.unlock_type}</span><button class="buy" ${ownedA.has(a.id)||a.unlock_type==='logro'?'disabled':''} onclick="buyAvatar('${a.id}')">${ownedA.has(a.id)?'Ya la tienes':'Comprar'}</button></div></article>`;
+  }
+  function renderTab(tab){
+    let items=[];
+    if(tab==='destacados') items=[...market.filter(m=>m.destacado).map(cardMarket), ...avatars.filter(a=>a.destacado).map(cardAvatar)];
+    else if(tab==='skins') items=avatars.map(cardAvatar);
+    else items=market.map(cardMarket);
+    return items.join('') || '<div class="empty-note">Nada por aquí todavía.</div>';
+  }
+  const total=cls?cls.points||0:0;
+  c.innerHTML=studentHeader('Mercado','Utiliza tus puntos para desbloquear experiencias y personalizaciones.')+
+    `<div class="panel" style="margin-bottom:18px">
+      <div class="panel-title">
+        <h2>Aula: <select class="class-select" onchange="state.marketClassId=this.value;renderMarket()">${classOpts}</select></h2>
+        <span class="small-muted">Puntos disponibles: <b style="color:#574fca">${fmt(total)}</b></span>
+      </div>
+      <div class="mkt-tabs">
+        <button class="mkt-tab active" data-tab="destacados" onclick="switchMktTab('destacados')">Destacados</button>
+        <button class="mkt-tab" data-tab="skins" onclick="switchMktTab('skins')">Skins</button>
+        <button class="mkt-tab" data-tab="recompensas" onclick="switchMktTab('recompensas')">Recompensas</button>
+      </div>
+      <div class="market-grid" id="mktGrid">${renderTab('destacados')}</div>
+    </div>`;
+  window._renderTab=renderTab;
+}
+function switchMktTab(tab){
+  document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.getElementById('mktGrid').innerHTML=window._renderTab(tab);
+}
+async function buyMarket(itemId){
+  const { error } = await sb.rpc('buy_market_item',{ p_item:itemId });
+  if(error) return toast(error.message);
+  toast('Recompensa canjeada');
+  await loadMyClasses(); renderMarket();
+}
+async function buyAvatar(itemId){
+  const { error } = await sb.rpc('buy_avatar_item',{ p_item:itemId });
+  if(error) return toast(error.message);
+  toast('Skin desbloqueada');
+  await loadMyClasses(); renderMarket();
+}
+
+/* default app helpers */
+(async () => {
+  const { data:{ session } } = await sb.auth.getSession();
+  if(session){ await bootAfterAuth(); } else { showOnly('landing'); }
+})();
+</script>
+</div>
+</body>
+</html>
