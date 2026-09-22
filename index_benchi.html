@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AulaCoin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root {
+    --bg: #EAF0E4; --paper: #F5F7F1; --paper-2: #FFFFFF; --ink: #1F3A34; --ink-soft: #4A635C;
+    --line: #C9D3C2; --gold: #D9971F; --gold-soft: #F3E0B8; --plum: #6B4A73; --plum-soft: #E7DCEA;
+    --danger: #B4483A; --danger-soft: #F3D9D3; --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'IBM Plex Sans',system-ui,sans-serif; min-height:100vh; }
+  h1,h2,h3,.brand { font-family:'Space Grotesk',system-ui,sans-serif; }
+  .wrap { max-width: 920px; margin:0 auto; padding: 20px 16px 60px; }
+  .top { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+  .brand { font-size:1.5rem; font-weight:700; }
+  .brand span { color: var(--gold); }
+  .classcode { font-size:0.8rem; color:var(--ink-soft); background:var(--paper-2); border:1px solid var(--line); border-radius:999px; padding:4px 12px; }
+  .panel { background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:18px; margin-bottom:16px; }
+  .panel h2 { margin:0 0 4px; font-size:1.05rem; }
+  .panel .sub { color:var(--ink-soft); font-size:0.85rem; margin:0 0 14px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:640px) { .grid2 { grid-template-columns:1fr; } }
+  table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+  th,td { text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); }
+  th { color:var(--ink-soft); font-weight:500; font-size:0.78rem; }
+  .tablewrap { overflow-x:auto; }
+  .pts { font-weight:600; color:var(--gold); font-family:'Space Grotesk',sans-serif; }
+  .pts.neg { color:var(--danger); }
+  select,input[type=text],input[type=number],input[type=email],input[type=password] {
+    font-family:inherit; font-size:0.88rem; padding:8px 10px; border-radius:7px;
+    border:1px solid var(--line); background:var(--paper-2); color:var(--ink); width:100%;
+  }
+  label.field { display:block; font-size:0.78rem; color:var(--ink-soft); margin-bottom:4px; }
+  .field-wrap { margin-bottom:10px; }
+  button { font-family:inherit; font-size:0.85rem; font-weight:600; padding:8px 14px; border-radius:7px; border:1px solid var(--line); background:var(--paper-2); color:var(--ink); cursor:pointer; }
+  button:hover { border-color:var(--ink-soft); }
+  button.primary { background:var(--gold); border-color:var(--gold); color:#2B2107; width:100%; }
+  button.plum { background:var(--plum-soft); border-color:var(--plum); color:var(--plum); }
+  button.ghost { background:none; }
+  button.small { padding:4px 9px; font-size:0.78rem; }
+  button:disabled { opacity:0.45; cursor:not-allowed; }
+  .badge { display:inline-block; font-size:0.72rem; padding:2px 8px; border-radius:999px; background:var(--plum-soft); color:var(--plum); font-weight:600; }
+  .studentcard { display:flex; align-items:center; gap:12px; padding:10px 4px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  .studentcard:last-child { border-bottom:none; }
+  .balance-box { display:flex; align-items:baseline; gap:8px; background:var(--gold-soft); border-radius:var(--radius); padding:14px 18px; margin-bottom:16px; }
+  .balance-box .num { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; font-weight:700; color:var(--gold); }
+  .avatar-big { width:120px; height:120px; border-radius:50%; position:relative; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0 auto 12px; border:2px solid var(--line); }
+  .avatar-big .layer { position:absolute; font-size:2.2rem; }
+  .avatar-big .layer.hat { top:-10px; } .avatar-big .layer.acc { bottom:6px; right:4px; font-size:1.6rem; }
+  .slotpicker { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .slotitem { border:1px solid var(--line); border-radius:8px; padding:8px; text-align:center; width:74px; cursor:pointer; background:var(--paper-2); font-size:0.72rem; }
+  .slotitem.selected { border-color:var(--plum); background:var(--plum-soft); }
+  .slotitem .em { font-size:1.4rem; display:block; margin-bottom:2px; }
+  .marketitem,.avatarshopitem { display:flex; justify-content:space-between; align-items:center; padding:10px 4px; border-bottom:1px solid var(--line); gap:10px; }
+  .marketitem:last-child,.avatarshopitem:last-child { border-bottom:none; }
+  .empty { color:var(--ink-soft); font-size:0.85rem; font-style:italic; padding:10px 0; }
+  .tradecard { border:1px solid var(--line); border-radius:8px; padding:12px; margin-bottom:10px; }
+  .tradecard .meta { font-size:0.78rem; color:var(--ink-soft); margin-bottom:6px; }
+  .authbox { max-width:380px; margin: 40px auto; }
+  .tabs2 { display:flex; gap:6px; margin-bottom:16px; border-bottom:1px solid var(--line); }
+  .tabs2 button { flex:1; background:none; border:none; border-bottom:2px solid transparent; border-radius:0; padding:10px; }
+  .tabs2 button.active { border-bottom-color: var(--gold); font-weight:700; }
+  .errormsg { color:var(--danger); font-size:0.82rem; margin-top:6px; }
+  .okmsg { color: var(--gold); font-size:0.82rem; margin-top:6px; }
+  .toolbar { display:flex; justify-content:flex-end; gap:8px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="root"></div>
+
+<script>
+/* ============ CONFIGURA ESTO CON TUS PROPIAS CLAVES DE SUPABASE ============ */
+const SUPABASE_URL = "PEGA_AQUI_TU_PROJECT_URL";
+const SUPABASE_ANON_KEY = "PEGA_AQUI_TU_ANON_KEY";
+/* ============================================================================ */
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const root = document.getElementById('root');
+
+let session = null;
+let profile = null;
+let cls = null;
+let students = [];
+let behaviors = [];
+let market = [];
+let avatarShop = [];
+let pointsLog = [];
+let trades = [];
+let myInventory = [];
+let myAvatarInv = [];
+let myAvatar = {};
+
+function fmtPts(n) {
+  const cls_ = n < 0 ? 'pts neg' : 'pts';
+  return `<span class="${cls_}">${n>0?'+':''}${n}</span>`;
+}
+function studentName(id) { const s = students.find(x=>x.id===id); return s ? s.name : '—'; }
+
+/* ---------------- AUTH SCREENS ---------------- */
+function renderAuth() {
+  root.innerHTML = `
+    <div class="authbox">
+      <div class="brand" style="text-align:center;margin-bottom:20px;">Aula<span>Coin</span></div>
+      <div class="tabs2">
+        <button id="tabLogin" class="active">Iniciar sesión</button>
+        <button id="tabRegProf">Soy profesor/a</button>
+        <button id="tabRegAlu">Soy alumno/a</button>
+      </div>
+      <div id="authForm"></div>
+    </div>
+  `;
+  document.getElementById('tabLogin').onclick = () => showLoginForm();
+  document.getElementById('tabRegProf').onclick = () => showRegProfForm();
+  document.getElementById('tabRegAlu').onclick = () => showRegAluForm();
+  showLoginForm();
+}
+function setActiveTab(id) {
+  ['tabLogin','tabRegProf','tabRegAlu'].forEach(t => document.getElementById(t).classList.toggle('active', t===id));
+}
+function showLoginForm() {
+  setActiveTab('tabLogin');
+  document.getElementById('authForm').innerHTML = `
+    <div class="field-wrap"><label class="field">Email</label><input type="email" id="loginEmail"></div>
+    <div class="field-wrap"><label class="field">Contraseña</label><input type="password" id="loginPass"></div>
+    <button class="primary" onclick="doLogin()">Entrar</button>
+    <div id="authMsg"></div>
+  `;
+}
+function showRegProfForm() {
+  setActiveTab('tabRegProf');
+  document.getElementById('authForm').innerHTML = `
+    <div class="field-wrap"><label class="field">Tu nombre</label><input type="text" id="regName"></div>
+    <div class="field-wrap"><label class="field">Email</label><input type="email" id="regEmail"></div>
+    <div class="field-wrap"><label class="field">Contraseña</label><input type="password" id="regPass"></div>
+    <button class="primary" onclick="doRegisterProfesor()">Crear mi clase</button>
+    <div id="authMsg"></div>
+  `;
+}
+function showRegAluForm() {
+  setActiveTab('tabRegAlu');
+  document.getElementById('authForm').innerHTML = `
+    <div class="field-wrap"><label class="field">Tu nombre</label><input type="text" id="regName"></div>
+    <div class="field-wrap"><label class="field">Código de clase</label><input type="text" id="regCode" placeholder="Ej: ECO4-7X2K"></div>
+    <div class="field-wrap"><label class="field">Email</label><input type="email" id="regEmail"></div>
+    <div class="field-wrap"><label class="field">Contraseña</label><input type="password" id="regPass"></div>
+    <button class="primary" onclick="doRegisterAlumno()">Unirme a la clase</button>
+    <div id="authMsg"></div>
+  `;
+}
+function authMsg(text, ok) {
+  document.getElementById('authMsg').innerHTML = `<div class="${ok?'okmsg':'errormsg'}">${text}</div>`;
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPass').value;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) return authMsg(error.message, false);
+  await bootAfterAuth();
+}
+async function doRegisterProfesor() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPass').value;
+  if (!name || !email || !password) return authMsg('Rellena todos los campos.', false);
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if (error) return authMsg(error.message, false);
+  const uid = data.user.id;
+  const code = 'AULA-' + Math.random().toString(36).slice(2,6).toUpperCase();
+  const { data: newClass, error: e1 } = await sb.from('classes').insert({ code, teacher_id: uid, name: name + ' — clase' }).select().single();
+  if (e1) return authMsg(e1.message, false);
+  const { error: e2 } = await sb.from('profiles').insert({ id: uid, role: 'profesor', name, class_id: newClass.id, points: 0 });
+  if (e2) return authMsg(e2.message, false);
+  await bootAfterAuth();
+}
+async function doRegisterAlumno() {
+  const name = document.getElementById('regName').value.trim();
+  const code = document.getElementById('regCode').value.trim().toUpperCase();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPass').value;
+  if (!name || !code || !email || !password) return authMsg('Rellena todos los campos.', false);
+  const { data: foundClass, error: e0 } = await sb.from('classes').select('*').eq('code', code).single();
+  if (e0 || !foundClass) return authMsg('Código de clase no encontrado.', false);
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if (error) return authMsg(error.message, false);
+  const uid = data.user.id;
+  const { error: e2 } = await sb.from('profiles').insert({ id: uid, role: 'alumno', name, class_id: foundClass.id, points: 0 });
+  if (e2) return authMsg(e2.message, false);
+  await bootAfterAuth();
+}
+async function doLogout() {
+  await sb.auth.signOut();
+  session = null; profile = null;
+  renderAuth();
+}
+
+/* ---------------- BOOT / DATA LOADING ---------------- */
+async function bootAfterAuth() {
+  const { data: { session: s } } = await sb.auth.getSession();
+  session = s;
+  if (!session) return renderAuth();
+  const { data: p } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+  if (!p) return renderAuth();
+  profile = p;
+  const { data: c } = await sb.from('classes').select('*').eq('id', profile.class_id).single();
+  cls = c;
+  await loadClassData();
+  render();
+  clearInterval(window._pollInterval);
+  window._pollInterval = setInterval(async () => { await loadClassData(); render(); }, 12000);
+}
+
+async function loadClassData() {
+  const classId = profile.class_id;
+  const [{data: st}, {data: bh}, {data: mk}, {data: av}, {data: lg}, {data: tr}] = await Promise.all([
+    sb.from('profiles').select('*').eq('class_id', classId).eq('role','alumno').order('name'),
+    sb.from('behaviors').select('*').eq('class_id', classId),
+    sb.from('market_items').select('*').eq('class_id', classId),
+    sb.from('avatar_items').select('*').eq('class_id', classId),
+    sb.from('points_log').select('*').eq('class_id', classId).order('created_at', {ascending:false}).limit(30),
+    sb.from('trades').select('*').eq('class_id', classId).order('created_at', {ascending:false}).limit(20)
+  ]);
+  students = st || []; behaviors = bh || []; market = mk || []; avatarShop = av || []; pointsLog = lg || []; trades = tr || [];
+
+  if (profile.role === 'alumno') {
+    const { data: fresh } = await sb.from('profiles').select('*').eq('id', profile.id).single();
+    if (fresh) profile.points = fresh.points;
+    const { data: inv } = await sb.from('student_market_inventory').select('item_id').eq('student_id', profile.id);
+    myInventory = (inv||[]).map(x=>x.item_id);
+    const { data: avinv } = await sb.from('student_avatar_inventory').select('item_id').eq('student_id', profile.id);
+    myAvatarInv = (avinv||[]).map(x=>x.item_id);
+    const { data: eq } = await sb.from('student_avatar').select('*').eq('student_id', profile.id).maybeSingle();
+    myAvatar = eq || {};
+  }
+}
+
+/* ---------------- RENDER ROOT ---------------- */
+function render() {
+  root.innerHTML = `
+    <div class="top">
+      <div class="brand">Aula<span>Coin</span></div>
+      <div class="row">
+        <div class="classcode">Código de clase: ${cls ? cls.code : ''}</div>
+        <button class="small ghost" onclick="doLogout()">Salir</button>
+      </div>
+    </div>
+    <div id="dash"></div>
+  `;
+  if (profile.role === 'profesor') renderProfesor(); else renderAlumno();
+}
+
+/* ---------------- PROFESOR ---------------- */
+function renderProfesor() {
+  const behaviorOptions = behaviors.map(b => `<option value="${b.id}">${b.name} (${b.value>0?'+':''}${b.value})</option>`).join('');
+  const studentRows = students.map(s => `
+    <div class="studentcard">
+      <div style="flex:1;min-width:120px;"><div style="font-weight:600;">${s.name}</div><div style="font-size:0.78rem;color:var(--ink-soft);">${fmtPts(s.points)} puntos</div></div>
+      <select data-behavior-for="${s.id}" style="max-width:180px;">${behaviorOptions}</select>
+      <button class="small primary" style="width:auto;" onclick="applyBehavior('${s.id}')">Aplicar</button>
+      <input type="number" placeholder="±pts" style="width:64px;" id="custom-${s.id}">
+      <button class="small ghost" onclick="applyCustom('${s.id}')">Custom</button>
+    </div>
+  `).join('') || '<div class="empty">Todavía no se ha unido ningún alumno con el código de clase.</div>';
+
+  const behaviorRows = behaviors.map(b => `<div class="marketitem"><div>${b.name} <span class="badge">${b.value>0?'+':''}${b.value} pts</span></div><button class="small ghost" onclick="deleteRow('behaviors','${b.id}')">Eliminar</button></div>`).join('') || '<div class="empty">Sin comportamientos definidos.</div>';
+  const marketRows = market.map(m => `<div class="marketitem"><div>${m.name} <span class="badge">${m.cost} pts</span></div><button class="small ghost" onclick="deleteRow('market_items','${m.id}')">Eliminar</button></div>`).join('') || '<div class="empty">Sin artículos todavía.</div>';
+  const avatarRows = avatarShop.map(a => `<div class="avatarshopitem"><div>${a.emoji} ${a.name} <span class="badge">${a.slot}</span> <span class="badge">${a.cost>0? a.cost+' pts' : a.unlock_type}</span></div><button class="small ghost" onclick="deleteRow('avatar_items','${a.id}')">Eliminar</button></div>`).join('') || '<div class="empty">Sin objetos todavía.</div>';
+
+  const logRows = pointsLog.map(l => `<tr><td>${studentName(l.student_id)}</td><td>${fmtPts(l.delta)}</td><td>${l.reason}</td><td style="color:var(--ink-soft);">${l.type}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">Sin movimientos.</td></tr>';
+  const tradeRows = trades.map(t => `<tr><td>${studentName(t.from_student)}</td><td>${studentName(t.to_student)}</td><td>${t.offer_points||0} pts ⇄ ${t.request_points||0} pts</td><td>${t.status}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">Sin intercambios.</td></tr>';
+
+  document.getElementById('dash').innerHTML = `
+    <div class="panel"><h2>Alumnado</h2><p class="sub">Comparte el código de clase de arriba para que se unan.</p>${studentRows}</div>
+    <div class="grid2">
+      <div class="panel"><h2>Comportamientos</h2>${behaviorRows}
+        <div class="row" style="margin-top:10px;"><input type="text" id="newBName" placeholder="Nombre"><input type="number" id="newBValue" placeholder="± valor" style="width:80px;"><button class="small primary" style="width:auto;" onclick="addBehavior()">Añadir</button></div>
+      </div>
+      <div class="panel"><h2>Mercado</h2>${marketRows}
+        <div class="row" style="margin-top:10px;"><input type="text" id="newMName" placeholder="Nombre"><input type="number" id="newMCost" placeholder="Coste" style="width:70px;"><button class="small primary" style="width:auto;" onclick="addMarketItem()">Añadir</button></div>
+      </div>
+    </div>
+    <div class="panel"><h2>Tienda de avatar</h2>${avatarRows}
+      <div class="row" style="margin-top:10px;">
+        <input type="text" id="newAvName" placeholder="Nombre" style="flex:1;min-width:100px;">
+        <input type="text" id="newAvEmoji" placeholder="Emoji" style="width:60px;">
+        <select id="newAvSlot"><option value="fondo">fondo</option><option value="cara">cara</option><option value="sombrero">sombrero</option><option value="accesorio">accesorio</option></select>
+        <input type="number" id="newAvCost" placeholder="Coste" style="width:70px;">
+        <button class="small primary" style="width:auto;" onclick="addAvatarItem()">Añadir</button>
+      </div>
+    </div>
+    <div class="panel"><h2>Historial de la clase</h2><div class="tablewrap"><table><thead><tr><th>Alumno</th><th>Puntos</th><th>Motivo</th><th>Tipo</th></tr></thead><tbody>${logRows}</tbody></table></div></div>
+    <div class="panel"><h2>Intercambios entre alumnos</h2><div class="tablewrap"><table><thead><tr><th>De</th><th>A</th><th>Trato</th><th>Estado</th></tr></thead><tbody>${tradeRows}</tbody></table></div></div>
+  `;
+}
+
+async function applyBehavior(sid) {
+  const sel = document.querySelector(`[data-behavior-for="${sid}"]`);
+  const b = behaviors.find(x=>x.id===sel.value);
+  if (!b) return;
+  const { error } = await sb.rpc('apply_points', { p_student: sid, p_delta: b.value, p_reason: b.name, p_type: 'puntuacion' });
+  if (error) return alert(error.message);
+  await loadClassData(); render();
+}
+async function applyCustom(sid) {
+  const input = document.getElementById('custom-'+sid);
+  const val = parseInt(input.value, 10);
+  if (!val) return;
+  const { error } = await sb.rpc('apply_points', { p_student: sid, p_delta: val, p_reason: 'Ajuste manual', p_type: 'puntuacion' });
+  if (error) return alert(error.message);
+  await loadClassData(); render();
+}
+async function addBehavior() {
+  const name = document.getElementById('newBName').value.trim();
+  const value = parseInt(document.getElementById('newBValue').value, 10);
+  if (!name || !value) return;
+  await sb.from('behaviors').insert({ class_id: profile.class_id, name, value });
+  await loadClassData(); render();
+}
+async function addMarketItem() {
+  const name = document.getElementById('newMName').value.trim();
+  const cost = parseInt(document.getElementById('newMCost').value, 10);
+  if (!name || !cost) return;
+  await sb.from('market_items').insert({ class_id: profile.class_id, name, cost });
+  await loadClassData(); render();
+}
+async function addAvatarItem() {
+  const name = document.getElementById('newAvName').value.trim();
+  const emoji = document.getElementById('newAvEmoji').value.trim() || '❔';
+  const slot = document.getElementById('newAvSlot').value;
+  const cost = parseInt(document.getElementById('newAvCost').value, 10) || 0;
+  if (!name) return;
+  await sb.from('avatar_items').insert({ class_id: profile.class_id, slot, name, emoji, cost, unlock_type: cost>0?'compra':'gratis' });
+  await loadClassData(); render();
+}
+async function deleteRow(table, id) {
+  await sb.from(table).delete().eq('id', id);
+  await loadClassData(); render();
+}
+
+/* ---------------- ALUMNO ---------------- */
+function avatarEmoji(id) { const it = avatarShop.find(a=>a.id===id); return it ? it.emoji : ''; }
+function renderAvatarBig() {
+  return `<div class="avatar-big" style="background:var(--paper-2);">
+    <span>${myAvatar.cara ? avatarEmoji(myAvatar.cara) : '🙂'}</span>
+    ${myAvatar.sombrero ? `<span class="layer hat">${avatarEmoji(myAvatar.sombrero)}</span>` : ''}
+    ${myAvatar.accesorio ? `<span class="layer acc">${avatarEmoji(myAvatar.accesorio)}</span>` : ''}
+  </div>`;
+}
+function renderAlumno() {
+  const historyRows = pointsLog.filter(l=>l.student_id===profile.id).slice(0,15).map(l=>`<tr><td>${fmtPts(l.delta)}</td><td>${l.reason}</td><td style="color:var(--ink-soft);">${l.type}</td></tr>`).join('') || '<tr><td colspan="3" class="empty">Sin movimientos.</td></tr>';
+
+  const marketRows = market.map(m => {
+    const owned = myInventory.includes(m.id);
+    const canAfford = profile.points >= m.cost;
+    return `<div class="marketitem"><div>${m.name} <span class="badge">${m.cost} pts</span></div><button class="small ${owned?'ghost':'primary'}" style="width:auto;" ${owned||!canAfford?'disabled':''} onclick="buyMarketItem('${m.id}')">${owned?'Ya lo tienes':'Canjear'}</button></div>`;
+  }).join('') || '<div class="empty">El profesor todavía no ha añadido recompensas.</div>';
+
+  const slots = ['fondo','cara','sombrero','accesorio'];
+  const avatarEditor = slots.map(slot => {
+    const items = avatarShop.filter(a=>a.slot===slot);
+    const cells = items.map(a => {
+      const owned = myAvatarInv.includes(a.id) || a.unlock_type === 'gratis';
+      const selected = myAvatar[slot] === a.id;
+      return `<div class="slotitem ${selected?'selected':''}" style="${owned?'':'opacity:0.4;'}" onclick="${owned ? `equipAvatar('${slot}','${a.id}')` : `tryBuyAvatarItem('${a.id}')`}">
+        <span class="em">${a.emoji}</span>${a.name}<br><span style="color:var(--ink-soft);">${a.cost>0?a.cost+' pts':a.unlock_type}</span>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:10px;"><div style="font-size:0.8rem;color:var(--ink-soft);text-transform:capitalize;">${slot}</div><div class="slotpicker">${cells}</div></div>`;
+  }).join('');
+
+  const otherStudents = students.filter(x=>x.id!==profile.id);
+  const targetOptions = otherStudents.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');
+  const myItemOptions = myInventory.map(id=>`<option value="${id}">${market.find(m=>m.id===id)?.name||id}</option>`).join('');
+
+  const incoming = trades.filter(t=>t.to_student===profile.id && t.status==='pendiente');
+  const incomingRows = incoming.map(t => `<div class="tradecard"><div class="meta">Propuesta de ${studentName(t.from_student)}</div><div>${t.offer_points||0} pts${t.offer_item? ' + '+(market.find(m=>m.id===t.offer_item)?.name||'') : ''} ⇄ ${t.request_points||0} pts${t.request_item_name? ' + '+t.request_item_name : ''}</div><div class="row" style="margin-top:8px;"><button class="small primary" style="width:auto;" onclick="respondTrade('${t.id}',true)">Aceptar</button><button class="small ghost" onclick="respondTrade('${t.id}',false)">Rechazar</button></div></div>`).join('') || '<div class="empty">Sin propuestas pendientes.</div>';
+
+  const history = trades.filter(t=>(t.from_student===profile.id||t.to_student===profile.id) && t.status!=='pendiente').slice(0,10)
+    .map(t=>`<div class="tradecard"><div class="meta">${studentName(t.from_student)} ⇄ ${studentName(t.to_student)} · ${t.status}</div></div>`).join('');
+
+  document.getElementById('dash').innerHTML = `
+    <div class="grid2">
+      <div class="panel"><h2>Mi saldo</h2><div class="balance-box"><span class="num">${profile.points}</span><span>puntos</span></div>
+        <h2>Historial</h2><div class="tablewrap"><table><thead><tr><th>Puntos</th><th>Motivo</th><th>Tipo</th></tr></thead><tbody>${historyRows}</tbody></table></div>
+      </div>
+      <div class="panel"><h2>Mi avatar</h2>${renderAvatarBig()}${avatarEditor}</div>
+    </div>
+    <div class="panel"><h2>Mercado</h2><p class="sub">Canjea tus puntos por recompensas.</p>${marketRows}</div>
+    <div class="grid2">
+      <div class="panel"><h2>Proponer intercambio</h2>
+        <div class="row" style="margin-bottom:8px;"><label style="font-size:0.8rem;">A:</label><select id="tradeTarget">${targetOptions}</select></div>
+        <div class="row" style="margin-bottom:6px;"><input type="number" id="offerPoints" placeholder="Ofrezco pts" style="width:110px;"><select id="offerItem"><option value="">— sin objeto —</option>${myItemOptions}</select></div>
+        <div class="row" style="margin-bottom:10px;"><input type="number" id="requestPoints" placeholder="Pido pts" style="width:110px;"><input type="text" id="requestItemName" placeholder="Objeto que pido (opcional)" style="flex:1;min-width:120px;"></div>
+        <button class="plum" style="width:auto;" onclick="proposeTrade()">Enviar propuesta</button>
+      </div>
+      <div class="panel"><h2>Propuestas para mí</h2>${incomingRows}${history?`<h2 style="margin-top:16px;">Historial</h2>${history}`:''}</div>
+    </div>
+  `;
+}
+
+async function buyMarketItem(id) {
+  const { error } = await sb.rpc('buy_market_item', { p_item: id });
+  if (error) return alert(error.message);
+  await loadClassData(); render();
+}
+async function tryBuyAvatarItem(id) {
+  const item = avatarShop.find(a=>a.id===id);
+  if (!item) return;
+  if (item.unlock_type === 'logro') return alert('Este objeto se desbloquea por logro: sigue acumulando puntos.');
+  if (profile.points < item.cost) return alert('No tienes puntos suficientes.');
+  if (!confirm(`¿Comprar "${item.name}" por ${item.cost} puntos?`)) return;
+  const { error } = await sb.rpc('buy_avatar_item', { p_item: id });
+  if (error) return alert(error.message);
+  await loadClassData(); render();
+}
+async function equipAvatar(slot, itemId) {
+  const payload = { student_id: profile.id, [slot]: itemId };
+  await sb.from('student_avatar').upsert(payload);
+  await loadClassData(); render();
+}
+async function proposeTrade() {
+  const to = document.getElementById('tradeTarget').value;
+  const offer_points = parseInt(document.getElementById('offerPoints').value,10) || 0;
+  const offer_item = document.getElementById('offerItem').value || null;
+  const request_points = parseInt(document.getElementById('requestPoints').value,10) || 0;
+  const request_item_name = document.getElementById('requestItemName').value.trim() || null;
+  if (!to || (!offer_points && !offer_item)) return alert('Ofrece al menos puntos o un objeto.');
+  if (offer_points > profile.points) return alert('No tienes suficientes puntos para ofrecer eso.');
+  const { error } = await sb.from('trades').insert({ class_id: profile.class_id, from_student: profile.id, to_student: to, offer_points, offer_item, request_points, request_item_name });
+  if (error) return alert(error.message);
+  await loadClassData(); render();
+}
+async function respondTrade(id, accept) {
+  const { error } = await sb.rpc(accept ? 'accept_trade' : 'reject_trade', { p_trade: id });
+  if (error) return alert(error.message);
+  await loadClassData(); render();
+}
+
+/* ---------------- INIT ---------------- */
+(async () => {
+  const { data: { session: s } } = await sb.auth.getSession();
+  if (s) { await bootAfterAuth(); } else { renderAuth(); }
+})();
+</script>
+</body>
+</html>
