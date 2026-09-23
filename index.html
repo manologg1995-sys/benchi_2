@@ -326,7 +326,7 @@ svg{display:block}
   .auth-screen{grid-template-columns:1fr}.auth-art{min-height:340px;padding:35px}.auth-copy h1{font-size:58px}.auth-box-wrap{padding:28px 18px}
 }
 @media(max-width:650px){
-  .container{width:min(100% - 28px,1180px)}.nav-actions .btn-light{display:none}.topbar-inner{height:66px}
+  .container{width:min(100% - 28px,1180px)}.topbar-inner{height:66px}
   .hero{min-height:auto;padding:76px 0 30px}.hero h1{font-size:60px}.hero p{font-size:16px}
   .hero-visual{transform:scale(.9);transform-origin:top center;min-height:470px;margin-bottom:-20px}.profile-card{right:1%;top:65px}.reward-float{left:-4%;top:40px}.level-float{right:-6%;bottom:52px}.points-float{left:4%;bottom:15px}
   .section{padding:65px 0}.steps{grid-template-columns:1fr}.feature-panel{min-height:530px;padding:24px}.mock-window{width:92%;right:4%}
@@ -518,7 +518,7 @@ svg{display:block}
       <div class="user-mini"><div class="avatar-sm"><svg class="icon"><use href="#i-user"/></svg></div><div><div style="font-weight:900;font-size:12px">Manuel García</div><div class="small-muted">Profesor</div></div></div>
     </aside>
     <div class="main">
-      <div class="top-mobile"><span class="brand"><span class="brand-mark"></span>BENCHI</span><button class="btn btn-light" onclick="logout()">Salir</button></div>
+      <div class="top-mobile"><a href="#" class="brand" onclick="showDashboard('teacher','home');return false;"><span class="brand-mark"></span>BENCHI</a><button class="btn btn-light" onclick="logout()">Salir</button></div>
       <div id="teacher-content" class="content"></div>
     </div>
   </div>
@@ -540,7 +540,7 @@ svg{display:block}
       <div class="user-mini"><div class="avatar-sm"><svg class="icon"><use href="#i-user"/></svg></div><div><div style="font-weight:900;font-size:12px">Alex Moreno</div><div class="small-muted">Alumno · Nivel 8</div></div></div>
     </aside>
     <div class="main">
-      <div class="top-mobile"><span class="brand"><span class="brand-mark"></span>BENCHI</span><button class="btn btn-light" onclick="logout()">Salir</button></div>
+      <div class="top-mobile"><a href="#" class="brand" onclick="showDashboard('student','home');return false;"><span class="brand-mark"></span>BENCHI</a><button class="btn btn-light" onclick="logout()">Salir</button></div>
       <div id="student-content" class="content"></div>
     </div>
   </div>
@@ -550,13 +550,13 @@ svg{display:block}
 <div class="toast" id="toast"></div>
 
 <script>
-const ICON = id => `<svg class="icon"><use href="#${id}"/></svg>`;
-
-/* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE ============ */
+/* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE (LAS DOS LÍNEAS DE ABAJO) ============ */
 const SUPABASE_URL = "https://gwvtamxfmsdetylzekwx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3dnRhbXhmbXNkZXR5bHpla3d4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjA4NzEsImV4cCI6MjEwNTYzNjg3MX0.xVhRy9qCe6108pu6OsqseNpdNxIltiW5P7WtDStntPo";
-/* ===================================================================== */
+/* =============================================================================================== */
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const ICON = id => `<svg class="icon"><use href="#${id}"/></svg>`;
 const LEVEL_SIZE = 250;
 function levelInfo(points){
   const p = Math.max(0, points|0);
@@ -743,7 +743,7 @@ async function renderTeacher(route, arg){
   }else if(route==='classdetail'){
     await renderClassDetail(arg);
   }else if(route==='profile'){
-    c.innerHTML=teacherHeader('Mi perfil','Personaliza tu identidad docente.')+
+    c.innerHTML=teacherHeader('Mi perfil','Personaliza tu identidad docente.','<button class="btn btn-light" onclick="showDashboard(\'teacher\',\'home\')">'+ICON('i-back')+' Volver</button>')+
       `<div class="panel" style="max-width:760px"><div class="profile-big">
         <div class="avatar-big">${ICON('i-user')}</div><div><div class="student-name">${state.profile.name}</div><div class="student-sub">Profesor · ${state.profile.centro||''}</div></div>
       </div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px">
@@ -753,7 +753,7 @@ async function renderTeacher(route, arg){
         <div class="field"><label>Correo</label><input value="${state.session.user.email}" disabled></div>
       </div><button class="btn btn-primary" style="margin-top:18px" onclick="saveProfile()">Guardar cambios</button></div>`;
   }else{
-    c.innerHTML=teacherHeader('Configuración','Preferencias generales de tu cuenta.')+
+    c.innerHTML=teacherHeader('Configuración','Preferencias generales de tu cuenta.','<button class="btn btn-light" onclick="showDashboard(\'teacher\',\'home\')">'+ICON('i-back')+' Volver</button>')+
       `<div class="panel" style="max-width:760px"><div class="field"><label>Notificaciones</label><select><option>Activadas</option><option>Solo importantes</option><option>Desactivadas</option></select></div><div class="field" style="margin-top:15px"><label>Apariencia</label><select><option>Benchi claro</option><option>Benchi automático</option></select></div><button class="btn btn-primary" style="margin-top:18px" onclick="toast('Configuración guardada')">Guardar</button></div>`;
   }
 }
@@ -928,7 +928,7 @@ async function renderStudent(route){
     const lv=levelInfo(total);
     const { data:skins } = await sb.from('student_avatar_inventory').select('avatar_items(name,emoji,rareza)').eq('student_id',state.profile.id);
     const skinCards=(skins||[]).map(s=>`<article class="product"><div class="product-art a"><div class="product-icon" style="font-size:22px">${s.avatar_items.emoji}</div></div><div class="product-name">${s.avatar_items.name}</div><div class="product-meta"><span class="rareza-pill rareza-${s.avatar_items.rareza}">${s.avatar_items.rareza}</span></div></article>`).join('')||'<div class="empty-note">Todavía no tienes skins.</div>';
-    c.innerHTML=studentHeader('Mi perfil','Tu identidad y tu colección.')+
+    c.innerHTML=studentHeader('Mi perfil','Tu identidad y tu colección.','<button class="btn btn-light" onclick="showDashboard(\'student\',\'home\')">'+ICON('i-back')+' Volver</button>')+
       `<div class="panel"><div class="profile-big"><div class="avatar-big">${ICON('i-user')}</div><div><span class="level-badge">NIVEL ${lv.level}</span><div class="student-name">${state.profile.name}</div><div class="student-sub">@${state.profile.alias||''}</div></div></div>
       <div class="stats" style="margin-top:25px"><div class="stat"><div class="stat-label">Puntos</div><div class="stat-num">${fmt(total)}</div></div><div class="stat"><div class="stat-label">Nivel</div><div class="stat-num">${lv.level}</div></div><div class="stat"><div class="stat-label">Aulas</div><div class="stat-num">${state.myClasses.length}</div></div><div class="stat"><div class="stat-label">Skins</div><div class="stat-num">${(skins||[]).length}</div></div></div>
       <div class="panel-title" style="margin-top:20px"><h2>Mi colección</h2></div><div class="market-grid">${skinCards}</div></div>`;
