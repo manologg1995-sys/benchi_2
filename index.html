@@ -360,6 +360,14 @@ svg{display:block}
 .student-row:hover{box-shadow:0 8px 20px rgba(31,32,66,.07);border-color:#dcdfec}
 .student-row select,.student-row input{border:1px solid #dde1eb;border-radius:11px;padding:9px 11px;font-size:12.5px;background:#fff}
 
+/* ---------- Avatar illustration catalog ---------- */
+.avatar-catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.avatar-catalog-item{display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:10px 6px;transition:.15s}
+.avatar-catalog-item:hover{border-color:#b7b0ff;box-shadow:0 8px 18px rgba(99,91,255,.13);transform:translateY(-2px)}
+.avatar-catalog-item img{width:52px;height:52px;border-radius:12px;background:var(--surface-2)}
+.avatar-catalog-item span{font-size:10.5px;font-weight:800;color:var(--muted);text-align:center;line-height:1.2}
+.avatar-preview-big{width:120px;height:120px;border-radius:34px;box-shadow:0 12px 25px rgba(99,91,255,.13);border:4px solid white}
+
 /* Mobile */
 @media(max-width:980px){
   .hero-grid{grid-template-columns:1fr;gap:20px}.hero-visual{min-height:500px}.profile-card{right:5%}
@@ -621,7 +629,7 @@ function levelInfo(points){
 }
 function fmt(n){ return (n||0).toLocaleString(state.lang==='en'?'en-GB':'es-ES'); }
 
-const state = { session:null, profile:null, myClasses:[], marketClassId:null, teacherClassId:null, teacherClassTab:'students', lang:'es', authMode:'login', authRole:null };
+const state = { session:null, profile:null, myClasses:[], marketClassId:null, teacherClassId:null, teacherClassTab:'students', avatarPickSlot:'cara', lang:'es', authMode:'login', authRole:null };
 
 const I18N = {
   es: {
@@ -1098,6 +1106,61 @@ const DEFAULT_REWARDS = {
     { name:'Surprise reward', cost:50, destacado:true }
   ]
 };
+
+/* ================= AVATAR ILLUSTRATIONS (DiceBear) ================= */
+const DICEBEAR_STYLE='avataaars';
+const DICEBEAR_BASE=`https://api.dicebear.com/10.x/${DICEBEAR_STYLE}/svg`;
+const EQUIP_DEFAULTS={ cara:'Benchi1', sombrero:'shortFlat', accesorio:'', fondo:'c7d2fe' };
+function avatarUrl(equipped, size){
+  const eq=Object.assign({}, EQUIP_DEFAULTS, equipped||{});
+  const p=new URLSearchParams({
+    seed:eq.cara||EQUIP_DEFAULTS.cara,
+    topVariant:eq.sombrero||EQUIP_DEFAULTS.sombrero,
+    accessoriesVariant:eq.accesorio||'',
+    accessoriesProbability:eq.accesorio?100:0,
+    backgroundColor:eq.fondo||EQUIP_DEFAULTS.fondo,
+    backgroundType:'solid',
+    radius:50
+  });
+  if(size) p.set('size',size);
+  return `${DICEBEAR_BASE}?${p.toString()}`;
+}
+const AVATAR_CATALOG={
+  cara:[
+    {name:'Nova',value:'Nova'},{name:'Rex',value:'Rex'},{name:'Luna',value:'Luna'},{name:'Kai',value:'Kai'},
+    {name:'Mia',value:'Mia'},{name:'Sol',value:'Sol'},{name:'Zeta',value:'Zeta'},{name:'Leo',value:'Leo'},
+    {name:'Iris',value:'Iris'},{name:'Atlas',value:'Atlas'}
+  ],
+  sombrero:[
+    {name:'Sin gorro',value:'shortFlat'},{name:'Gorro',value:'hat'},{name:'Gorro de invierno',value:'winterHat1'},
+    {name:'Gorro pompón',value:'winterHat02'},{name:'Gorro orejas',value:'winterHat03'},{name:'Gorro rayas',value:'winterHat04'},
+    {name:'Turbante',value:'turban'},{name:'Pañuelo',value:'hijab'},{name:'Rizos',value:'curly'},{name:'Moño',value:'bun'}
+  ],
+  accesorio:[
+    {name:'Sin gafas',value:''},{name:'Redondas',value:'round'},{name:'Wayfarer',value:'wayfarers'},
+    {name:'De sol',value:'sunglasses'},{name:'Graduadas',value:'prescription01'},{name:'Graduadas finas',value:'prescription02'},
+    {name:'Parche pirata',value:'eyepatch'},{name:'Estilo Kurt',value:'kurt'}
+  ],
+  fondo:[
+    {name:'Lila',value:'c7d2fe'},{name:'Cian',value:'a7f0f0'},{name:'Rosa',value:'ffd1e6'},{name:'Amarillo',value:'ffe6a7'},
+    {name:'Verde',value:'baf7cf'},{name:'Coral',value:'ffc4b0'},{name:'Azul',value:'b6d8ff'},{name:'Gris',value:'e2e4ea'},
+    {name:'Violeta',value:'ddc7ff'},{name:'Menta',value:'c7f9e5'}
+  ]
+};
+function avatarCatalogChips(slot, classId){
+  const list=AVATAR_CATALOG[slot]||[];
+  return `<div class="avatar-catalog-grid">${list.map((it,i)=>`
+    <button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}')">
+      <img src="${avatarUrl(slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value},72)}" alt="${it.name}">
+      <span>${it.name}</span>
+    </button>`).join('')}</div>`;
+}
+async function addCatalogAvatarItem(slot, i, classId){
+  const it=AVATAR_CATALOG[slot][i];
+  const cost = slot==='cara'?0:20;
+  await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji:'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
+  renderTeacher('classdetail', classId);
+}
 function suggestionChips(list, kind, classId){
   return `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${list.map((x,i)=>
     `<button type="button" class="btn btn-light" style="font-size:12px" onclick="addSuggested('${kind}','${classId}',${i})">+ ${x.name} (${x.value!==undefined?(x.value>0?'+':'')+x.value:x.cost+' pts'})</button>`
@@ -1121,6 +1184,11 @@ const CLASS_TABS=[
   {key:'skins',icon:'i-shop',label:'skins_panel'},
   {key:'history',icon:'i-chart',label:'class_history_panel'}
 ];
+function switchAvatarPickSlot(slot, classId){
+  state.avatarPickSlot=slot;
+  document.querySelectorAll('.avatar-pick-tab').forEach(b=>b.classList.toggle('active',b.dataset.slot===slot));
+  document.getElementById('avatarCatalogArea').innerHTML=avatarCatalogChips(slot, classId);
+}
 function switchClassTab(tab){
   state.teacherClassTab=tab;
   document.querySelectorAll('.teacher-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -1172,14 +1240,18 @@ async function renderClassDetail(classId){
         <button class="icon-btn danger" title="${t('delete_btn')}" onclick="deleteRow('market_items','${m.id}','${classId}')">${ICON('i-trash')}</button>
       </div>
     </div>`).join('')||`<div class="empty-note">${t('no_rewards')}</div>`;
-  const avatarRows=(avatars||[]).map(a=>`<div class="list-card">
-      <div class="list-card-icon" style="font-size:19px">${a.emoji||'✦'}</div>
+  const avatarRows=(avatars||[]).map(a=>{
+    const eq=a.asset_value!==undefined&&a.asset_value!==null?{[a.slot]:a.asset_value}:null;
+    const thumb=eq?`<img src="${avatarUrl(eq,72)}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`:(a.emoji||'✦');
+    return `<div class="list-card">
+      <div class="list-card-icon" style="font-size:19px;overflow:hidden;padding:0">${thumb}</div>
       <div class="list-card-body"><div class="list-card-name">${a.name}</div><div class="list-card-meta"><span class="pill">${slotLabel[a.slot]||a.slot}</span><span class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</span>${a.cost>0?`<span class="pill">${a.cost} pts</span>`:`<span class="pill">${a.unlock_type}</span>`}</div></div>
       <div class="list-card-actions">
         <button class="icon-btn" title="${t('edit_btn')}" onclick="editAvatarItem('${a.id}','${classId}')">${ICON('i-edit')}</button>
         <button class="icon-btn danger" title="${t('delete_btn')}" onclick="deleteRow('avatar_items','${a.id}','${classId}')">${ICON('i-trash')}</button>
       </div>
-    </div>`).join('')||`<div class="empty-note">${t('no_skins')}</div>`;
+    </div>`;
+  }).join('')||`<div class="empty-note">${t('no_skins')}</div>`;
   const logRows=(log||[]).map(l=>{
     const s=(members||[]).find(m=>m.student_id===l.student_id);
     return `<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${s?s.profiles.name:'—'} · ${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString(state.lang==='en'?'en-GB':'es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`;
@@ -1222,15 +1294,13 @@ async function renderClassDetail(classId){
         ${avatarRows}
         <div class="add-card">
           <div class="add-card-head">${t('add_skin_btn')}</div>
-          <div class="grid-2">
-            <input id="newAvName" placeholder="${t('name_field')}">
-            <select id="newAvSlot"><option value="fondo">${t('slot_bg')}</option><option value="cara">${t('slot_face')}</option><option value="sombrero">${t('slot_hat')}</option><option value="accesorio">${t('slot_acc')}</option></select>
-            <input id="newAvEmoji" placeholder="${t('symbol_field')}">
-            <input id="newAvCost" type="number" placeholder="${t('cost_field')}">
-            <select id="newAvRareza"><option value="comun">${t('rarity_common')}</option><option value="raro">${t('rarity_rare')}</option><option value="epico">${t('rarity_epic')}</option></select>
-            <label class="small-muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="newAvFeatured"> ${t('featured_label')}</label>
+          <div class="mkt-tabs">
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='cara'?'active':''}" data-slot="cara" onclick="switchAvatarPickSlot('cara','${classId}')">${t('slot_face')}</button>
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='sombrero'?'active':''}" data-slot="sombrero" onclick="switchAvatarPickSlot('sombrero','${classId}')">${t('slot_hat')}</button>
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='accesorio'?'active':''}" data-slot="accesorio" onclick="switchAvatarPickSlot('accesorio','${classId}')">${t('slot_acc')}</button>
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='fondo'?'active':''}" data-slot="fondo" onclick="switchAvatarPickSlot('fondo','${classId}')">${t('slot_bg')}</button>
           </div>
-          <button class="btn btn-primary" style="margin-top:10px" onclick="addAvatarItem('${classId}')">${ICON('i-plus')} ${t('add_skin_btn')}</button>
+          <div id="avatarCatalogArea">${avatarCatalogChips(state.avatarPickSlot||'cara', classId)}</div>
         </div>
       </div>
     </div>
@@ -1274,17 +1344,10 @@ async function saveMarketEdit(id, classId){
 }
 function editAvatarItem(id, classId){
   const a=window._cd.avatars.find(x=>x.id===id); if(!a) return;
+  const eq=a.asset_value?{[a.slot]:a.asset_value}:{};
   modal(`${t('edit_btn')} · ${t('skins_panel')}`, `<div class="form">
+    <div style="display:flex;justify-content:center"><img src="${avatarUrl(eq,90)}" style="width:64px;height:64px;border-radius:16px;background:var(--surface-2)"></div>
     <div class="field"><label>${t('name_field')}</label><input id="editAvName" value="${a.name}"></div>
-    <div class="grid-2">
-      <select id="editAvSlot">
-        <option value="fondo" ${a.slot==='fondo'?'selected':''}>${t('slot_bg')}</option>
-        <option value="cara" ${a.slot==='cara'?'selected':''}>${t('slot_face')}</option>
-        <option value="sombrero" ${a.slot==='sombrero'?'selected':''}>${t('slot_hat')}</option>
-        <option value="accesorio" ${a.slot==='accesorio'?'selected':''}>${t('slot_acc')}</option>
-      </select>
-      <input id="editAvEmoji" value="${a.emoji||''}">
-    </div>
     <div class="grid-2">
       <input id="editAvCost" type="number" value="${a.cost}">
       <select id="editAvRareza">
@@ -1299,13 +1362,11 @@ function editAvatarItem(id, classId){
 }
 async function saveAvatarEdit(id, classId){
   const name=document.getElementById('editAvName').value.trim();
-  const slot=document.getElementById('editAvSlot').value;
-  const emoji=document.getElementById('editAvEmoji').value.trim()||'✦';
   const cost=parseInt(document.getElementById('editAvCost').value,10)||0;
   const rareza=document.getElementById('editAvRareza').value;
   const destacado=document.getElementById('editAvFeatured').checked;
   if(!name) return;
-  await sb.from('avatar_items').update({ name, slot, emoji, cost, rareza, destacado, unlock_type: cost>0?'compra':'gratis' }).eq('id', id);
+  await sb.from('avatar_items').update({ name, cost, rareza, destacado, unlock_type: cost>0?'compra':'gratis' }).eq('id', id);
   closeModal();
   renderTeacher('classdetail', classId);
 }
@@ -1339,17 +1400,6 @@ async function addMarketItem(classId){
   const destacado=document.getElementById('newMFeatured').checked;
   if(!name||!cost) return;
   await sb.from('market_items').insert({ class_id:classId, name, cost, destacado });
-  renderTeacher('classdetail', classId);
-}
-async function addAvatarItem(classId){
-  const name=document.getElementById('newAvName').value.trim();
-  const slot=document.getElementById('newAvSlot').value;
-  const emoji=document.getElementById('newAvEmoji').value.trim()||'✦';
-  const cost=parseInt(document.getElementById('newAvCost').value,10)||0;
-  const rareza=document.getElementById('newAvRareza').value;
-  const destacado=document.getElementById('newAvFeatured').checked;
-  if(!name) return;
-  await sb.from('avatar_items').insert({ class_id:classId, slot, name, emoji, cost, rareza, destacado, unlock_type: cost>0?'compra':'gratis' });
   renderTeacher('classdetail', classId);
 }
 async function deleteRow(table,id,classId){
