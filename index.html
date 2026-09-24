@@ -289,6 +289,20 @@ svg{display:block}
 .auth-copy{color:white;max-width:560px;position:relative;z-index:2}.auth-copy h1{font-size:clamp(45px,6vw,80px);letter-spacing:-.065em;line-height:.95;margin:18px 0}.auth-copy p{font-size:18px;color:rgba(255,255,255,.83);max-width:470px}.auth-orb{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.20);width:390px;height:390px;right:-130px;top:-120px}.auth-orb.second{width:230px;height:230px;left:-95px;bottom:30px}
 .auth-box-wrap{display:grid;place-items:center;padding:32px;background:#fbfbfe}.auth-box{width:min(470px,100%)}.auth-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.back{border:0;background:none;color:#72798b;font-weight:800}.auth-box h2{font-size:36px;letter-spacing:-.05em;margin:0 0 8px}.auth-box p{color:var(--muted);margin:0 0 24px}.form{display:grid;gap:14px}.field{display:grid;gap:7px}.field label{font-weight:850;font-size:12px;color:#4d5569}.field input,.field select{border:1px solid #dde1eb;background:white;border-radius:14px;padding:13px 14px;outline:none;transition:border-color .18s,box-shadow .18s}.field input:focus,.field select:focus{border-color:#8c84ff;box-shadow:0 0 0 4px rgba(99,91,255,.10)}.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.role-card{border:1px solid var(--line);background:#fff;border-radius:20px;padding:20px;text-align:left;transition:.18s}.role-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}.role-card.selected{border-color:#8e86ff;box-shadow:0 0 0 4px rgba(99,91,255,.09)}.role-title{font-weight:950;font-size:18px;margin-top:13px}.role-sub{font-size:12px;color:var(--muted);margin-top:4px}.auth-links{display:flex;justify-content:space-between;gap:12px;margin-top:15px;font-size:12px;color:#6b7286}.auth-links button{border:0;background:none;color:#5a51ca;font-weight:800;padding:0}
 
+.lang-switcher{position:relative;margin-left:6px}
+.lang-current{background:none;border:none;padding:0;cursor:pointer;line-height:0}
+.flag-badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:22px;border-radius:6px;font-size:8.5px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);letter-spacing:.02em;border:1px solid rgba(0,0,0,.08)}
+.flag-es{background:linear-gradient(to bottom,#AA151B 0 25%,#F1BF00 25% 75%,#AA151B 75% 100%)}
+.flag-en{background-color:#00247D;background-image:
+  linear-gradient(to bottom,transparent 42%,#fff 42%,#fff 58%,transparent 58%),
+  linear-gradient(to right,transparent 42%,#fff 42%,#fff 58%,transparent 58%),
+  linear-gradient(to bottom,transparent 46%,#CF142B 46%,#CF142B 54%,transparent 54%),
+  linear-gradient(to right,transparent 46%,#CF142B 46%,#CF142B 54%,transparent 54%)}
+.lang-menu{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 18px 40px rgba(20,20,50,.16);display:none;z-index:60;min-width:120px}
+.lang-menu.open{display:block}
+.lang-option{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;padding:7px 8px;border-radius:9px;cursor:pointer;font-size:12.5px;font-weight:800;color:var(--ink)}
+.lang-option:hover{background:#f4f5fa}
+
 /* ---------- Modal & toast ---------- */
 .modal-back{position:fixed;inset:0;background:rgba(20,18,40,.44);backdrop-filter:blur(6px);z-index:90;display:none;align-items:center;justify-content:center;padding:18px}
 .modal-back.show{display:flex}
@@ -313,6 +327,47 @@ svg{display:block}
 .empty-note{color:var(--muted);font-size:13px;font-style:italic;padding:16px 0}
 .join-box{border:2px dashed var(--line);border-radius:20px;padding:18px;text-align:center;color:var(--muted);font-weight:800;background:none;width:100%;cursor:pointer}
 .small-row{display:flex;align-items:center;gap:10px;justify-content:space-between}
+
+/* ---------- Teacher class tabs & lists ---------- */
+.teacher-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;padding:6px;background:var(--surface-2);border-radius:18px;border:1px solid var(--line)}
+.teacher-tab{display:flex;align-items:center;gap:8px;border:0;background:none;border-radius:13px;padding:11px 18px;font-weight:850;font-size:13.5px;color:var(--muted);transition:.18s}
+.teacher-tab .icon{width:17px;height:17px}
+.teacher-tab:hover{color:var(--ink)}
+.teacher-tab.active{background:#fff;color:var(--ink);box-shadow:0 6px 16px rgba(31,32,66,.09)}
+.teacher-tab.active .icon{color:var(--primary)}
+.tab-panel{animation:fadeInTab .22s ease}
+@keyframes fadeInTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.list-card{display:flex;align-items:center;gap:14px;padding:13px 16px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:10px;transition:.18s}
+.list-card:hover{box-shadow:0 8px 20px rgba(31,32,66,.07);border-color:#dcdfec}
+.list-card-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:none;background:var(--surface-2);color:#5b50d0}
+.list-card-icon .icon{width:19px;height:19px}
+.list-card-icon.pos{background:#e9fbf2;color:#189a63}
+.list-card-icon.neg{background:#fff0f4;color:#e14e79}
+.list-card-body{flex:1;min-width:0}
+.list-card-name{font-weight:900;font-size:14px}
+.list-card-meta{font-size:12px;color:var(--muted);margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.list-card-actions{display:flex;gap:6px;flex:none}
+.icon-btn{border:1px solid var(--line);background:#fff;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:var(--muted);transition:.15s;flex:none}
+.icon-btn .icon{width:15px;height:15px}
+.icon-btn:hover{border-color:#c9cce0;color:var(--ink)}
+.icon-btn.danger:hover{background:#fff0f4;border-color:#ffd0dd;color:#e14e79}
+
+.add-card{margin-top:14px;padding:18px;border:1.5px dashed #d7d9ea;border-radius:18px;background:var(--surface-2)}
+.add-card-head{font-weight:900;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+
+.student-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:10px;flex-wrap:wrap;transition:.18s}
+.student-row:hover{box-shadow:0 8px 20px rgba(31,32,66,.07);border-color:#dcdfec}
+.student-row select,.student-row input{border:1px solid #dde1eb;border-radius:11px;padding:9px 11px;font-size:12.5px;background:#fff}
+
+/* ---------- Avatar illustration catalog ---------- */
+.avatar-catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.avatar-catalog-item{display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:10px 6px;transition:.15s}
+.avatar-catalog-item:hover{border-color:#b7b0ff;box-shadow:0 8px 18px rgba(99,91,255,.13);transform:translateY(-2px)}
+.avatar-catalog-item.selected{border-color:var(--primary);background:#f4f2ff;box-shadow:0 0 0 3px rgba(99,91,255,.14)}
+.avatar-catalog-item img{width:52px;height:52px;border-radius:12px;background:var(--surface-2)}
+.avatar-catalog-item span{font-size:10.5px;font-weight:800;color:var(--muted);text-align:center;line-height:1.2}
+.avatar-preview-big{width:120px;height:120px;border-radius:34px;box-shadow:0 12px 25px rgba(99,91,255,.13);border:4px solid white}
 
 /* Mobile */
 @media(max-width:980px){
@@ -355,6 +410,8 @@ svg{display:block}
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 16l4-4 3 2 5-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.7 6.3.9-4.6 4.4 1.1 6.2-5.5-2.9-5.5 2.9 1.1-6.2L3 9.6l6.3-.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0 0-3l-1-1a2.1 2.1 0 0 0-3 0L4 16v4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
 </svg>
 
 <!-- LANDING -->
@@ -363,8 +420,12 @@ svg{display:block}
     <div class="container topbar-inner">
       <a href="#" class="brand" onclick="showLanding();return false;"><span class="brand-mark"></span>BENCHI</a>
       <div class="nav-actions">
-        <button class="btn btn-light" onclick="showAuth('login')">Iniciar sesión</button>
-        <button class="btn btn-primary" onclick="showRoleChoice()">Crear cuenta <svg class="icon"><use href="#i-arrow"/></svg></button>
+        <button class="btn btn-light" onclick="showAuth('login')"><span data-i18n="nav_login">Iniciar sesión</span></button>
+        <button class="btn btn-primary" onclick="showRoleChoice()"><span data-i18n="nav_signup">Crear cuenta</span> <svg class="icon"><use href="#i-arrow"/></svg></button>
+        <div class="lang-switcher" id="langSwitcher">
+          <button class="lang-current" onclick="toggleLangMenu(event)"><span class="flag-badge flag-es" id="langCurrentBadge">ES</span></button>
+          <div class="lang-menu" id="langMenu"></div>
+        </div>
       </div>
     </div>
   </header>
@@ -373,47 +434,47 @@ svg{display:block}
     <span class="hero-orb orb-a"></span><span class="hero-orb orb-b"></span><span class="hero-orb orb-c"></span>
     <div class="container hero-grid">
       <div>
-        <span class="eyebrow">Gamificación educativa</span>
-        <h1>Aprende <span class="gradient-text">diferente.</span></h1>
-        <p>Convierte el esfuerzo, la participación y el trabajo diario en puntos, niveles y recompensas. Benchi conecta la motivación del aula con una experiencia que engancha.</p>
+        <span class="eyebrow" data-i18n="hero_eyebrow">Gamificación educativa</span>
+        <h1 data-i18n-html="hero_title">Aprende <span class="gradient-text">diferente.</span></h1>
+        <p data-i18n="hero_p">Convierte el esfuerzo, la participación y el trabajo diario en puntos, niveles y recompensas. Benchi conecta la motivación del aula con una experiencia que engancha.</p>
         <div class="hero-actions">
-          <button class="btn btn-primary" onclick="showRoleChoice()">Empezar ahora <svg class="icon"><use href="#i-arrow"/></svg></button>
-          <button class="btn btn-light" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Descubrir Benchi</button>
+          <button class="btn btn-primary" onclick="showRoleChoice()"><span data-i18n="hero_cta1">Empezar ahora</span> <svg class="icon"><use href="#i-arrow"/></svg></button>
+          <button class="btn btn-light" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})" data-i18n="hero_cta2">Descubrir Benchi</button>
         </div>
         <div class="hero-proof">
-          <span class="proof"><span class="dot"></span> Para docentes y estudiantes</span>
-          <span class="proof"><span class="dot" style="background:#635bff"></span> Aulas personalizables</span>
-          <span class="proof"><span class="dot" style="background:#ff5a9d"></span> Recompensas que motivan</span>
+          <span class="proof"><span class="dot"></span> <span data-i18n="hero_proof1">Para docentes y estudiantes</span></span>
+          <span class="proof"><span class="dot" style="background:#635bff"></span> <span data-i18n="hero_proof2">Aulas personalizables</span></span>
+          <span class="proof"><span class="dot" style="background:#ff5a9d"></span> <span data-i18n="hero_proof3">Recompensas que motivan</span></span>
         </div>
       </div>
 
       <div class="hero-visual">
         <div class="float-card reward-float float">
-          <div class="reward-art"><span class="reward-chip">DESBLOQUEADO</span></div>
-          <div class="reward-name">Skin Aurora</div>
-          <div class="reward-cost">500 puntos</div>
+          <div class="reward-art"><span class="reward-chip" data-i18n="float_unlocked">DESBLOQUEADO</span></div>
+          <div class="reward-name" data-i18n="float_skin">Skin Aurora</div>
+          <div class="reward-cost">500 <span data-i18n="word_points">puntos</span></div>
         </div>
 
         <div class="float-card profile-card pulse">
           <div class="profile-row">
             <div class="avatar-xl"><div><div class="avatar-head"></div><div class="avatar-body"></div></div></div>
-            <div><div class="profile-name">Alex Moreno</div><div class="small-muted">Nivel 8 · 4º ESO</div></div>
+            <div><div class="profile-name">Alex Moreno</div><div class="small-muted"><span data-i18n="word_level">Nivel</span> 8 · 4º ESO</div></div>
           </div>
           <div class="points-box">
-            <div class="points-label">Puntos disponibles</div>
+            <div class="points-label" data-i18n="float_available">Puntos disponibles</div>
             <div class="points-num">1.250</div>
             <div class="progress"><span style="width:78%"></span></div>
-            <div class="progress-meta"><span>78% hasta nivel 9</span><span>250 XP</span></div>
+            <div class="progress-meta"><span data-i18n="float_progress">78% hasta nivel 9</span><span>250 XP</span></div>
           </div>
         </div>
 
         <div class="float-card level-float float">
-          <div class="level-number">+100</div><div class="level-accent">Puntos por participación</div>
+          <div class="level-number">+100</div><div class="level-accent" data-i18n="float_participation">Puntos por participación</div>
           <div class="progress"><span style="width:64%"></span></div>
         </div>
 
         <div class="float-card points-float pulse">
-          <div class="plus">+50 XP</div><div class="plus-caption">Actividad completada</div>
+          <div class="plus">+50 XP</div><div class="plus-caption" data-i18n="float_activity">Actividad completada</div>
         </div>
       </div>
     </div>
@@ -421,46 +482,46 @@ svg{display:block}
 
   <section id="how" class="section section-soft">
     <div class="container">
-      <span class="eyebrow">Así funciona</span>
-      <h2 class="section-title">Cada pequeño logro <span class="gradient-text">cuenta.</span></h2>
-      <p class="section-copy">Una experiencia sencilla para reconocer el trabajo que ocurre dentro del aula y convertirlo en motivación visible.</p>
+      <span class="eyebrow" data-i18n="how_eyebrow">Así funciona</span>
+      <h2 class="section-title" data-i18n-html="how_title">Cada pequeño logro <span class="gradient-text">cuenta.</span></h2>
+      <p class="section-copy" data-i18n="how_copy">Una experiencia sencilla para reconocer el trabajo que ocurre dentro del aula y convertirlo en motivación visible.</p>
       <div class="steps">
         <div class="connector"></div>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-user"/></svg></div><div class="step-no">01</div><h3>Participa</h3><p>El alumno trabaja, participa y se implica en clase.</p></article>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-star"/></svg></div><div class="step-no">02</div><h3>Consigue puntos</h3><p>El profesor reconoce ese esfuerzo con puntos.</p></article>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-chart"/></svg></div><div class="step-no">03</div><h3>Sube de nivel</h3><p>Los puntos se convierten en progreso y logros.</p></article>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-gift"/></svg></div><div class="step-no">04</div><h3>Canjea</h3><p>El alumno utiliza sus puntos para obtener recompensas.</p></article>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-user"/></svg></div><div class="step-no">01</div><h3 data-i18n="step1_t">Participa</h3><p data-i18n="step1_p">El alumno trabaja, participa y se implica en clase.</p></article>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-star"/></svg></div><div class="step-no">02</div><h3 data-i18n="step2_t">Consigue puntos</h3><p data-i18n="step2_p">El profesor reconoce ese esfuerzo con puntos.</p></article>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-chart"/></svg></div><div class="step-no">03</div><h3 data-i18n="step3_t">Sube de nivel</h3><p data-i18n="step3_p">Los puntos se convierten en progreso y logros.</p></article>
+        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-gift"/></svg></div><div class="step-no">04</div><h3 data-i18n="step4_t">Canjea</h3><p data-i18n="step4_p">El alumno utiliza sus puntos para obtener recompensas.</p></article>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <span class="eyebrow">Una plataforma, dos experiencias</span>
-      <h2 class="section-title">Diseñada para <span class="gradient-text">motivar.</span></h2>
+      <span class="eyebrow" data-i18n="dual_eyebrow">Una plataforma, dos experiencias</span>
+      <h2 class="section-title" data-i18n-html="dual_title">Diseñada para <span class="gradient-text">motivar.</span></h2>
       <div class="feature-grid">
         <article class="card feature-panel teacher">
-          <span class="eyebrow">Docentes</span>
-          <h3>Gestiona el aula sin perder de vista lo importante.</h3>
-          <p>Crea aulas, reconoce el esfuerzo, visualiza el progreso y convierte tus propias recompensas en dinámicas de clase.</p>
+          <span class="eyebrow" data-i18n="teachers_word">Docentes</span>
+          <h3 data-i18n="teachers_h">Gestiona el aula sin perder de vista lo importante.</h3>
+          <p data-i18n="teachers_p">Crea aulas, reconoce el esfuerzo, visualiza el progreso y convierte tus propias recompensas en dinámicas de clase.</p>
           <div class="mock-window">
             <div class="mock-top"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
             <div class="mock-body">
               <div class="mock-line short"></div><div class="mock-line mid"></div>
-              <div class="mock-grid"><div class="mock-mini"><div class="mini-num">26</div><div class="mini-label">Alumnos</div></div><div class="mock-mini"><div class="mini-num">4.8K</div><div class="mini-label">Puntos dados</div></div></div>
+              <div class="mock-grid"><div class="mock-mini"><div class="mini-num">26</div><div class="mini-label" data-i18n="word_students">Alumnos</div></div><div class="mock-mini"><div class="mini-num">4.8K</div><div class="mini-label" data-i18n="mini_given">Puntos dados</div></div></div>
               <div class="mock-line mid" style="margin-top:17px"></div><div class="mock-progress"><span></span></div>
             </div>
           </div>
         </article>
         <article class="card feature-panel student">
-          <span class="eyebrow">Alumnado</span>
-          <h3>Tu esfuerzo tiene una forma de verse.</h3>
-          <p>Consulta tus puntos, evoluciona tu perfil, desbloquea skins y utiliza el mercado para convertir tus logros en recompensas.</p>
+          <span class="eyebrow" data-i18n="students_word">Alumnado</span>
+          <h3 data-i18n="students_h">Tu esfuerzo tiene una forma de verse.</h3>
+          <p data-i18n="students_p">Consulta tus puntos, evoluciona tu perfil, desbloquea skins y utiliza el mercado para convertir tus logros en recompensas.</p>
           <div class="mock-window">
             <div class="mock-top"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
             <div class="mock-body">
               <div class="mock-line short"></div><div class="mock-line mid"></div>
-              <div class="mock-grid"><div class="mock-mini"><div class="mini-num">1.250</div><div class="mini-label">Puntos</div></div><div class="mock-mini"><div class="mini-num">8</div><div class="mini-label">Nivel</div></div></div>
+              <div class="mock-grid"><div class="mock-mini"><div class="mini-num">1.250</div><div class="mini-label" data-i18n="word_points_cap">Puntos</div></div><div class="mock-mini"><div class="mini-num">8</div><div class="mini-label" data-i18n="word_level">Nivel</div></div></div>
               <div class="mock-line mid" style="margin-top:17px"></div><div class="mock-progress"><span style="width:78%"></span></div>
             </div>
           </div>
@@ -471,11 +532,11 @@ svg{display:block}
 
   <section class="cta">
     <div class="container cta-inner">
-      <div><h2>Haz que cada punto cuente.</h2><p>Benchi convierte la motivación del aula en una experiencia visual, sencilla y divertida.</p></div>
-      <button class="btn btn-white" onclick="showRoleChoice()">Crear mi cuenta <svg class="icon"><use href="#i-arrow"/></svg></button>
+      <div><h2 data-i18n="cta_h">Haz que cada punto cuente.</h2><p data-i18n="cta_p">Benchi convierte la motivación del aula en una experiencia visual, sencilla y divertida.</p></div>
+      <button class="btn btn-white" onclick="showRoleChoice()"><span data-i18n="cta_btn">Crear mi cuenta</span> <svg class="icon"><use href="#i-arrow"/></svg></button>
     </div>
   </section>
-  <footer class="footer"><div class="container footer-inner"><span>© 2026 Benchi</span><span>Aprende diferente.</span></div></footer>
+  <footer class="footer"><div class="container footer-inner"><span>© 2026 Benchi</span><span data-i18n="footer_tag">Aprende diferente.</span></div></footer>
 </section>
 
 <!-- AUTH -->
@@ -485,16 +546,15 @@ svg{display:block}
       <div class="auth-orb"></div><div class="auth-orb second"></div>
       <div class="auth-copy">
         <div class="brand" style="color:#fff"><span class="brand-mark"></span>BENCHI</div>
-        <span class="eyebrow" style="margin-top:45px;color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22)">Aprende diferente</span>
-        <h1>El esfuerzo también se puede <span style="color:#ffd9f0">celebrar.</span></h1>
-        <p>Entra en tu espacio Benchi y sigue construyendo tu experiencia de aula.</p>
+        <span class="eyebrow" style="margin-top:45px;color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22)" data-i18n="hero_eyebrow">Aprende diferente</span>
+        <h1 data-i18n-html="auth_hero_title">El esfuerzo también se puede <span style="color:#ffd9f0">celebrar.</span></h1>
+        <p data-i18n="auth_hero_p">Entra en tu espacio Benchi y sigue construyendo tu experiencia de aula.</p>
       </div>
     </div>
     <div class="auth-box-wrap">
       <div class="auth-box">
         <div class="auth-header">
-          <button class="back" onclick="showLanding()"><svg class="icon" style="vertical-align:middle"><use href="#i-back"/></svg> Volver</button>
-          <span class="small-muted">Demo visual</span>
+          <button class="back" onclick="showLanding()"><svg class="icon" style="vertical-align:middle"><use href="#i-back"/></svg> <span data-i18n="word_back">Volver</span></button>
         </div>
         <div id="auth-content"></div>
       </div>
@@ -515,6 +575,7 @@ svg{display:block}
         <button class="nav-item" data-route="teacher-settings" onclick="showDashboard('teacher','settings')"><svg class="icon"><use href="#i-settings"/></svg>Configuración</button>
       </nav>
       <div class="side-spacer"></div>
+      <button class="btn btn-light btn-full" style="margin-bottom:10px" onclick="logout()"><span data-i18n="logout_btn">Cerrar sesión</span></button>
       <div class="user-mini"><div class="avatar-sm" id="teacherAvatarSm" style="font-size:18px">🙂</div><div><div id="teacherUserName" style="font-weight:900;font-size:12px">Manuel García</div><div class="small-muted" id="teacherUserRole">Profesor</div></div></div>
     </aside>
     <div class="main">
@@ -532,11 +593,10 @@ svg{display:block}
       <nav class="side-nav">
         <button class="nav-item active" data-route="student-home" onclick="showDashboard('student','home')"><svg class="icon"><use href="#i-home"/></svg>Inicio</button>
         <button class="nav-item" data-route="student-classes" onclick="showDashboard('student','classes')"><svg class="icon"><use href="#i-grid"/></svg>Mis clases</button>
-        <button class="nav-item" data-route="student-rewards" onclick="showDashboard('student','rewards')"><svg class="icon"><use href="#i-gift"/></svg>Recompensas</button>
-        <button class="nav-item" data-route="student-market" onclick="showDashboard('student','market')"><svg class="icon"><use href="#i-shop"/></svg>Mercado</button>
         <button class="nav-item" data-route="student-profile" onclick="showDashboard('student','profile')"><svg class="icon"><use href="#i-user"/></svg>Mi perfil</button>
       </nav>
       <div class="side-spacer"></div>
+      <button class="btn btn-light btn-full" style="margin-bottom:10px" onclick="logout()"><span data-i18n="logout_btn">Cerrar sesión</span></button>
       <div class="user-mini"><div class="avatar-sm" id="studentAvatarSm" style="font-size:18px">🙂</div><div><div id="studentUserName" style="font-weight:900;font-size:12px">Alex Moreno</div><div class="small-muted" id="studentUserRole">Alumno · Nivel 8</div></div></div>
     </aside>
     <div class="main">
@@ -566,9 +626,212 @@ function levelInfo(points){
   const toNext = LEVEL_SIZE - inLevel;
   return { level, pct, toNext };
 }
-function fmt(n){ return (n||0).toLocaleString('es-ES'); }
+function fmt(n){ return (n||0).toLocaleString(state.lang==='en'?'en-GB':'es-ES'); }
 
-const state = { session:null, profile:null, myClasses:[], marketClassId:null, teacherClassId:null };
+const state = { session:null, profile:null, myClasses:[], teacherClassId:null, teacherClassTab:'students', avatarPickSlot:'cara', studentClassId:null, studentClassTab:'market', equipDraft:null, lang:'es', authMode:'login', authRole:null };
+
+const I18N = {
+  es: {
+    nav_login:'Iniciar sesión', nav_signup:'Crear cuenta',
+    hero_eyebrow:'Gamificación educativa',
+    hero_title:'Aprende <span class="gradient-text">diferente.</span>',
+    hero_p:'Convierte el esfuerzo, la participación y el trabajo diario en puntos, niveles y recompensas. Benchi conecta la motivación del aula con una experiencia que engancha.',
+    hero_cta1:'Empezar ahora', hero_cta2:'Descubrir Benchi',
+    hero_proof1:'Para docentes y estudiantes', hero_proof2:'Aulas personalizables', hero_proof3:'Recompensas que motivan',
+    float_unlocked:'DESBLOQUEADO', float_skin:'Skin Aurora', word_points:'puntos',
+    float_available:'Puntos disponibles', float_progress:'78% hasta nivel 9', word_level:'Nivel',
+    float_participation:'Puntos por participación', float_activity:'Actividad completada',
+    how_eyebrow:'Así funciona', how_title:'Cada pequeño logro <span class="gradient-text">cuenta.</span>',
+    how_copy:'Una experiencia sencilla para reconocer el trabajo que ocurre dentro del aula y convertirlo en motivación visible.',
+    step1_t:'Participa', step1_p:'El alumno trabaja, participa y se implica en clase.',
+    step2_t:'Consigue puntos', step2_p:'El profesor reconoce ese esfuerzo con puntos.',
+    step3_t:'Sube de nivel', step3_p:'Los puntos se convierten en progreso y logros.',
+    step4_t:'Canjea', step4_p:'El alumno utiliza sus puntos para obtener recompensas.',
+    dual_eyebrow:'Una plataforma, dos experiencias', dual_title:'Diseñada para <span class="gradient-text">motivar.</span>',
+    teachers_word:'Docentes', teachers_h:'Gestiona el aula sin perder de vista lo importante.',
+    teachers_p:'Crea aulas, reconoce el esfuerzo, visualiza el progreso y convierte tus propias recompensas en dinámicas de clase.',
+    word_students:'Alumnos', mini_given:'Puntos dados',
+    students_word:'Alumnado', students_h:'Tu esfuerzo tiene una forma de verse.',
+    students_p:'Consulta tus puntos, evoluciona tu perfil, desbloquea skins y utiliza el mercado para convertir tus logros en recompensas.',
+    word_points_cap:'Puntos',
+    cta_h:'Haz que cada punto cuente.', cta_p:'Benchi convierte la motivación del aula en una experiencia visual, sencilla y divertida.', cta_btn:'Crear mi cuenta',
+    footer_tag:'Aprende diferente.', word_back:'Volver',
+    auth_hero_title:'El esfuerzo también se puede <span style="color:#ffd9f0">celebrar.</span>',
+    auth_hero_p:'Entra en tu espacio Benchi y sigue construyendo tu experiencia de aula.',
+    login_h:'Bienvenido de nuevo.', login_p:'Entra en tu espacio Benchi.',
+    field_email:'Correo electrónico', field_pass:'Contraseña', ph_email:'tu@correo.com', login_btn:'Iniciar sesión',
+    link_create:'Crear una cuenta', link_forgot:'¿Has olvidado tu contraseña?', toast_nodemo:'Función no disponible en esta demo',
+    choose_h:'Empieza con Benchi.', choose_p:'Elige cómo quieres utilizar la plataforma.',
+    role_teacher_t:'Soy profesor', role_teacher_p:'Crea aulas y convierte el esfuerzo en recompensas.',
+    role_student_t:'Soy alumno', role_student_p:'Consigue puntos, sube de nivel y desbloquea.',
+    reg_teacher_h:'Crea tu espacio docente.', reg_teacher_p:'Gestiona tus aulas desde Benchi.',
+    reg_student_h:'Crea tu perfil de alumno.', reg_student_p:'Empieza a acumular puntos y recompensas.',
+    field_name:'Nombre completo', field_alias:'Alias', field_centro:'Centro educativo',
+    ph_name:'Nombre y apellidos', ph_alias:'Cómo aparecerás en Benchi', ph_centro:'Nombre del centro',
+    field_pass2:'Confirmar contraseña', ph_pass:'Crea una contraseña', ph_pass2:'Repite la contraseña',
+    reg_btn:'Crear cuenta', link_changetype:'Cambiar tipo de cuenta', link_havecccount:'Ya tengo cuenta',
+    logout_btn:'Cerrar sesión',
+    greet_hi:'Hola', greet_ready:'¿Listo para hacer que hoy cuente?',
+    stat_active_classes:'Aulas activas', stat_students:'Alumnos', stat_points_given:'Puntos dados', stat_rewards:'Recompensas',
+    my_classes:'Mis aulas', view_all:'Ver todas', no_classes_yet:'Todavía no has creado ninguna aula.',
+    manage_classes_sub:'Gestiona tus clases y entra en cada espacio.', create_class_btn:'Crear aula',
+    create_class_title:'Crear nueva aula', create_class_sub:'Configura el espacio de tu grupo.',
+    field_classname:'Nombre del aula', ph_classname:'Ej. Economía · 4º ESO', field_course:'Curso', ph_course:'Ej. 4º ESO',
+    field_desc:'Descripción', ph_desc:'Una breve descripción del aula', field_classimage:'Imagen del aula',
+    opt_purple:'Gradiente violeta', opt_cyan:'Gradiente turquesa', opt_pink:'Gradiente coral',
+    my_profile:'Mi perfil', profile_sub_teacher:'Personaliza tu identidad docente.', word_teacher:'Profesor',
+    choose_emoji:'Elige tu emoticono', field_fullname:'Nombre completo', field_school:'Centro educativo', field_mail:'Correo',
+    save_changes:'Guardar cambios', settings_title:'Configuración', settings_sub:'Preferencias generales de tu cuenta.',
+    field_notifications:'Notificaciones', opt_on:'Activadas', opt_important:'Solo importantes', opt_off:'Desactivadas',
+    field_appearance:'Apariencia', opt_light:'Benchi claro', opt_auto:'Benchi automático', save_btn:'Guardar', settings_saved:'Configuración guardada',
+    word_students_lower:'alumnos', active_class_word:'Aula activa', points_given_short:'puntos dados', enter_arrow:'Entrar →',
+    need_class_name:'Ponle un nombre a tu aula', class_created_toast:'Aula creada: ', emoji_saved_toast:'Emoticono guardado', profile_saved_toast:'Perfil guardado',
+    code_label:'Código', students_panel:'Alumnado', no_students_joined:'Todavía no se ha unido ningún alumno con el código de aula.',
+    apply_btn:'Aplicar', custom_btn:'Custom', behaviors_panel:'Comportamientos', suggestions_label:'Sugerencias — actívalas con un clic:',
+    no_behaviors:'Sin comportamientos.', delete_btn:'Eliminar', edit_btn:'Editar', name_field:'Nombre', value_field:'± valor', add_behavior_btn:'Añadir comportamiento',
+    rewards_panel:'Recompensas', no_rewards:'Sin recompensas.', cost_field:'Coste', featured_label:'Destacada', add_reward_btn:'Añadir recompensa',
+    skins_panel:'Tienda de skins', no_skins:'Sin skins.', symbol_field:'Símbolo (ej. ★)',
+    slot_bg:'fondo', slot_face:'cara', slot_hat:'sombrero', slot_acc:'accesorio',
+    rarity_common:'Común', rarity_rare:'Rara', rarity_epic:'Épica', add_skin_btn:'Añadir skin',
+    class_history_panel:'Historial del aula', no_movements:'Sin movimientos.', points_applied_toast:'puntos aplicados', manual_adjustment:'Ajuste manual',
+    word_level_cap:'NIVEL', active_class_singular:'aula activa', active_class_plural:'aulas activas',
+    progress_to_level:'Progreso hacia nivel', total_points:'Puntos totales', points_to_next:'puntos para el siguiente nivel',
+    your_space:'Tu espacio Benchi', keep_going:'Sigue acumulando puntos y desbloqueando recompensas.',
+    my_classes_student:'Mis clases', recent_activity:'Actividad reciente', view_history:'Ver historial',
+    my_classes_sub:'Consulta tus puntos y el progreso de cada aula.', join_class_btn:'Unirme a una aula',
+    rewards_title:'Recompensas', rewards_sub:'Todo lo que has conseguido y gastado en Benchi.',
+    points_history:'Historial de puntos', available_suffix:'disponibles',
+    my_profile_student_sub:'Tu identidad y tu colección.', word_points_cap:'Puntos', word_classes_cap:'Aulas', word_skins_cap:'Skins',
+    save_emoji_btn:'Guardar emoticono', my_collection:'Mi colección', no_skins_yet:'Todavía no tienes skins.',
+    lvl_abbr:'Nvl', progress_word:'Progreso', go_to_market:'Ir al mercado →',
+    join_class_modal_p:'Introduce el código de clase que te ha dado tu profesor.', class_code_field:'Código de aula', join_btn:'Unirme',
+    class_code_not_found:'Código de aula no encontrado.', already_in_class:'Ya estás en esta aula.', joined_toast:'Te has unido a ',
+    no_movements2:'Todavía no hay movimientos.', market_title:'Mercado', market_no_class:'Todavía no perteneces a ninguna aula.',
+    market_sub:'Utiliza tus puntos para desbloquear experiencias y personalizaciones.', aula_label:'Aula:', points_available_label:'Puntos disponibles:',
+    tab_featured:'Destacados', tab_skins:'Skins', tab_rewards:'Recompensas', nothing_here:'Nada por aquí todavía.',
+    already_have:'Ya la tienes', redeem_btn:'Canjear', buy_btn:'Comprar', reward_redeemed_toast:'Recompensa canjeada', skin_unlocked_toast:'Skin desbloqueada',
+    tab_shop:'Tienda', my_rewards_panel:'Mis recompensas', no_redeemed:'Todavía no has canjeado ninguna recompensa en esta clase.',
+    choose_avatar_label:'Elige tu avatar', none_label:'Ninguno', no_owned_slot:'Todavía no has desbloqueado nada aquí — consíguelo en la Tienda de tu clase.'
+  },
+  en: {
+    nav_login:'Log in', nav_signup:'Sign up',
+    hero_eyebrow:'Educational gamification',
+    hero_title:'Learn <span class="gradient-text">differently.</span>',
+    hero_p:'Turn effort, participation and daily work into points, levels and rewards. Benchi connects classroom motivation with an experience that hooks.',
+    hero_cta1:'Get started', hero_cta2:'Discover Benchi',
+    hero_proof1:'For teachers and students', hero_proof2:'Customizable classrooms', hero_proof3:'Rewards that motivate',
+    float_unlocked:'UNLOCKED', float_skin:'Aurora Skin', word_points:'points',
+    float_available:'Available points', float_progress:'78% to level 9', word_level:'Level',
+    float_participation:'Points for participation', float_activity:'Activity completed',
+    how_eyebrow:'How it works', how_title:'Every small win <span class="gradient-text">counts.</span>',
+    how_copy:'A simple experience to recognize the work that happens in the classroom and turn it into visible motivation.',
+    step1_t:'Participate', step1_p:'The student works, takes part and engages in class.',
+    step2_t:'Earn points', step2_p:'The teacher recognizes that effort with points.',
+    step3_t:'Level up', step3_p:'Points turn into progress and achievements.',
+    step4_t:'Redeem', step4_p:'The student uses their points to get rewards.',
+    dual_eyebrow:'One platform, two experiences', dual_title:'Designed to <span class="gradient-text">motivate.</span>',
+    teachers_word:'Teachers', teachers_h:"Manage your classroom without losing sight of what matters.",
+    teachers_p:'Create classrooms, recognize effort, track progress, and turn your own rewards into classroom dynamics.',
+    word_students:'Students', mini_given:'Points given',
+    students_word:'Students', students_h:'Your effort has a way of showing.',
+    students_p:'Check your points, evolve your profile, unlock skins, and use the market to turn your achievements into rewards.',
+    word_points_cap:'Points',
+    cta_h:'Make every point count.', cta_p:'Benchi turns classroom motivation into a visual, simple and fun experience.', cta_btn:'Create my account',
+    footer_tag:'Learn differently.', word_back:'Back',
+    auth_hero_title:'Effort can be <span style="color:#ffd9f0">celebrated too.</span>',
+    auth_hero_p:'Enter your Benchi space and keep building your classroom experience.',
+    login_h:'Welcome back.', login_p:'Enter your Benchi space.',
+    field_email:'Email', field_pass:'Password', ph_email:'you@email.com', login_btn:'Log in',
+    link_create:'Create an account', link_forgot:'Forgot your password?', toast_nodemo:'Feature not available in this demo',
+    choose_h:'Get started with Benchi.', choose_p:'Choose how you want to use the platform.',
+    role_teacher_t:"I'm a teacher", role_teacher_p:'Create classrooms and turn effort into rewards.',
+    role_student_t:"I'm a student", role_student_p:'Earn points, level up and unlock.',
+    reg_teacher_h:'Create your teacher space.', reg_teacher_p:'Manage your classrooms from Benchi.',
+    reg_student_h:'Create your student profile.', reg_student_p:'Start earning points and rewards.',
+    field_name:'Full name', field_alias:'Alias', field_centro:'School',
+    ph_name:'First and last name', ph_alias:'How you\'ll appear in Benchi', ph_centro:'School name',
+    field_pass2:'Confirm password', ph_pass:'Create a password', ph_pass2:'Repeat the password',
+    reg_btn:'Create account', link_changetype:'Change account type', link_havecccount:'I already have an account',
+    logout_btn:'Log out',
+    greet_hi:'Hi', greet_ready:'Ready to make today count?',
+    stat_active_classes:'Active classrooms', stat_students:'Students', stat_points_given:'Points given', stat_rewards:'Rewards',
+    my_classes:'My classrooms', view_all:'View all', no_classes_yet:"You haven't created any classroom yet.",
+    manage_classes_sub:'Manage your classes and enter each space.', create_class_btn:'Create classroom',
+    create_class_title:'Create new classroom', create_class_sub:"Set up your group's space.",
+    field_classname:'Classroom name', ph_classname:'E.g. Economics · Grade 10', field_course:'Grade', ph_course:'E.g. Grade 10',
+    field_desc:'Description', ph_desc:'A short description of the classroom', field_classimage:'Classroom image',
+    opt_purple:'Purple gradient', opt_cyan:'Cyan gradient', opt_pink:'Coral gradient',
+    my_profile:'My profile', profile_sub_teacher:'Personalize your teacher identity.', word_teacher:'Teacher',
+    choose_emoji:'Choose your emoji', field_fullname:'Full name', field_school:'School', field_mail:'Email',
+    save_changes:'Save changes', settings_title:'Settings', settings_sub:'General preferences for your account.',
+    field_notifications:'Notifications', opt_on:'On', opt_important:'Important only', opt_off:'Off',
+    field_appearance:'Appearance', opt_light:'Benchi light', opt_auto:'Benchi automatic', save_btn:'Save', settings_saved:'Settings saved',
+    word_students_lower:'students', active_class_word:'Active classroom', points_given_short:'points given', enter_arrow:'Enter →',
+    need_class_name:'Give your classroom a name', class_created_toast:'Classroom created: ', emoji_saved_toast:'Emoji saved', profile_saved_toast:'Profile saved',
+    code_label:'Code', students_panel:'Students', no_students_joined:"No students have joined with the classroom code yet.",
+    apply_btn:'Apply', custom_btn:'Custom', behaviors_panel:'Behaviors', suggestions_label:'Suggestions — activate them with one click:',
+    no_behaviors:'No behaviors yet.', delete_btn:'Delete', edit_btn:'Edit', name_field:'Name', value_field:'± value', add_behavior_btn:'Add behavior',
+    rewards_panel:'Rewards', no_rewards:'No rewards yet.', cost_field:'Cost', featured_label:'Featured', add_reward_btn:'Add reward',
+    skins_panel:'Skin shop', no_skins:'No skins yet.', symbol_field:'Symbol (e.g. ★)',
+    slot_bg:'background', slot_face:'face', slot_hat:'hat', slot_acc:'accessory',
+    rarity_common:'Common', rarity_rare:'Rare', rarity_epic:'Epic', add_skin_btn:'Add skin',
+    class_history_panel:'Classroom history', no_movements:'No activity yet.', points_applied_toast:'points applied', manual_adjustment:'Manual adjustment',
+    word_level_cap:'LEVEL', active_class_singular:'active classroom', active_class_plural:'active classrooms',
+    progress_to_level:'Progress toward level', total_points:'Total points', points_to_next:'points to next level',
+    your_space:'Your Benchi space', keep_going:'Keep earning points and unlocking rewards.',
+    my_classes_student:'My classes', recent_activity:'Recent activity', view_history:'View history',
+    my_classes_sub:'Check your points and progress in each classroom.', join_class_btn:'Join a classroom',
+    rewards_title:'Rewards', rewards_sub:"Everything you've earned and spent on Benchi.",
+    points_history:'Points history', available_suffix:'available',
+    my_profile_student_sub:'Your identity and your collection.', word_points_cap:'Points', word_classes_cap:'Classrooms', word_skins_cap:'Skins',
+    save_emoji_btn:'Save emoji', my_collection:'My collection', no_skins_yet:"You don't have any skins yet.",
+    lvl_abbr:'Lvl', progress_word:'Progress', go_to_market:'Go to market →',
+    join_class_modal_p:'Enter the class code your teacher gave you.', class_code_field:'Classroom code', join_btn:'Join',
+    class_code_not_found:'Classroom code not found.', already_in_class:"You're already in this classroom.", joined_toast:'You joined ',
+    no_movements2:'No activity yet.', market_title:'Market', market_no_class:"You don't belong to any classroom yet.",
+    market_sub:'Use your points to unlock experiences and personalizations.', aula_label:'Classroom:', points_available_label:'Available points:',
+    tab_featured:'Featured', tab_skins:'Skins', tab_rewards:'Rewards', nothing_here:'Nothing here yet.',
+    already_have:'You already have it', redeem_btn:'Redeem', buy_btn:'Buy', reward_redeemed_toast:'Reward redeemed', skin_unlocked_toast:'Skin unlocked',
+    tab_shop:'Shop', my_rewards_panel:'My rewards', no_redeemed:"You haven't redeemed any reward in this class yet.",
+    choose_avatar_label:'Choose your avatar', none_label:'None', no_owned_slot:'Nothing unlocked here yet — get it from your class Shop.'
+  }
+};
+function t(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.es[key] || key; }
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{ el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+}
+const LANG_META = {
+  es: { code:'ES', cls:'flag-es', label:'Español' },
+  en: { code:'ENG', cls:'flag-en', label:'English' }
+};
+function renderLangSwitcher(){
+  const cur = LANG_META[state.lang];
+  const other = state.lang==='es' ? LANG_META.en : LANG_META.es;
+  const otherKey = state.lang==='es' ? 'en' : 'es';
+  const badge = document.getElementById('langCurrentBadge');
+  if(badge){ badge.className='flag-badge '+cur.cls; badge.textContent=cur.code; }
+  const menu = document.getElementById('langMenu');
+  if(menu){ menu.innerHTML = `<button class="lang-option" onclick="setLang('${otherKey}')"><span class="flag-badge ${other.cls}">${other.code}</span> ${other.label}</button>`; }
+}
+function toggleLangMenu(e){
+  if(e) e.stopPropagation();
+  document.getElementById('langMenu').classList.toggle('open');
+}
+document.addEventListener('click', (e)=>{
+  const sw=document.getElementById('langSwitcher');
+  if(sw && !sw.contains(e.target)) document.getElementById('langMenu').classList.remove('open');
+});
+function setLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  applyI18n();
+  renderLangSwitcher();
+  document.getElementById('langMenu').classList.remove('open');
+  if(document.getElementById('auth').classList.contains('active')){
+    renderAuth(state.authMode, state.authRole);
+  }
+}
 
 /* ---------- toast / modal ---------- */
 function toast(msg){
@@ -593,45 +856,46 @@ function showRoleChoice(){ showAuth('register','choose'); }
 function showAuth(mode='login', role=null){ showOnly('auth'); renderAuth(mode, role); }
 
 function renderAuth(mode, role){
+  state.authMode=mode; state.authRole=role;
   const box=document.getElementById('auth-content');
   if(mode==='login'){
     box.innerHTML=`
-      <h2>Bienvenido de nuevo.</h2>
-      <p>Entra en tu espacio Benchi.</p>
+      <h2>${t('login_h')}</h2>
+      <p>${t('login_p')}</p>
       <form class="form" onsubmit="doLogin(event)">
-        <div class="field"><label>Correo electrónico</label><input id="loginEmail" type="email" placeholder="tu@correo.com" required></div>
-        <div class="field"><label>Contraseña</label><input id="loginPass" type="password" placeholder="••••••••" required></div>
+        <div class="field"><label>${t('field_email')}</label><input id="loginEmail" type="email" placeholder="${t('ph_email')}" required></div>
+        <div class="field"><label>${t('field_pass')}</label><input id="loginPass" type="password" placeholder="••••••••" required></div>
         <div id="authError" style="color:#e0446b;font-size:12px;font-weight:700;"></div>
-        <button class="btn btn-primary btn-full">Iniciar sesión ${ICON('i-arrow')}</button>
+        <button class="btn btn-primary btn-full">${t('login_btn')} ${ICON('i-arrow')}</button>
       </form>
-      <div class="auth-links"><button onclick="showAuth('register','choose')">Crear una cuenta</button><button onclick="toast('Función no disponible en esta demo')">¿Has olvidado tu contraseña?</button></div>`;
+      <div class="auth-links"><button onclick="showAuth('register','choose')">${t('link_create')}</button><button onclick="toast(t('toast_nodemo'))">${t('link_forgot')}</button></div>`;
     return;
   }
   if(role==='choose'){
     box.innerHTML=`
-      <h2>Empieza con Benchi.</h2>
-      <p>Elige cómo quieres utilizar la plataforma.</p>
+      <h2>${t('choose_h')}</h2>
+      <p>${t('choose_p')}</p>
       <div class="role-grid">
-        <button class="role-card" onclick="renderAuth('register','teacher')"><div class="step-icon">${ICON('i-user')}</div><div class="role-title">Soy profesor</div><div class="role-sub">Crea aulas y convierte el esfuerzo en recompensas.</div></button>
-        <button class="role-card" onclick="renderAuth('register','student')"><div class="step-icon">${ICON('i-grid')}</div><div class="role-title">Soy alumno</div><div class="role-sub">Consigue puntos, sube de nivel y desbloquea.</div></button>
+        <button class="role-card" onclick="renderAuth('register','teacher')"><div class="step-icon">${ICON('i-user')}</div><div class="role-title">${t('role_teacher_t')}</div><div class="role-sub">${t('role_teacher_p')}</div></button>
+        <button class="role-card" onclick="renderAuth('register','student')"><div class="step-icon">${ICON('i-grid')}</div><div class="role-title">${t('role_student_t')}</div><div class="role-sub">${t('role_student_p')}</div></button>
       </div>`;
     return;
   }
   const isTeacher = role==='teacher';
   box.innerHTML=`
-    <h2>${isTeacher?'Crea tu espacio docente.':'Crea tu perfil de alumno.'}</h2>
-    <p>${isTeacher?'Gestiona tus aulas desde Benchi.':'Empieza a acumular puntos y recompensas.'}</p>
+    <h2>${isTeacher?t('reg_teacher_h'):t('reg_student_h')}</h2>
+    <p>${isTeacher?t('reg_teacher_p'):t('reg_student_p')}</p>
     <form class="form" onsubmit="doRegister(event,'${role}')">
-      <div class="field"><label>Nombre completo</label><input id="regName" required placeholder="Nombre y apellidos"></div>
-      <div class="field"><label>Alias</label><input id="regAlias" required placeholder="Cómo aparecerás en Benchi"></div>
-      ${isTeacher?`<div class="field"><label>Centro educativo</label><input id="regCentro" required placeholder="Nombre del centro"></div>`:''}
-      <div class="field"><label>Correo electrónico</label><input id="regEmail" type="email" required placeholder="tu@correo.com"></div>
-      <div class="field"><label>Contraseña</label><input id="regPass" type="password" required placeholder="Crea una contraseña"></div>
-      <div class="field"><label>Confirmar contraseña</label><input id="regPass2" type="password" required placeholder="Repite la contraseña"></div>
+      <div class="field"><label>${t('field_name')}</label><input id="regName" required placeholder="${t('ph_name')}"></div>
+      <div class="field"><label>${t('field_alias')}</label><input id="regAlias" required placeholder="${t('ph_alias')}"></div>
+      ${isTeacher?`<div class="field"><label>${t('field_centro')}</label><input id="regCentro" required placeholder="${t('ph_centro')}"></div>`:''}
+      <div class="field"><label>${t('field_email')}</label><input id="regEmail" type="email" required placeholder="${t('ph_email')}"></div>
+      <div class="field"><label>${t('field_pass')}</label><input id="regPass" type="password" required placeholder="${t('ph_pass')}"></div>
+      <div class="field"><label>${t('field_pass2')}</label><input id="regPass2" type="password" required placeholder="${t('ph_pass2')}"></div>
       <div id="authError" style="color:#e0446b;font-size:12px;font-weight:700;"></div>
-      <button class="btn btn-primary btn-full">Crear cuenta ${ICON('i-arrow')}</button>
+      <button class="btn btn-primary btn-full">${t('reg_btn')} ${ICON('i-arrow')}</button>
     </form>
-    <div class="auth-links"><button onclick="renderAuth('register','choose')">Cambiar tipo de cuenta</button><button onclick="renderAuth('login')">Ya tengo cuenta</button></div>`;
+    <div class="auth-links"><button onclick="renderAuth('register','choose')">${t('link_changetype')}</button><button onclick="renderAuth('login')">${t('link_havecccount')}</button></div>`;
 }
 function authErr(msg){ const e=document.getElementById('authError'); if(e) e.textContent=msg; }
 
@@ -670,7 +934,8 @@ async function bootAfterAuth(){
   state.profile=profile;
   const type = profile.role==='profesor' ? 'teacher' : 'student';
   const p = type==='teacher' ? 'teacher' : 'student';
-  document.getElementById(`${p}AvatarSm`).textContent = profile.avatar_emoji || '🙂';
+  const smEl=document.getElementById(`${p}AvatarSm`);
+  if(type==='student') smEl.innerHTML=avatarImgHTML(profile.equipped); else smEl.textContent = profile.avatar_emoji || '🙂';
   document.getElementById(`${p}UserName`).textContent = profile.name;
   document.getElementById(`${p}UserRole`).textContent = profile.role==='profesor' ? 'Profesor' : 'Alumno';
   await showDashboard(type,'home');
@@ -692,7 +957,7 @@ async function showDashboard(type, route='home', arg){
   const contentId = type==='teacher' ? 'teacher-content' : 'student-content';
   document.getElementById(contentId).innerHTML = '<div class="panel">Cargando…</div>';
   await loadMyClasses();
-  if(type==='teacher') await renderTeacher(route, arg); else await renderStudent(route);
+  if(type==='teacher') await renderTeacher(route, arg); else await renderStudent(route, arg);
 }
 function updateNav(type, route){
   const prefix = type==='teacher' ? 'teacher' : 'student';
@@ -716,54 +981,54 @@ async function renderTeacher(route, arg){
       const { count } = await sb.from('market_items').select('id',{count:'exact',head:true}).in('class_id', ids);
       rewards = count||0;
     }
-    c.innerHTML=teacherHeader(`Hola, ${state.profile.name.split(' ')[0]}.`,'¿Listo para hacer que hoy cuente?','<button class="btn btn-primary" onclick="showDashboard(\'teacher\',\'create\')">'+ICON('i-plus')+' Crear aula</button>')+
+    c.innerHTML=teacherHeader(`${t('greet_hi')}, ${state.profile.name.split(' ')[0]}.`,t('greet_ready'),'<button class="btn btn-primary" onclick="showDashboard(\'teacher\',\'create\')">'+ICON('i-plus')+' '+t('create_class_btn')+'</button>')+
     `<div class="stats">
-      <div class="stat"><div class="stat-label">Aulas activas</div><div class="stat-num">${state.myClasses.length}</div></div>
-      <div class="stat"><div class="stat-label">Alumnos</div><div class="stat-num">${students}</div></div>
-      <div class="stat"><div class="stat-label">Puntos dados</div><div class="stat-num">${fmt(pointsGiven)}</div></div>
-      <div class="stat"><div class="stat-label">Recompensas</div><div class="stat-num">${rewards}</div></div>
+      <div class="stat"><div class="stat-label">${t('stat_active_classes')}</div><div class="stat-num">${state.myClasses.length}</div></div>
+      <div class="stat"><div class="stat-label">${t('stat_students')}</div><div class="stat-num">${students}</div></div>
+      <div class="stat"><div class="stat-label">${t('stat_points_given')}</div><div class="stat-num">${fmt(pointsGiven)}</div></div>
+      <div class="stat"><div class="stat-label">${t('stat_rewards')}</div><div class="stat-num">${rewards}</div></div>
     </div>
-    <div class="panel"><div class="panel-title"><h2>Mis aulas</h2><button onclick="showDashboard('teacher','classes')">Ver todas</button></div>
-      <div class="class-grid">${state.myClasses.length? await teacherClassCards() : '<div class="empty-note">Todavía no has creado ninguna aula.</div>'}</div>
+    <div class="panel"><div class="panel-title"><h2>${t('my_classes')}</h2><button onclick="showDashboard('teacher','classes')">${t('view_all')}</button></div>
+      <div class="class-grid">${state.myClasses.length? await teacherClassCards() : `<div class="empty-note">${t('no_classes_yet')}</div>`}</div>
     </div>`;
   }else if(route==='classes'){
-    c.innerHTML=teacherHeader('Mis aulas','Gestiona tus clases y entra en cada espacio.','<button class="btn btn-primary" onclick="showDashboard(\'teacher\',\'create\')">'+ICON('i-plus')+' Crear aula</button>')+
-      `<div class="class-grid">${state.myClasses.length? await teacherClassCards() : '<div class="empty-note">Todavía no has creado ninguna aula.</div>'}</div>`;
+    c.innerHTML=teacherHeader(t('my_classes'),t('manage_classes_sub'),'<button class="btn btn-primary" onclick="showDashboard(\'teacher\',\'create\')">'+ICON('i-plus')+' '+t('create_class_btn')+'</button>')+
+      `<div class="class-grid">${state.myClasses.length? await teacherClassCards() : `<div class="empty-note">${t('no_classes_yet')}</div>`}</div>`;
   }else if(route==='create'){
-    c.innerHTML=teacherHeader('Crear nueva aula','Configura el espacio de tu grupo.')+
+    c.innerHTML=teacherHeader(t('create_class_title'),t('create_class_sub'))+
       `<div class="panel" style="max-width:720px">
         <div class="form">
-          <div class="field"><label>Nombre del aula</label><input id="newClassName" placeholder="Ej. Economía · 4º ESO"></div>
-          <div class="field"><label>Curso</label><input id="newClassCourse" placeholder="Ej. 4º ESO"></div>
-          <div class="field"><label>Descripción</label><input id="newClassDesc" placeholder="Una breve descripción del aula"></div>
-          <div class="field"><label>Imagen del aula</label><select id="newClassColor"><option value="banner-purple">Gradiente violeta</option><option value="banner-cyan">Gradiente turquesa</option><option value="banner-pink">Gradiente coral</option></select></div>
-          <button class="btn btn-primary" onclick="createClass()">Crear aula ${ICON('i-arrow')}</button>
+          <div class="field"><label>${t('field_classname')}</label><input id="newClassName" placeholder="${t('ph_classname')}"></div>
+          <div class="field"><label>${t('field_course')}</label><input id="newClassCourse" placeholder="${t('ph_course')}"></div>
+          <div class="field"><label>${t('field_desc')}</label><input id="newClassDesc" placeholder="${t('ph_desc')}"></div>
+          <div class="field"><label>${t('field_classimage')}</label><select id="newClassColor"><option value="banner-purple">${t('opt_purple')}</option><option value="banner-cyan">${t('opt_cyan')}</option><option value="banner-pink">${t('opt_pink')}</option></select></div>
+          <button class="btn btn-primary" onclick="createClass()">${t('create_class_btn')} ${ICON('i-arrow')}</button>
         </div>
       </div>`;
   }else if(route==='classdetail'){
     await renderClassDetail(arg);
   }else if(route==='profile'){
-    c.innerHTML=teacherHeader('Mi perfil','Personaliza tu identidad docente.','<button class="btn btn-light" onclick="showDashboard(\'teacher\',\'home\')">'+ICON('i-back')+' Volver</button>')+
+    c.innerHTML=teacherHeader(t('my_profile'),t('profile_sub_teacher'),'<button class="btn btn-light" onclick="showDashboard(\'teacher\',\'home\')">'+ICON('i-back')+' '+t('word_back')+'</button>')+
       `<div class="panel" style="max-width:760px"><div class="profile-big">
-        <div class="avatar-big" id="pfAvatarBig" style="font-size:34px">${state.profile.avatar_emoji||'🙂'}</div><div><div class="student-name">${state.profile.name}</div><div class="student-sub">Profesor · ${state.profile.centro||''}</div></div>
+        <div class="avatar-big" id="pfAvatarBig" style="font-size:34px">${state.profile.avatar_emoji||'🙂'}</div><div><div class="student-name">${state.profile.name}</div><div class="student-sub">${t('word_teacher')} · ${state.profile.centro||''}</div></div>
       </div>
-      <div style="margin-top:18px"><label class="small-muted" style="display:block;margin-bottom:8px">Elige tu emoticono</label>${emojiPicker(state.profile.avatar_emoji)}</div>
+      <div style="margin-top:18px"><label class="small-muted" style="display:block;margin-bottom:8px">${t('choose_emoji')}</label>${emojiPicker(state.profile.avatar_emoji)}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px">
-        <div class="field"><label>Nombre completo</label><input id="pfName" value="${state.profile.name}"></div>
-        <div class="field"><label>Alias</label><input id="pfAlias" value="${state.profile.alias||''}"></div>
-        <div class="field"><label>Centro educativo</label><input id="pfCentro" value="${state.profile.centro||''}"></div>
-        <div class="field"><label>Correo</label><input value="${state.session.user.email}" disabled></div>
-      </div><button class="btn btn-primary" style="margin-top:18px" onclick="saveProfile()">Guardar cambios</button></div>`;
+        <div class="field"><label>${t('field_fullname')}</label><input id="pfName" value="${state.profile.name}"></div>
+        <div class="field"><label>${t('field_alias')}</label><input id="pfAlias" value="${state.profile.alias||''}"></div>
+        <div class="field"><label>${t('field_school')}</label><input id="pfCentro" value="${state.profile.centro||''}"></div>
+        <div class="field"><label>${t('field_mail')}</label><input value="${state.session.user.email}" disabled></div>
+      </div><button class="btn btn-primary" style="margin-top:18px" onclick="saveProfile()">${t('save_changes')}</button></div>`;
   }else{
-    c.innerHTML=teacherHeader('Configuración','Preferencias generales de tu cuenta.','<button class="btn btn-light" onclick="showDashboard(\'teacher\',\'home\')">'+ICON('i-back')+' Volver</button>')+
-      `<div class="panel" style="max-width:760px"><div class="field"><label>Notificaciones</label><select><option>Activadas</option><option>Solo importantes</option><option>Desactivadas</option></select></div><div class="field" style="margin-top:15px"><label>Apariencia</label><select><option>Benchi claro</option><option>Benchi automático</option></select></div><button class="btn btn-primary" style="margin-top:18px" onclick="toast('Configuración guardada')">Guardar</button></div>`;
+    c.innerHTML=teacherHeader(t('settings_title'),t('settings_sub'),'<button class="btn btn-light" onclick="showDashboard(\'teacher\',\'home\')">'+ICON('i-back')+' '+t('word_back')+'</button>')+
+      `<div class="panel" style="max-width:760px"><div class="field"><label>${t('field_notifications')}</label><select><option>${t('opt_on')}</option><option>${t('opt_important')}</option><option>${t('opt_off')}</option></select></div><div class="field" style="margin-top:15px"><label>${t('field_appearance')}</label><select><option>${t('opt_light')}</option><option>${t('opt_auto')}</option></select></div><button class="btn btn-primary" style="margin-top:18px" onclick="toast(t('settings_saved'))">${t('save_btn')}</button></div>`;
   }
 }
 async function teacherClassCards(){
   const rows = await Promise.all(state.myClasses.map(async (x,i)=>{
     const { data:mem } = await sb.from('class_members').select('points').eq('class_id', x.id);
     const students=(mem||[]).length, pts=(mem||[]).reduce((a,m)=>a+m.points,0);
-    return `<article class="class-card"><div class="class-banner ${x.color||'banner-purple'}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${students} alumnos · ${x.curso||'Aula activa'}</div></div><span class="pill">${x.code}</span></div><div class="class-foot"><span>${fmt(pts)} puntos dados</span><button class="enter-link" onclick="showDashboard('teacher','classdetail','${x.id}')">Entrar →</button></div></article>`;
+    return `<article class="class-card"><div class="class-banner ${x.color||'banner-purple'}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${students} ${t('word_students_lower')} · ${x.curso||t('active_class_word')}</div></div><span class="pill">${x.code}</span></div><div class="class-foot"><span>${fmt(pts)} ${t('points_given_short')}</span><button class="enter-link" onclick="showDashboard('teacher','classdetail','${x.id}')">${t('enter_arrow')}</button></div></article>`;
   }));
   return rows.join('');
 }
@@ -772,11 +1037,11 @@ async function createClass(){
   const curso=document.getElementById('newClassCourse').value.trim();
   const descripcion=document.getElementById('newClassDesc').value.trim();
   const color=document.getElementById('newClassColor').value;
-  if(!name) return toast('Ponle un nombre a tu aula');
+  if(!name) return toast(t('need_class_name'));
   const code='BEN-'+Math.random().toString(36).slice(2,6).toUpperCase();
   const { error } = await sb.from('classes').insert({ code, name, curso, descripcion, color, teacher_id: state.profile.id });
   if(error) return toast(error.message);
-  toast('Aula creada: '+name);
+  toast(t('class_created_toast')+name);
   showDashboard('teacher','classes');
 }
 const EMOJI_OPTIONS = ['🙂','😎','🤓','🥳','🦊','🐼','🐸','🦉','🐙','🦁','🐯','🌟','🚀','⚡','🎨','🎮'];
@@ -795,7 +1060,7 @@ async function saveEmojiOnly(){
   if(error) return toast(error.message);
   state.profile.avatar_emoji=emoji;
   document.getElementById(document.getElementById('student')?.classList.contains('active')?'studentAvatarSm':'teacherAvatarSm').textContent=emoji;
-  toast('Emoticono guardado');
+  toast(t('emoji_saved_toast'));
 }
 async function saveProfile(){
   const name=document.getElementById('pfName').value.trim();
@@ -806,25 +1071,103 @@ async function saveProfile(){
   if(error) return toast(error.message);
   state.profile.name=name; state.profile.alias=alias; state.profile.centro=centro; state.profile.avatar_emoji=avatar_emoji;
   document.getElementById('teacherAvatarSm').textContent=avatar_emoji;
-  toast('Perfil guardado');
+  toast(t('profile_saved_toast'));
 }
 
-const DEFAULT_BEHAVIORS = [
-  { name:'Ayuda al compañero', value:10 },
-  { name:'Realiza la tarea en clase', value:5 },
-  { name:'Se comporta bien', value:2 },
-  { name:'Entrega los deberes a tiempo', value:8 },
-  { name:'Molesta en clase', value:-5 },
-  { name:'Falta de respeto', value:-8 }
-];
-const DEFAULT_REWARDS = [
-  { name:'Elegir sitio un día', cost:15 },
-  { name:'5 minutos extra de descanso', cost:20 },
-  { name:'Sin deberes un día', cost:30 },
-  { name:'Elegir la música de la clase', cost:25 },
-  { name:'Ser ayudante del profesor', cost:10 },
-  { name:'Recompensa sorpresa', cost:50, destacado:true }
-];
+const DEFAULT_BEHAVIORS = {
+  es: [
+    { name:'Ayuda al compañero', value:10 },
+    { name:'Realiza la tarea en clase', value:5 },
+    { name:'Se comporta bien', value:2 },
+    { name:'Entrega los deberes a tiempo', value:8 },
+    { name:'Molesta en clase', value:-5 },
+    { name:'Falta de respeto', value:-8 }
+  ],
+  en: [
+    { name:'Helps a classmate', value:10 },
+    { name:'Completes classwork', value:5 },
+    { name:'Behaves well', value:2 },
+    { name:'Submits homework on time', value:8 },
+    { name:'Disrupts the class', value:-5 },
+    { name:'Shows disrespect', value:-8 }
+  ]
+};
+const DEFAULT_REWARDS = {
+  es: [
+    { name:'Elegir sitio un día', cost:15 },
+    { name:'5 minutos extra de descanso', cost:20 },
+    { name:'Sin deberes un día', cost:30 },
+    { name:'Elegir la música de la clase', cost:25 },
+    { name:'Ser ayudante del profesor', cost:10 },
+    { name:'Recompensa sorpresa', cost:50, destacado:true }
+  ],
+  en: [
+    { name:'Choose your seat for a day', cost:15 },
+    { name:'5 extra minutes of break', cost:20 },
+    { name:'No homework for a day', cost:30 },
+    { name:'Choose the class music', cost:25 },
+    { name:"Be the teacher's assistant", cost:10 },
+    { name:'Surprise reward', cost:50, destacado:true }
+  ]
+};
+
+/* ================= AVATAR ILLUSTRATIONS (DiceBear) ================= */
+const DICEBEAR_STYLE='avataaars';
+const DICEBEAR_BASE=`https://api.dicebear.com/10.x/${DICEBEAR_STYLE}/svg`;
+const EQUIP_DEFAULTS={ cara:'Benchi1', sombrero:'shortFlat', accesorio:'', fondo:'c7d2fe' };
+function avatarUrl(equipped, size){
+  const eq=Object.assign({}, EQUIP_DEFAULTS, equipped||{});
+  const p=new URLSearchParams({
+    seed:eq.cara||EQUIP_DEFAULTS.cara,
+    topVariant:eq.sombrero||EQUIP_DEFAULTS.sombrero,
+    accessoriesVariant:eq.accesorio||'',
+    accessoriesProbability:eq.accesorio?100:0,
+    backgroundColor:eq.fondo||EQUIP_DEFAULTS.fondo,
+    backgroundType:'solid',
+    radius:50
+  });
+  if(size) p.set('size',size);
+  return `${DICEBEAR_BASE}?${p.toString()}`;
+}
+function avatarImgHTML(equipped){
+  return `<img src="${avatarUrl(equipped,96)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`;
+}
+const AVATAR_CATALOG={
+  cara:[
+    {name:'Nova',value:'Nova'},{name:'Rex',value:'Rex'},{name:'Luna',value:'Luna'},{name:'Kai',value:'Kai'},
+    {name:'Mia',value:'Mia'},{name:'Sol',value:'Sol'},{name:'Zeta',value:'Zeta'},{name:'Leo',value:'Leo'},
+    {name:'Iris',value:'Iris'},{name:'Atlas',value:'Atlas'}
+  ],
+  sombrero:[
+    {name:'Sin gorro',value:'shortFlat'},{name:'Gorro',value:'hat'},{name:'Gorro de invierno',value:'winterHat1'},
+    {name:'Gorro pompón',value:'winterHat02'},{name:'Gorro orejas',value:'winterHat03'},{name:'Gorro rayas',value:'winterHat04'},
+    {name:'Turbante',value:'turban'},{name:'Pañuelo',value:'hijab'},{name:'Rizos',value:'curly'},{name:'Moño',value:'bun'}
+  ],
+  accesorio:[
+    {name:'Sin gafas',value:''},{name:'Redondas',value:'round'},{name:'Wayfarer',value:'wayfarers'},
+    {name:'De sol',value:'sunglasses'},{name:'Graduadas',value:'prescription01'},{name:'Graduadas finas',value:'prescription02'},
+    {name:'Parche pirata',value:'eyepatch'},{name:'Estilo Kurt',value:'kurt'}
+  ],
+  fondo:[
+    {name:'Lila',value:'c7d2fe'},{name:'Cian',value:'a7f0f0'},{name:'Rosa',value:'ffd1e6'},{name:'Amarillo',value:'ffe6a7'},
+    {name:'Verde',value:'baf7cf'},{name:'Coral',value:'ffc4b0'},{name:'Azul',value:'b6d8ff'},{name:'Gris',value:'e2e4ea'},
+    {name:'Violeta',value:'ddc7ff'},{name:'Menta',value:'c7f9e5'}
+  ]
+};
+function avatarCatalogChips(slot, classId){
+  const list=AVATAR_CATALOG[slot]||[];
+  return `<div class="avatar-catalog-grid">${list.map((it,i)=>`
+    <button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}')">
+      <img src="${avatarUrl(slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value},72)}" alt="${it.name}">
+      <span>${it.name}</span>
+    </button>`).join('')}</div>`;
+}
+async function addCatalogAvatarItem(slot, i, classId){
+  const it=AVATAR_CATALOG[slot][i];
+  const cost = slot==='cara'?0:20;
+  await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji:'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
+  renderTeacher('classdetail', classId);
+}
 function suggestionChips(list, kind, classId){
   return `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${list.map((x,i)=>
     `<button type="button" class="btn btn-light" style="font-size:12px" onclick="addSuggested('${kind}','${classId}',${i})">+ ${x.name} (${x.value!==undefined?(x.value>0?'+':'')+x.value:x.cost+' pts'})</button>`
@@ -832,75 +1175,207 @@ function suggestionChips(list, kind, classId){
 }
 async function addSuggested(kind, classId, i){
   if(kind==='behavior'){
-    const b=DEFAULT_BEHAVIORS[i];
+    const b=DEFAULT_BEHAVIORS[state.lang][i];
     await sb.from('behaviors').insert({ class_id:classId, name:b.name, value:b.value });
   }else{
-    const r=DEFAULT_REWARDS[i];
+    const r=DEFAULT_REWARDS[state.lang][i];
     await sb.from('market_items').insert({ class_id:classId, name:r.name, cost:r.cost, destacado:!!r.destacado });
   }
   renderTeacher('classdetail', classId);
 }
 
+const CLASS_TABS=[
+  {key:'students',icon:'i-user',label:'students_panel'},
+  {key:'behaviors',icon:'i-star',label:'behaviors_panel'},
+  {key:'rewards',icon:'i-gift',label:'rewards_panel'},
+  {key:'skins',icon:'i-shop',label:'skins_panel'},
+  {key:'history',icon:'i-chart',label:'class_history_panel'}
+];
+function switchAvatarPickSlot(slot, classId){
+  state.avatarPickSlot=slot;
+  document.querySelectorAll('.avatar-pick-tab').forEach(b=>b.classList.toggle('active',b.dataset.slot===slot));
+  document.getElementById('avatarCatalogArea').innerHTML=avatarCatalogChips(slot, classId);
+}
+function switchClassTab(tab){
+  state.teacherClassTab=tab;
+  document.querySelectorAll('.teacher-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
+}
 async function renderClassDetail(classId){
   const c=document.getElementById('teacher-content');
+  if(state.teacherClassId!==classId) state.teacherClassTab='students';
   state.teacherClassId=classId;
+  const activeTab=state.teacherClassTab||'students';
   const cls = state.myClasses.find(x=>x.id===classId);
   const [{data:members},{data:behaviors},{data:market},{data:avatars},{data:log}] = await Promise.all([
-    sb.from('class_members').select('student_id,points,profiles(name,alias,avatar_emoji)').eq('class_id',classId),
+    sb.from('class_members').select('student_id,points,profiles(name,alias,avatar_emoji,equipped)').eq('class_id',classId),
     sb.from('behaviors').select('*').eq('class_id',classId),
     sb.from('market_items').select('*').eq('class_id',classId),
     sb.from('avatar_items').select('*').eq('class_id',classId),
     sb.from('points_log').select('*').eq('class_id',classId).order('created_at',{ascending:false}).limit(25)
   ]);
   window._cd={members:members||[],behaviors:behaviors||[],market:market||[],avatars:avatars||[]};
+  const slotLabel={fondo:t('slot_bg'),cara:t('slot_face'),sombrero:t('slot_hat'),accesorio:t('slot_acc')};
   const behaviorOpts=(behaviors||[]).map(b=>`<option value="${b.id}">${b.name} (${b.value>0?'+':''}${b.value})</option>`).join('');
   const studentRows=(members||[]).map(m=>{
     const lv=levelInfo(m.points);
-    return `<div class="small-row" style="padding:10px 0;border-bottom:1px solid var(--line)">
-      <div class="avatar-sm" style="font-size:16px;flex-shrink:0">${m.profiles.avatar_emoji||'🙂'}</div>
-      <div style="flex:1;"><b>${m.profiles.name}</b><div class="small-muted">@${m.profiles.alias||''} · Nivel ${lv.level} · ${fmt(m.points)} pts</div></div>
+    return `<div class="student-row">
+      <div class="avatar-sm" style="flex-shrink:0">${avatarImgHTML(m.profiles.equipped)}</div>
+      <div style="flex:1;min-width:170px"><b>${m.profiles.name}</b><div class="small-muted">@${m.profiles.alias||''} · ${t('word_level')} ${lv.level} · ${fmt(m.points)} pts</div></div>
       <select data-beh="${m.student_id}" style="max-width:170px">${behaviorOpts}</select>
-      <button class="btn btn-light" onclick="applyBehavior('${classId}','${m.student_id}')">Aplicar</button>
+      <button class="btn btn-light" onclick="applyBehavior('${classId}','${m.student_id}')">${t('apply_btn')}</button>
       <input type="number" placeholder="±pts" style="width:70px" id="custom-${m.student_id}">
-      <button class="btn btn-light" onclick="applyCustom('${classId}','${m.student_id}')">Custom</button>
+      <button class="btn btn-light" onclick="applyCustom('${classId}','${m.student_id}')">${t('custom_btn')}</button>
     </div>`;
-  }).join('') || '<div class="empty-note">Todavía no se ha unido ningún alumno con el código de aula.</div>';
-  const behaviorRows=(behaviors||[]).map(b=>`<div class="small-row"><span>${b.name} <span class="pill">${b.value>0?'+':''}${b.value}</span></span><button class="btn btn-light" onclick="deleteRow('behaviors','${b.id}','${classId}')">Eliminar</button></div>`).join('')||'<div class="empty-note">Sin comportamientos.</div>';
-  const marketRows=(market||[]).map(m=>`<div class="small-row"><span>${m.name} <span class="pill">${m.cost} pts</span>${m.destacado?' <span class="pill">★</span>':''}</span><button class="btn btn-light" onclick="deleteRow('market_items','${m.id}','${classId}')">Eliminar</button></div>`).join('')||'<div class="empty-note">Sin recompensas.</div>';
-  const avatarRows=(avatars||[]).map(a=>`<div class="small-row"><span>${a.name} <span class="pill">${a.slot}</span> <span class="pill">${a.rareza}</span> ${a.cost>0?`<span class="pill">${a.cost} pts</span>`:`<span class="pill">${a.unlock_type}</span>`}</span><button class="btn btn-light" onclick="deleteRow('avatar_items','${a.id}','${classId}')">Eliminar</button></div>`).join('')||'<div class="empty-note">Sin skins.</div>';
+  }).join('') || `<div class="empty-note">${t('no_students_joined')}</div>`;
+  const behaviorRows=(behaviors||[]).map(b=>{
+    const positive=b.value>0;
+    return `<div class="list-card">
+      <div class="list-card-icon ${positive?'pos':'neg'}">${positive?'+':'−'}</div>
+      <div class="list-card-body"><div class="list-card-name">${b.name}</div><div class="list-card-meta"><span class="pill">${positive?'+':''}${b.value} pts</span></div></div>
+      <div class="list-card-actions">
+        <button class="icon-btn" title="${t('edit_btn')}" onclick="editBehavior('${b.id}','${classId}')">${ICON('i-edit')}</button>
+        <button class="icon-btn danger" title="${t('delete_btn')}" onclick="deleteRow('behaviors','${b.id}','${classId}')">${ICON('i-trash')}</button>
+      </div>
+    </div>`;
+  }).join('')||`<div class="empty-note">${t('no_behaviors')}</div>`;
+  const marketRows=(market||[]).map(m=>`<div class="list-card">
+      <div class="list-card-icon">${ICON('i-gift')}</div>
+      <div class="list-card-body"><div class="list-card-name">${m.name}</div><div class="list-card-meta"><span class="pill">${m.cost} pts</span>${m.destacado?`<span class="pill">★ ${t('featured_label')}</span>`:''}</div></div>
+      <div class="list-card-actions">
+        <button class="icon-btn" title="${t('edit_btn')}" onclick="editMarketItem('${m.id}','${classId}')">${ICON('i-edit')}</button>
+        <button class="icon-btn danger" title="${t('delete_btn')}" onclick="deleteRow('market_items','${m.id}','${classId}')">${ICON('i-trash')}</button>
+      </div>
+    </div>`).join('')||`<div class="empty-note">${t('no_rewards')}</div>`;
+  const avatarRows=(avatars||[]).map(a=>{
+    const eq=a.asset_value!==undefined&&a.asset_value!==null?{[a.slot]:a.asset_value}:null;
+    const thumb=eq?`<img src="${avatarUrl(eq,72)}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`:(a.emoji||'✦');
+    return `<div class="list-card">
+      <div class="list-card-icon" style="font-size:19px;overflow:hidden;padding:0">${thumb}</div>
+      <div class="list-card-body"><div class="list-card-name">${a.name}</div><div class="list-card-meta"><span class="pill">${slotLabel[a.slot]||a.slot}</span><span class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</span>${a.cost>0?`<span class="pill">${a.cost} pts</span>`:`<span class="pill">${a.unlock_type}</span>`}</div></div>
+      <div class="list-card-actions">
+        <button class="icon-btn" title="${t('edit_btn')}" onclick="editAvatarItem('${a.id}','${classId}')">${ICON('i-edit')}</button>
+        <button class="icon-btn danger" title="${t('delete_btn')}" onclick="deleteRow('avatar_items','${a.id}','${classId}')">${ICON('i-trash')}</button>
+      </div>
+    </div>`;
+  }).join('')||`<div class="empty-note">${t('no_skins')}</div>`;
   const logRows=(log||[]).map(l=>{
     const s=(members||[]).find(m=>m.student_id===l.student_id);
-    return `<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${s?s.profiles.name:'—'} · ${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString('es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`;
-  }).join('')||'<div class="empty-note">Sin movimientos.</div>';
+    return `<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${s?s.profiles.name:'—'} · ${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString(state.lang==='en'?'en-GB':'es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`;
+  }).join('')||`<div class="empty-note">${t('no_movements')}</div>`;
 
-  c.innerHTML = `<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('teacher','classes')">${ICON('i-back')} Mis aulas</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''} · Código ${cls?cls.code:''}</p></div></div>
-    <div class="panel"><div class="panel-title"><h2>Alumnado</h2></div>${studentRows}</div>
-    <div class="grid-2" style="margin-top:16px">
-      <div class="panel"><div class="panel-title"><h2>Comportamientos</h2></div>
-        <div class="small-muted" style="margin-bottom:8px">Sugerencias — actívalas con un clic:</div>
-        ${suggestionChips(DEFAULT_BEHAVIORS,'behavior',classId)}
-        ${behaviorRows}
-        <div class="grid-2" style="margin-top:10px"><input id="newBehName" placeholder="Nombre"><input id="newBehValue" type="number" placeholder="± valor"></div>
-        <button class="btn btn-light" style="margin-top:8px" onclick="addBehavior('${classId}')">Añadir comportamiento</button></div>
-      <div class="panel"><div class="panel-title"><h2>Recompensas</h2></div>
-        <div class="small-muted" style="margin-bottom:8px">Sugerencias — actívalas con un clic:</div>
-        ${suggestionChips(DEFAULT_REWARDS,'reward',classId)}
-        ${marketRows}
-        <div class="grid-2" style="margin-top:10px"><input id="newMName" placeholder="Nombre"><input id="newMCost" type="number" placeholder="Coste"></div>
-        <label class="small-muted" style="display:flex;gap:6px;align-items:center;margin-top:6px"><input type="checkbox" id="newMFeatured"> Destacada</label>
-        <button class="btn btn-light" style="margin-top:8px" onclick="addMarketItem('${classId}')">Añadir recompensa</button></div>
+  const tabsHtml=`<div class="teacher-tabs">${CLASS_TABS.map(tb=>`<button class="teacher-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>`;
+
+  c.innerHTML = `<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('teacher','classes')">${ICON('i-back')} ${t('my_classes')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''} · ${t('code_label')} ${cls?cls.code:''}</p></div></div>
+    ${tabsHtml}
+    <div class="tab-panel ${activeTab==='students'?'':'hidden'}" data-panel="students">
+      <div class="panel"><div class="panel-title"><h2>${t('students_panel')}</h2></div>${studentRows}</div>
     </div>
-    <div class="panel" style="margin-top:16px"><div class="panel-title"><h2>Tienda de skins</h2></div>${avatarRows}
-      <div class="grid-2" style="margin-top:10px">
-        <input id="newAvName" placeholder="Nombre">
-        <select id="newAvSlot"><option value="fondo">fondo</option><option value="cara">cara</option><option value="sombrero">sombrero</option><option value="accesorio">accesorio</option></select>
-        <input id="newAvEmoji" placeholder="Símbolo (ej. ★)">
-        <input id="newAvCost" type="number" placeholder="Coste">
-        <select id="newAvRareza"><option value="comun">Común</option><option value="raro">Rara</option><option value="epico">Épica</option></select>
-        <label class="small-muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="newAvFeatured"> Destacada</label>
+    <div class="tab-panel ${activeTab==='behaviors'?'':'hidden'}" data-panel="behaviors">
+      <div class="panel"><div class="panel-title"><h2>${t('behaviors_panel')}</h2></div>
+        ${behaviorRows}
+        <div class="add-card">
+          <div class="add-card-head">${t('add_behavior_btn')}</div>
+          <div class="small-muted" style="margin-bottom:8px">${t('suggestions_label')}</div>
+          ${suggestionChips(DEFAULT_BEHAVIORS[state.lang],'behavior',classId)}
+          <div class="grid-2"><input id="newBehName" placeholder="${t('name_field')}"><input id="newBehValue" type="number" placeholder="${t('value_field')}"></div>
+          <button class="btn btn-primary" style="margin-top:10px" onclick="addBehavior('${classId}')">${ICON('i-plus')} ${t('add_behavior_btn')}</button>
+        </div>
       </div>
-      <button class="btn btn-light" style="margin-top:8px" onclick="addAvatarItem('${classId}')">Añadir skin</button></div>
-    <div class="panel" style="margin-top:16px"><div class="panel-title"><h2>Historial del aula</h2></div><div class="activity">${logRows}</div></div>`;
+    </div>
+    <div class="tab-panel ${activeTab==='rewards'?'':'hidden'}" data-panel="rewards">
+      <div class="panel"><div class="panel-title"><h2>${t('rewards_panel')}</h2></div>
+        ${marketRows}
+        <div class="add-card">
+          <div class="add-card-head">${t('add_reward_btn')}</div>
+          <div class="small-muted" style="margin-bottom:8px">${t('suggestions_label')}</div>
+          ${suggestionChips(DEFAULT_REWARDS[state.lang],'reward',classId)}
+          <div class="grid-2"><input id="newMName" placeholder="${t('name_field')}"><input id="newMCost" type="number" placeholder="${t('cost_field')}"></div>
+          <label class="small-muted" style="display:flex;gap:6px;align-items:center;margin-top:8px"><input type="checkbox" id="newMFeatured"> ${t('featured_label')}</label>
+          <button class="btn btn-primary" style="margin-top:10px" onclick="addMarketItem('${classId}')">${ICON('i-plus')} ${t('add_reward_btn')}</button>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel ${activeTab==='skins'?'':'hidden'}" data-panel="skins">
+      <div class="panel"><div class="panel-title"><h2>${t('skins_panel')}</h2></div>
+        ${avatarRows}
+        <div class="add-card">
+          <div class="add-card-head">${t('add_skin_btn')}</div>
+          <div class="mkt-tabs">
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='cara'?'active':''}" data-slot="cara" onclick="switchAvatarPickSlot('cara','${classId}')">${t('slot_face')}</button>
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='sombrero'?'active':''}" data-slot="sombrero" onclick="switchAvatarPickSlot('sombrero','${classId}')">${t('slot_hat')}</button>
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='accesorio'?'active':''}" data-slot="accesorio" onclick="switchAvatarPickSlot('accesorio','${classId}')">${t('slot_acc')}</button>
+            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='fondo'?'active':''}" data-slot="fondo" onclick="switchAvatarPickSlot('fondo','${classId}')">${t('slot_bg')}</button>
+          </div>
+          <div id="avatarCatalogArea">${avatarCatalogChips(state.avatarPickSlot||'cara', classId)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel ${activeTab==='history'?'':'hidden'}" data-panel="history">
+      <div class="panel"><div class="panel-title"><h2>${t('class_history_panel')}</h2></div><div class="activity">${logRows}</div></div>
+    </div>`;
+}
+function editBehavior(id, classId){
+  const b=window._cd.behaviors.find(x=>x.id===id); if(!b) return;
+  modal(`${t('edit_btn')} · ${t('behaviors_panel')}`, `<div class="form">
+    <div class="field"><label>${t('name_field')}</label><input id="editBehName" value="${b.name}"></div>
+    <div class="field"><label>${t('value_field')}</label><input id="editBehValue" type="number" value="${b.value}"></div>
+    <button class="btn btn-primary" onclick="saveBehaviorEdit('${id}','${classId}')">${t('save_btn')}</button>
+  </div>`);
+}
+async function saveBehaviorEdit(id, classId){
+  const name=document.getElementById('editBehName').value.trim();
+  const value=parseInt(document.getElementById('editBehValue').value,10);
+  if(!name||isNaN(value)) return;
+  await sb.from('behaviors').update({ name, value }).eq('id', id);
+  closeModal();
+  renderTeacher('classdetail', classId);
+}
+function editMarketItem(id, classId){
+  const m=window._cd.market.find(x=>x.id===id); if(!m) return;
+  modal(`${t('edit_btn')} · ${t('rewards_panel')}`, `<div class="form">
+    <div class="field"><label>${t('name_field')}</label><input id="editMName" value="${m.name}"></div>
+    <div class="field"><label>${t('cost_field')}</label><input id="editMCost" type="number" value="${m.cost}"></div>
+    <label class="small-muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="editMFeatured" ${m.destacado?'checked':''}> ${t('featured_label')}</label>
+    <button class="btn btn-primary" onclick="saveMarketEdit('${id}','${classId}')">${t('save_btn')}</button>
+  </div>`);
+}
+async function saveMarketEdit(id, classId){
+  const name=document.getElementById('editMName').value.trim();
+  const cost=parseInt(document.getElementById('editMCost').value,10);
+  const destacado=document.getElementById('editMFeatured').checked;
+  if(!name||!cost) return;
+  await sb.from('market_items').update({ name, cost, destacado }).eq('id', id);
+  closeModal();
+  renderTeacher('classdetail', classId);
+}
+function editAvatarItem(id, classId){
+  const a=window._cd.avatars.find(x=>x.id===id); if(!a) return;
+  const eq=a.asset_value?{[a.slot]:a.asset_value}:{};
+  modal(`${t('edit_btn')} · ${t('skins_panel')}`, `<div class="form">
+    <div style="display:flex;justify-content:center"><img src="${avatarUrl(eq,90)}" style="width:64px;height:64px;border-radius:16px;background:var(--surface-2)"></div>
+    <div class="field"><label>${t('name_field')}</label><input id="editAvName" value="${a.name}"></div>
+    <div class="grid-2">
+      <input id="editAvCost" type="number" value="${a.cost}">
+      <select id="editAvRareza">
+        <option value="comun" ${a.rareza==='comun'?'selected':''}>${t('rarity_common')}</option>
+        <option value="raro" ${a.rareza==='raro'?'selected':''}>${t('rarity_rare')}</option>
+        <option value="epico" ${a.rareza==='epico'?'selected':''}>${t('rarity_epic')}</option>
+      </select>
+    </div>
+    <label class="small-muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="editAvFeatured" ${a.destacado?'checked':''}> ${t('featured_label')}</label>
+    <button class="btn btn-primary" onclick="saveAvatarEdit('${id}','${classId}')">${t('save_btn')}</button>
+  </div>`);
+}
+async function saveAvatarEdit(id, classId){
+  const name=document.getElementById('editAvName').value.trim();
+  const cost=parseInt(document.getElementById('editAvCost').value,10)||0;
+  const rareza=document.getElementById('editAvRareza').value;
+  const destacado=document.getElementById('editAvFeatured').checked;
+  if(!name) return;
+  await sb.from('avatar_items').update({ name, cost, rareza, destacado, unlock_type: cost>0?'compra':'gratis' }).eq('id', id);
+  closeModal();
+  renderTeacher('classdetail', classId);
 }
 async function applyBehavior(classId, studentId){
   const sel=document.querySelector(`[data-beh="${studentId}"]`);
@@ -908,14 +1383,14 @@ async function applyBehavior(classId, studentId){
   if(!b) return;
   const { error } = await sb.rpc('apply_points',{ p_student:studentId, p_class:classId, p_delta:b.value, p_reason:b.name, p_type:'puntuacion' });
   if(error) return toast(error.message);
-  toast(`${b.value>0?'+':''}${b.value} puntos aplicados`);
+  toast(`${b.value>0?'+':''}${b.value} ${t('points_applied_toast')}`);
   renderTeacher('classdetail', classId);
 }
 async function applyCustom(classId, studentId){
   const input=document.getElementById('custom-'+studentId);
   const val=parseInt(input.value,10);
   if(!val) return;
-  const { error } = await sb.rpc('apply_points',{ p_student:studentId, p_class:classId, p_delta:val, p_reason:'Ajuste manual', p_type:'puntuacion' });
+  const { error } = await sb.rpc('apply_points',{ p_student:studentId, p_class:classId, p_delta:val, p_reason:t('manual_adjustment'), p_type:'puntuacion' });
   if(error) return toast(error.message);
   renderTeacher('classdetail', classId);
 }
@@ -934,17 +1409,6 @@ async function addMarketItem(classId){
   await sb.from('market_items').insert({ class_id:classId, name, cost, destacado });
   renderTeacher('classdetail', classId);
 }
-async function addAvatarItem(classId){
-  const name=document.getElementById('newAvName').value.trim();
-  const slot=document.getElementById('newAvSlot').value;
-  const emoji=document.getElementById('newAvEmoji').value.trim()||'✦';
-  const cost=parseInt(document.getElementById('newAvCost').value,10)||0;
-  const rareza=document.getElementById('newAvRareza').value;
-  const destacado=document.getElementById('newAvFeatured').checked;
-  if(!name) return;
-  await sb.from('avatar_items').insert({ class_id:classId, slot, name, emoji, cost, rareza, destacado, unlock_type: cost>0?'compra':'gratis' });
-  renderTeacher('classdetail', classId);
-}
 async function deleteRow(table,id,classId){
   await sb.from(table).delete().eq('id',id);
   renderTeacher('classdetail', classId);
@@ -957,120 +1421,125 @@ function studentHeader(title,sub,action=''){
 function studentHero(){
   const total=state.myClasses.reduce((a,c)=>a+(c.points||0),0);
   const lv=levelInfo(total);
+  const activeWord = state.myClasses.length===1 ? t('active_class_singular') : t('active_class_plural');
   return `<section class="student-hero">
     <div>
-      <div class="profile-big"><div class="avatar-big" style="font-size:34px">${state.profile.avatar_emoji||'🙂'}</div><div><span class="level-badge">NIVEL ${lv.level}</span><div class="student-name">${state.profile.name}</div><div class="student-sub">${state.myClasses.length} aula${state.myClasses.length===1?'':'s'} activa${state.myClasses.length===1?'':'s'}</div></div></div>
-      <div style="margin-top:22px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:850;color:#70778b;margin-bottom:7px"><span>Progreso hacia nivel ${lv.level+1}</span><span>${lv.pct}%</span></div><div class="progress"><span style="width:${lv.pct}%"></span></div></div>
+      <div class="profile-big"><div class="avatar-big">${avatarImgHTML(state.profile.equipped)}</div><div><span class="level-badge">${t('word_level_cap')} ${lv.level}</span><div class="student-name">${state.profile.name}</div><div class="student-sub">${state.myClasses.length} ${activeWord}</div></div></div>
+      <div style="margin-top:22px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:850;color:#70778b;margin-bottom:7px"><span>${t('progress_to_level')} ${lv.level+1}</span><span>${lv.pct}%</span></div><div class="progress"><span style="width:${lv.pct}%"></span></div></div>
     </div>
-    <div class="hero-points"><div class="points-label">Puntos totales</div><div class="points-num">${fmt(total)}</div><div style="font-size:12px;color:#6f7689;margin-top:2px">${lv.toNext} puntos para el siguiente nivel</div></div>
+    <div class="hero-points"><div class="points-label">${t('total_points')}</div><div class="points-num">${fmt(total)}</div><div style="font-size:12px;color:#6f7689;margin-top:2px">${lv.toNext} ${t('points_to_next')}</div></div>
   </section>`;
 }
-async function renderStudent(route){
+async function renderStudent(route, arg){
   const c=document.getElementById('student-content');
   if(route==='home'){
     const { data:log } = await sb.from('points_log').select('*').eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(6);
-    c.innerHTML=studentHero()+studentHeader('Tu espacio Benchi','Sigue acumulando puntos y desbloqueando recompensas.')+
+    c.innerHTML=studentHero()+studentHeader(t('your_space'),t('keep_going'))+
       `<div class="feature-grid" style="grid-template-columns:1.1fr .9fr;margin-top:0">
-       <div class="panel"><div class="panel-title"><h2>Mis clases</h2><button onclick="showDashboard('student','classes')">Ver todas</button></div><div class="class-grid">${state.myClasses.length?state.myClasses.map(studentClassCard).join(''):joinBox()}</div></div>
-       <div class="panel"><div class="panel-title"><h2>Actividad reciente</h2><button onclick="showDashboard('student','rewards')">Ver historial</button></div>${activityHTML(log)}</div>
+       <div class="panel"><div class="panel-title"><h2>${t('my_classes_student')}</h2><button onclick="showDashboard('student','classes')">${t('view_all')}</button></div><div class="class-grid">${state.myClasses.length?state.myClasses.map(studentClassCard).join(''):joinBox()}</div></div>
+       <div class="panel"><div class="panel-title"><h2>${t('recent_activity')}</h2><button onclick="showDashboard('student','classes')">${t('view_all')}</button></div>${activityHTML(log)}</div>
       </div>`;
   }else if(route==='classes'){
-    c.innerHTML=studentHeader('Mis clases','Consulta tus puntos y el progreso de cada aula.','<button class="btn btn-primary" onclick="openJoinClass()">'+ICON('i-plus')+' Unirme a una aula</button>')+
+    c.innerHTML=studentHeader(t('my_classes_student'),t('my_classes_sub'),'<button class="btn btn-primary" onclick="openJoinClass()">'+ICON('i-plus')+' '+t('join_class_btn')+'</button>')+
       `<div class="class-grid">${state.myClasses.map(studentClassCard).join('')}${joinBox()}</div>`;
-  }else if(route==='rewards'){
-    const { data:log } = await sb.from('points_log').select('*').eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(40);
-    const total=state.myClasses.reduce((a,x)=>a+(x.points||0),0);
-    c.innerHTML=studentHeader('Recompensas','Todo lo que has conseguido y gastado en Benchi.')+
-      `<div class="panel"><div class="panel-title"><h2>Historial de puntos</h2><span class="pill">${fmt(total)} disponibles</span></div>${activityHTML(log)}</div>`;
-  }else if(route==='market'){
-    await renderMarket();
+  }else if(route==='classdetail'){
+    await renderStudentClassDetail(arg);
   }else{
-    const total=state.myClasses.reduce((a,x)=>a+(x.points||0),0);
-    const lv=levelInfo(total);
-    const { data:skins } = await sb.from('student_avatar_inventory').select('avatar_items(name,emoji,rareza)').eq('student_id',state.profile.id);
-    const skinCards=(skins||[]).map(s=>`<article class="product"><div class="product-art a"><div class="product-icon" style="font-size:22px">${s.avatar_items.emoji}</div></div><div class="product-name">${s.avatar_items.name}</div><div class="product-meta"><span class="rareza-pill rareza-${s.avatar_items.rareza}">${s.avatar_items.rareza}</span></div></article>`).join('')||'<div class="empty-note">Todavía no tienes skins.</div>';
-    c.innerHTML=studentHeader('Mi perfil','Tu identidad y tu colección.','<button class="btn btn-light" onclick="showDashboard(\'student\',\'home\')">'+ICON('i-back')+' Volver</button>')+
-      `<div class="panel"><div class="profile-big"><div class="avatar-big" id="pfAvatarBig" style="font-size:34px">${state.profile.avatar_emoji||'🙂'}</div><div><span class="level-badge">NIVEL ${lv.level}</span><div class="student-name">${state.profile.name}</div><div class="student-sub">@${state.profile.alias||''}</div></div></div>
-      <div style="margin-top:18px"><label class="small-muted" style="display:block;margin-bottom:8px">Elige tu emoticono</label>${emojiPicker(state.profile.avatar_emoji)}</div>
-      <div class="stats" style="margin-top:25px"><div class="stat"><div class="stat-label">Puntos</div><div class="stat-num">${fmt(total)}</div></div><div class="stat"><div class="stat-label">Nivel</div><div class="stat-num">${lv.level}</div></div><div class="stat"><div class="stat-label">Aulas</div><div class="stat-num">${state.myClasses.length}</div></div><div class="stat"><div class="stat-label">Skins</div><div class="stat-num">${(skins||[]).length}</div></div></div>
-      <button class="btn btn-primary" style="margin-top:16px" onclick="saveEmojiOnly()">Guardar emoticono</button>
-      <div class="panel-title" style="margin-top:20px"><h2>Mi colección</h2></div><div class="market-grid">${skinCards}</div></div>`;
+    await renderStudentProfile();
   }
 }
-function joinBox(){ return `<button class="join-box" onclick="openJoinClass()">${ICON('i-plus')} Unirme a una aula</button>`; }
+function joinBox(){ return `<button class="join-box" onclick="openJoinClass()">${ICON('i-plus')} ${t('join_class_btn')}</button>`; }
 function studentClassCard(x,i){
   const lv=levelInfo(x.points||0);
-  return `<article class="class-card"><div class="class-banner ${x.color||['banner-purple','banner-cyan','banner-pink'][i%3]}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${x.curso||''}</div></div><span class="pill">Nvl ${lv.level}</span></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#757c8e;font-weight:800;margin-bottom:6px"><span>Progreso</span><span>${lv.pct}%</span></div><div class="progress"><span style="width:${lv.pct}%"></span></div></div><div class="class-foot"><span>${fmt(x.points||0)} puntos</span><button class="enter-link" onclick="enterMarketClass('${x.id}')">Ir al mercado →</button></div></article>`;
+  return `<article class="class-card"><div class="class-banner ${x.color||['banner-purple','banner-cyan','banner-pink'][i%3]}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${x.curso||''}</div></div><span class="pill">${t('lvl_abbr')} ${lv.level}</span></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#757c8e;font-weight:800;margin-bottom:6px"><span>${t('progress_word')}</span><span>${lv.pct}%</span></div><div class="progress"><span style="width:${lv.pct}%"></span></div></div><div class="class-foot"><span>${fmt(x.points||0)} ${t('word_points')}</span><button class="enter-link" onclick="showDashboard('student','classdetail','${x.id}')">${t('enter_arrow')}</button></div></article>`;
 }
-function enterMarketClass(classId){ state.marketClassId=classId; showDashboard('student','market'); }
 function openJoinClass(){
-  modal('Unirme a una aula', `
-    <p class="small-muted">Introduce el código de clase que te ha dado tu profesor.</p>
-    <div class="field"><label>Código de aula</label><input id="joinCode" placeholder="Ej. BEN-7X2K" style="text-transform:uppercase"></div>
+  modal(t('join_class_btn'), `
+    <p class="small-muted">${t('join_class_modal_p')}</p>
+    <div class="field"><label>${t('class_code_field')}</label><input id="joinCode" placeholder="Ej. BEN-7X2K" style="text-transform:uppercase"></div>
     <div id="joinError" style="color:#e0446b;font-size:12px;font-weight:700;margin-bottom:10px"></div>
-    <button class="btn btn-primary btn-full" onclick="doJoinClass()">Unirme ${ICON('i-arrow')}</button>`);
+    <button class="btn btn-primary btn-full" onclick="doJoinClass()">${t('join_btn')} ${ICON('i-arrow')}</button>`);
 }
 async function doJoinClass(){
   const code=document.getElementById('joinCode').value.trim().toUpperCase();
   if(!code) return;
   const { data:found, error:e0 } = await sb.from('classes').select('*').eq('code',code).single();
-  if(e0||!found){ document.getElementById('joinError').textContent='Código de aula no encontrado.'; return; }
+  if(e0||!found){ document.getElementById('joinError').textContent=t('class_code_not_found'); return; }
   const { error } = await sb.from('class_members').insert({ student_id:state.profile.id, class_id:found.id, points:0 });
-  if(error){ document.getElementById('joinError').textContent = error.message.includes('duplicate')?'Ya estás en esta aula.':error.message; return; }
-  closeModal(); toast('Te has unido a '+found.name);
+  if(error){ document.getElementById('joinError').textContent = error.message.includes('duplicate')?t('already_in_class'):error.message; return; }
+  closeModal(); toast(t('joined_toast')+found.name);
   showDashboard('student','classes');
 }
 function activityHTML(rows){
-  if(!rows||!rows.length) return '<div class="empty-note">Todavía no hay movimientos.</div>';
-  return `<div class="activity">${rows.map(l=>`<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString('es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`).join('')}</div>`;
+  if(!rows||!rows.length) return `<div class="empty-note">${t('no_movements2')}</div>`;
+  return `<div class="activity">${rows.map(l=>`<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString(state.lang==='en'?'en-GB':'es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`).join('')}</div>`;
 }
-async function renderMarket(){
+const STUDENT_CLASS_TABS=[
+  {key:'market',icon:'i-shop',label:'tab_shop'},
+  {key:'history',icon:'i-chart',label:'points_history'},
+  {key:'redeemed',icon:'i-gift',label:'my_rewards_panel'}
+];
+function switchStudentClassTab(tab){
+  state.studentClassTab=tab;
+  document.querySelectorAll('.student-class-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.student-tab-panel').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
+}
+async function renderStudentClassDetail(classId){
   const c=document.getElementById('student-content');
-  if(!state.myClasses.length){
-    c.innerHTML=studentHeader('Mercado','Todavía no perteneces a ninguna aula.')+`<div class="panel">${joinBox()}</div>`;
-    return;
-  }
-  if(!state.marketClassId || !state.myClasses.find(x=>x.id===state.marketClassId)) state.marketClassId=state.myClasses[0].id;
-  const cls=state.myClasses.find(x=>x.id===state.marketClassId);
-  const [{data:market},{data:avatars},{data:myMarketInv},{data:myAvInv}] = await Promise.all([
-    sb.from('market_items').select('*').eq('class_id',state.marketClassId),
-    sb.from('avatar_items').select('*').eq('class_id',state.marketClassId),
+  if(state.studentClassId!==classId) state.studentClassTab='market';
+  state.studentClassId=classId;
+  const activeTab=state.studentClassTab||'market';
+  const cls=state.myClasses.find(x=>x.id===classId);
+  const [{data:market},{data:avatars},{data:myMarketInv},{data:myAvInv},{data:log}] = await Promise.all([
+    sb.from('market_items').select('*').eq('class_id',classId),
+    sb.from('avatar_items').select('*').eq('class_id',classId),
     sb.from('student_market_inventory').select('item_id').eq('student_id',state.profile.id),
-    sb.from('student_avatar_inventory').select('item_id').eq('student_id',state.profile.id)
+    sb.from('student_avatar_inventory').select('item_id').eq('student_id',state.profile.id),
+    sb.from('points_log').select('*').eq('class_id',classId).eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(50)
   ]);
-  window._mkt={market:market||[],avatars:avatars||[]};
+  const marketList=market||[], avatarList=avatars||[];
   const ownedM=new Set((myMarketInv||[]).map(x=>x.item_id));
   const ownedA=new Set((myAvInv||[]).map(x=>x.item_id));
-  const classOpts=state.myClasses.map(x=>`<option value="${x.id}" ${x.id===state.marketClassId?'selected':''}>${x.name}</option>`).join('');
+  const redeemedItems=marketList.filter(m=>ownedM.has(m.id));
 
   function cardMarket(m){
-    return `<article class="product"><div class="product-art b"><div class="product-icon">${ICON('i-gift')}</div></div><div class="product-name">${m.name}</div><div class="product-meta"><span class="price">${m.cost} puntos</span><button class="buy" ${ownedM.has(m.id)?'disabled':''} onclick="buyMarket('${m.id}')">${ownedM.has(m.id)?'Ya la tienes':'Canjear'}</button></div></article>`;
+    return `<article class="product"><div class="product-art b"><div class="product-icon">${ICON('i-gift')}</div></div><div class="product-name">${m.name}</div><div class="product-meta"><span class="price">${m.cost} ${t('word_points')}</span><button class="buy" ${ownedM.has(m.id)?'disabled':''} onclick="buyMarket('${m.id}')">${ownedM.has(m.id)?t('already_have'):t('redeem_btn')}</button></div></article>`;
   }
   function cardAvatar(a){
-    return `<article class="product"><div class="product-art a"><div class="product-icon" style="font-size:24px">${a.emoji}</div></div><div class="rareza-pill rareza-${a.rareza}">${a.rareza}</div><div class="product-name">${a.name}</div><div class="product-meta"><span class="price">${a.cost>0?a.cost+' puntos':a.unlock_type}</span><button class="buy" ${ownedA.has(a.id)||a.unlock_type==='logro'?'disabled':''} onclick="buyAvatar('${a.id}')">${ownedA.has(a.id)?'Ya la tienes':'Comprar'}</button></div></article>`;
+    const eq=a.asset_value?{[a.slot]:a.asset_value}:null;
+    const thumb=eq?`<img src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:24px">${a.emoji||'✦'}</div>`;
+    return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div><div class="product-meta"><span class="price">${a.cost>0?a.cost+' '+t('word_points'):a.unlock_type}</span><button class="buy" ${ownedA.has(a.id)||a.unlock_type==='logro'?'disabled':''} onclick="buyAvatar('${a.id}')">${ownedA.has(a.id)?t('already_have'):t('buy_btn')}</button></div></article>`;
   }
-  function renderTab(tab){
+  function renderMktTab(tab){
     let items=[];
-    if(tab==='destacados') items=[...market.filter(m=>m.destacado).map(cardMarket), ...avatars.filter(a=>a.destacado).map(cardAvatar)];
-    else if(tab==='skins') items=avatars.map(cardAvatar);
-    else items=market.map(cardMarket);
-    return items.join('') || '<div class="empty-note">Nada por aquí todavía.</div>';
+    if(tab==='destacados') items=[...marketList.filter(m=>m.destacado).map(cardMarket), ...avatarList.filter(a=>a.destacado).map(cardAvatar)];
+    else if(tab==='skins') items=avatarList.map(cardAvatar);
+    else items=marketList.map(cardMarket);
+    return items.join('') || `<div class="empty-note">${t('nothing_here')}</div>`;
   }
+  const redeemedRows=redeemedItems.map(m=>`<div class="list-card"><div class="list-card-icon">${ICON('i-gift')}</div><div class="list-card-body"><div class="list-card-name">${m.name}</div><div class="list-card-meta"><span class="pill">${m.cost} pts</span></div></div></div>`).join('')||`<div class="empty-note">${t('no_redeemed')}</div>`;
   const total=cls?cls.points||0:0;
-  c.innerHTML=studentHeader('Mercado','Utiliza tus puntos para desbloquear experiencias y personalizaciones.')+
-    `<div class="panel" style="margin-bottom:18px">
-      <div class="panel-title">
-        <h2>Aula: <select class="class-select" onchange="state.marketClassId=this.value;renderMarket()">${classOpts}</select></h2>
-        <span class="small-muted">Puntos disponibles: <b style="color:#574fca">${fmt(total)}</b></span>
+
+  c.innerHTML=`<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('student','classes')">${ICON('i-back')} ${t('my_classes_student')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''}</p></div></div>
+    <div class="teacher-tabs">${STUDENT_CLASS_TABS.map(tb=>`<button class="teacher-tab student-class-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchStudentClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>
+    <div class="tab-panel student-tab-panel ${activeTab==='market'?'':'hidden'}" data-panel="market">
+      <div class="panel">
+        <div class="panel-title"><h2>${t('tab_shop')}</h2><span class="small-muted">${t('points_available_label')} <b style="color:#574fca">${fmt(total)}</b></span></div>
+        <div class="mkt-tabs">
+          <button class="mkt-tab active" data-tab="destacados" onclick="switchMktTab('destacados')">${t('tab_featured')}</button>
+          <button class="mkt-tab" data-tab="skins" onclick="switchMktTab('skins')">${t('tab_skins')}</button>
+          <button class="mkt-tab" data-tab="recompensas" onclick="switchMktTab('recompensas')">${t('tab_rewards')}</button>
+        </div>
+        <div class="market-grid" id="mktGrid">${renderMktTab('destacados')}</div>
       </div>
-      <div class="mkt-tabs">
-        <button class="mkt-tab active" data-tab="destacados" onclick="switchMktTab('destacados')">Destacados</button>
-        <button class="mkt-tab" data-tab="skins" onclick="switchMktTab('skins')">Skins</button>
-        <button class="mkt-tab" data-tab="recompensas" onclick="switchMktTab('recompensas')">Recompensas</button>
-      </div>
-      <div class="market-grid" id="mktGrid">${renderTab('destacados')}</div>
+    </div>
+    <div class="tab-panel student-tab-panel ${activeTab==='history'?'':'hidden'}" data-panel="history">
+      <div class="panel"><div class="panel-title"><h2>${t('points_history')}</h2></div>${activityHTML(log)}</div>
+    </div>
+    <div class="tab-panel student-tab-panel ${activeTab==='redeemed'?'':'hidden'}" data-panel="redeemed">
+      <div class="panel"><div class="panel-title"><h2>${t('my_rewards_panel')}</h2></div>${redeemedRows}</div>
     </div>`;
-  window._renderTab=renderTab;
+  window._renderTab=renderMktTab;
 }
 function switchMktTab(tab){
   document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -1079,17 +1548,82 @@ function switchMktTab(tab){
 async function buyMarket(itemId){
   const { error } = await sb.rpc('buy_market_item',{ p_item:itemId });
   if(error) return toast(error.message);
-  toast('Recompensa canjeada');
-  await loadMyClasses(); renderMarket();
+  toast(t('reward_redeemed_toast'));
+  await loadMyClasses(); renderStudentClassDetail(state.studentClassId);
 }
 async function buyAvatar(itemId){
   const { error } = await sb.rpc('buy_avatar_item',{ p_item:itemId });
   if(error) return toast(error.message);
-  toast('Skin desbloqueada');
-  await loadMyClasses(); renderMarket();
+  toast(t('skin_unlocked_toast'));
+  await loadMyClasses(); renderStudentClassDetail(state.studentClassId);
+}
+async function renderStudentProfile(){
+  const c=document.getElementById('student-content');
+  const total=state.myClasses.reduce((a,x)=>a+(x.points||0),0);
+  const lv=levelInfo(total);
+  const { data:inv } = await sb.from('student_avatar_inventory').select('avatar_items(id,name,slot,asset_value,emoji,rareza)').eq('student_id',state.profile.id);
+  const owned=(inv||[]).map(s=>s.avatar_items).filter(Boolean);
+  window._ownedAvatars=owned;
+  state.equipDraft=null;
+  const skinCards=owned.map(a=>{
+    const eq=a.asset_value?{[a.slot]:a.asset_value}:null;
+    const thumb=eq?`<img src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:22px">${a.emoji||'✦'}</div>`;
+    return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div></article>`;
+  }).join('')||`<div class="empty-note">${t('no_skins_yet')}</div>`;
+  const equipped=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped);
+  c.innerHTML=studentHeader(t('my_profile'),t('my_profile_student_sub'),'<button class="btn btn-light" onclick="showDashboard(\'student\',\'home\')">'+ICON('i-back')+' '+t('word_back')+'</button>')+
+    `<div class="panel"><div class="profile-big">
+      <img id="equipAvatarBig" class="avatar-preview-big" src="${avatarUrl(equipped,240)}" alt="">
+      <div><span class="level-badge">${t('word_level_cap')} ${lv.level}</span><div class="student-name">${state.profile.name}</div><div class="student-sub">@${state.profile.alias||''}</div></div>
+    </div>
+    <div style="margin-top:24px">
+      <div class="add-card-head" style="margin-bottom:10px">${t('choose_avatar_label')}</div>
+      <div class="teacher-tabs">
+        <button class="teacher-tab equip-pick-tab active" data-slot="cara" onclick="switchEquipTab('cara')">${ICON('i-user')}${t('slot_face')}</button>
+        <button class="teacher-tab equip-pick-tab" data-slot="sombrero" onclick="switchEquipTab('sombrero')">${ICON('i-star')}${t('slot_hat')}</button>
+        <button class="teacher-tab equip-pick-tab" data-slot="accesorio" onclick="switchEquipTab('accesorio')">${ICON('i-gift')}${t('slot_acc')}</button>
+        <button class="teacher-tab equip-pick-tab" data-slot="fondo" onclick="switchEquipTab('fondo')">${ICON('i-shop')}${t('slot_bg')}</button>
+      </div>
+      <div id="equipPickArea">${equipPickerGrid('cara')}</div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="saveEquip()">${t('save_btn')}</button>
+    </div>
+    <div class="stats" style="margin-top:25px"><div class="stat"><div class="stat-label">${t('word_points_cap')}</div><div class="stat-num">${fmt(total)}</div></div><div class="stat"><div class="stat-label">${t('word_level')}</div><div class="stat-num">${lv.level}</div></div><div class="stat"><div class="stat-label">${t('word_classes_cap')}</div><div class="stat-num">${state.myClasses.length}</div></div><div class="stat"><div class="stat-label">${t('word_skins_cap')}</div><div class="stat-num">${owned.length}</div></div></div>
+    <div class="panel-title" style="margin-top:20px"><h2>${t('my_collection')}</h2></div><div class="market-grid">${skinCards}</div></div>`;
+}
+function equipPickerGrid(slot){
+  const draft=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped,state.equipDraft);
+  const current=draft[slot];
+  const owned=(window._ownedAvatars||[]).filter(a=>a.slot===slot);
+  const noneChip = slot!=='cara' ? `<button type="button" class="avatar-catalog-item ${!current?'selected':''}" onclick="pickEquip('${slot}','')"><div style="width:52px;height:52px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;color:var(--muted);font-size:20px">–</div><span>${t('none_label')}</span></button>` : '';
+  const itemsHtml=owned.map(a=>{
+    const eq={[slot]:a.asset_value};
+    const sel = current===a.asset_value;
+    return `<button type="button" class="avatar-catalog-item ${sel?'selected':''}" onclick="pickEquip('${slot}','${a.asset_value}')"><img src="${avatarUrl(eq,72)}" alt="${a.name}"><span>${a.name}</span></button>`;
+  }).join('');
+  if(slot==='cara' && !owned.length) return `<div class="empty-note">${t('no_owned_slot')}</div>`;
+  return `<div class="avatar-catalog-grid">${noneChip}${itemsHtml}</div>`;
+}
+function switchEquipTab(slot){
+  document.querySelectorAll('.equip-pick-tab').forEach(b=>b.classList.toggle('active',b.dataset.slot===slot));
+  document.getElementById('equipPickArea').innerHTML=equipPickerGrid(slot);
+}
+function pickEquip(slot, value){
+  state.equipDraft=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped,state.equipDraft,{[slot]:value});
+  document.getElementById('equipAvatarBig').src=avatarUrl(state.equipDraft,240);
+  document.getElementById('equipPickArea').innerHTML=equipPickerGrid(slot);
+}
+async function saveEquip(){
+  const equipped=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped,state.equipDraft);
+  const { error } = await sb.from('profiles').update({ equipped }).eq('id', state.profile.id);
+  if(error) return toast(error.message);
+  state.profile.equipped=equipped;
+  state.equipDraft=null;
+  const smEl=document.getElementById('studentAvatarSm'); if(smEl) smEl.innerHTML=avatarImgHTML(equipped);
+  toast(t('profile_saved_toast'));
 }
 
 /* default app helpers */
+renderLangSwitcher();
 (async () => {
   const { data:{ session } } = await sb.auth.getSession();
   if(session){ await bootAfterAuth(); } else { showOnly('landing'); }
