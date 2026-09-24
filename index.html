@@ -369,6 +369,22 @@ svg{display:block}
 .avatar-catalog-item span{font-size:10.5px;font-weight:800;color:var(--muted);text-align:center;line-height:1.2}
 .avatar-preview-big{width:120px;height:120px;border-radius:34px;box-shadow:0 12px 25px rgba(99,91,255,.13);border:4px solid white}
 
+/* ---------- Points prestige badge ---------- */
+.points-badge{position:relative;overflow:hidden;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 26px;border-radius:20px;min-width:110px;box-shadow:0 10px 24px rgba(20,20,50,.16)}
+.points-badge-num{font-size:28px;font-weight:950;letter-spacing:-.03em;color:#fff;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+.points-badge-label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.88);margin-top:4px}
+.points-badge:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.35) 48%,transparent 62%);transform:translateX(-120%)}
+.points-badge.tier-bronze{background:linear-gradient(135deg,#a9714f,#d19a6f)}
+.points-badge.tier-silver{background:linear-gradient(135deg,#8695a8,#d3dde6)}
+.points-badge.tier-gold{background:linear-gradient(135deg,#e2a52e,#ffd975)}
+.points-badge.tier-gold:after{animation:badgeShine 3.2s ease-in-out infinite}
+.points-badge.tier-epic{background:linear-gradient(135deg,#8b5cf6,#ff5ad1)}
+.points-badge.tier-epic:after{animation:badgeShine 2.6s ease-in-out infinite}
+.points-badge.tier-legendary{background:linear-gradient(120deg,#635bff,#28c6e8,#ff5a9d,#ffc857);background-size:300% 300%;animation:badgeGradient 5s ease infinite}
+.points-badge.tier-legendary:after{animation:badgeShine 2s ease-in-out infinite}
+@keyframes badgeShine{0%,25%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
+@keyframes badgeGradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
 /* Mobile */
 @media(max-width:980px){
   .hero-grid{grid-template-columns:1fr;gap:20px}.hero-visual{min-height:500px}.profile-card{right:5%}
@@ -627,6 +643,21 @@ function levelInfo(points){
   return { level, pct, toNext };
 }
 function fmt(n){ return (n||0).toLocaleString(state.lang==='en'?'en-GB':'es-ES'); }
+const POINTS_TIERS=[
+  { key:'bronze', min:0 },
+  { key:'silver', min:100 },
+  { key:'gold', min:300 },
+  { key:'epic', min:600 },
+  { key:'legendary', min:1000 }
+];
+function pointsTier(points){
+  let tier=POINTS_TIERS[0].key;
+  for(const tr of POINTS_TIERS) if((points||0)>=tr.min) tier=tr.key;
+  return tier;
+}
+function pointsBadgeHTML(points){
+  return `<div class="points-badge tier-${pointsTier(points)}"><span class="points-badge-num">${fmt(points)}</span><span class="points-badge-label">${t('word_points')}</span></div>`;
+}
 
 const state = { session:null, profile:null, myClasses:[], teacherClassId:null, teacherClassTab:'students', avatarPickSlot:'cara', studentClassId:null, studentClassTab:'market', equipDraft:null, lang:'es', authMode:'login', authRole:null };
 
@@ -1520,7 +1551,7 @@ async function renderStudentClassDetail(classId){
   const redeemedRows=redeemedItems.map(m=>`<div class="list-card"><div class="list-card-icon">${ICON('i-gift')}</div><div class="list-card-body"><div class="list-card-name">${m.name}</div><div class="list-card-meta"><span class="pill">${m.cost} pts</span></div></div></div>`).join('')||`<div class="empty-note">${t('no_redeemed')}</div>`;
   const total=cls?cls.points||0:0;
 
-  c.innerHTML=`<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('student','classes')">${ICON('i-back')} ${t('my_classes_student')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''}</p></div></div>
+  c.innerHTML=`<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('student','classes')">${ICON('i-back')} ${t('my_classes_student')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''}</p></div>${pointsBadgeHTML(total)}</div>
     <div class="teacher-tabs">${STUDENT_CLASS_TABS.map(tb=>`<button class="teacher-tab student-class-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchStudentClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>
     <div class="tab-panel student-tab-panel ${activeTab==='market'?'':'hidden'}" data-panel="market">
       <div class="panel">
