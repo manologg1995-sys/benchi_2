@@ -240,6 +240,9 @@ svg{display:block}
 .top-mobile{
   display:none;padding:15px 18px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;justify-content:space-between;align-items:center
 }
+.hamburger-btn{border:1px solid var(--line);background:#fff;width:38px;height:38px;border-radius:11px;display:none;align-items:center;justify-content:center;color:var(--ink);flex:none}
+.sidebar-close-btn{display:none}
+.mobile-nav-backdrop{display:none;position:fixed;inset:0;background:rgba(20,18,40,.45);z-index:45}
 .content{padding:34px 36px;max-width:1400px}
 .page-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:28px}
 .page-head h1{font-size:42px;letter-spacing:-.05em;line-height:1;margin:0 0 8px}.page-head p{color:var(--muted);margin:0}
@@ -391,11 +394,16 @@ svg{display:block}
   .steps{grid-template-columns:1fr 1fr}.connector{display:none}
   .feature-grid{grid-template-columns:1fr}
   .cta-inner{flex-direction:column;align-items:flex-start}
-  .app-shell{grid-template-columns:1fr}.sidebar{display:none}.top-mobile{display:flex}.content{padding:24px 18px}
+  .app-shell{grid-template-columns:1fr;position:relative}.sidebar{display:none}.top-mobile{display:flex}.content{padding:24px 18px}
+  .hamburger-btn{display:inline-flex}
+  .screen#teacher.mobile-nav-open .sidebar,.screen#student.mobile-nav-open .sidebar{display:flex;position:fixed;inset:0 auto 0 0;width:82%;max-width:300px;z-index:50;box-shadow:0 20px 60px rgba(20,20,50,.3);animation:slideInNav .2s ease}
+  .screen#teacher.mobile-nav-open .mobile-nav-backdrop,.screen#student.mobile-nav-open .mobile-nav-backdrop{display:block}
+  .sidebar .sidebar-close-btn{display:inline-flex}
   .stats{grid-template-columns:1fr 1fr}.class-grid{grid-template-columns:1fr 1fr}.market-grid{grid-template-columns:1fr 1fr}
   .student-hero{grid-template-columns:1fr}
   .auth-screen{grid-template-columns:1fr}.auth-art{min-height:340px;padding:35px}.auth-copy h1{font-size:58px}.auth-box-wrap{padding:28px 18px}
 }
+@keyframes slideInNav{from{transform:translateX(-100%)}to{transform:translateX(0)}}
 @media(max-width:650px){
   .container{width:min(100% - 28px,1180px)}.topbar-inner{height:66px}
   .hero{min-height:auto;padding:76px 0 30px}.hero h1{font-size:60px}.hero p{font-size:16px}
@@ -403,6 +411,12 @@ svg{display:block}
   .section{padding:65px 0}.steps{grid-template-columns:1fr}.feature-panel{min-height:530px;padding:24px}.mock-window{width:92%;right:4%}
   .footer-inner{flex-direction:column}.page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:34px}.stats{grid-template-columns:1fr 1fr}.class-grid,.market-grid{grid-template-columns:1fr}
   .profile-big{align-items:flex-start}.student-name{font-size:25px}.auth-copy h1{font-size:50px}.role-grid{grid-template-columns:1fr}
+  .btn{padding:10px 15px;font-size:13px;border-radius:12px;gap:6px}
+  .btn .icon{width:16px;height:16px}
+  .head-actions{width:100%}.head-actions .btn{flex:1}
+  .hero-actions .btn,.role-grid .btn{width:auto}
+  .points-badge{padding:9px 18px;min-width:88px}.points-badge-num{font-size:21px}
+  .teacher-tabs,.mkt-tabs{gap:6px}.teacher-tab,.mkt-tab{padding:8px 13px;font-size:12px}
 }
 
 /* tiny utility visuals */
@@ -426,6 +440,8 @@ svg{display:block}
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 16l4-4 3 2 5-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.7 6.3.9-4.6 4.4 1.1 6.2-5.5-2.9-5.5 2.9 1.1-6.2L3 9.6l6.3-.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0 0-3l-1-1a2.1 2.1 0 0 0-3 0L4 16v4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
 </svg>
@@ -581,8 +597,12 @@ svg{display:block}
 <!-- TEACHER APP -->
 <section id="teacher" class="screen">
   <div class="app-shell">
+    <div class="mobile-nav-backdrop" onclick="toggleMobileNav('teacher')"></div>
     <aside class="sidebar">
-      <a class="brand" onclick="showDashboard('teacher','home');return false;" href="#"><span class="brand-mark"></span>BENCHI</a>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <a class="brand" onclick="showDashboard('teacher','home');return false;" href="#"><span class="brand-mark"></span>BENCHI</a>
+        <button class="hamburger-btn sidebar-close-btn" onclick="toggleMobileNav('teacher')"><svg class="icon"><use href="#i-close"/></svg></button>
+      </div>
       <nav class="side-nav">
         <button class="nav-item active" data-route="teacher-home" onclick="showDashboard('teacher','home')"><svg class="icon"><use href="#i-home"/></svg>Inicio</button>
         <button class="nav-item" data-route="teacher-classes" onclick="showDashboard('teacher','classes')"><svg class="icon"><use href="#i-grid"/></svg>Mis aulas</button>
@@ -595,7 +615,7 @@ svg{display:block}
       <div class="user-mini"><div class="avatar-sm" id="teacherAvatarSm" style="font-size:18px">🙂</div><div><div id="teacherUserName" style="font-weight:900;font-size:12px">Manuel García</div><div class="small-muted" id="teacherUserRole">Profesor</div></div></div>
     </aside>
     <div class="main">
-      <div class="top-mobile"><a href="#" class="brand" onclick="showDashboard('teacher','home');return false;"><span class="brand-mark"></span>BENCHI</a><button class="btn btn-light" onclick="logout()">Salir</button></div>
+      <div class="top-mobile"><div style="display:flex;align-items:center;gap:10px"><button class="hamburger-btn" onclick="toggleMobileNav('teacher')"><svg class="icon"><use href="#i-menu"/></svg></button><a href="#" class="brand" onclick="showDashboard('teacher','home');return false;"><span class="brand-mark"></span>BENCHI</a></div><button class="btn btn-light" onclick="logout()">Salir</button></div>
       <div id="teacher-content" class="content"></div>
     </div>
   </div>
@@ -604,8 +624,12 @@ svg{display:block}
 <!-- STUDENT APP -->
 <section id="student" class="screen">
   <div class="app-shell">
+    <div class="mobile-nav-backdrop" onclick="toggleMobileNav('student')"></div>
     <aside class="sidebar">
-      <a class="brand" onclick="showDashboard('student','home');return false;" href="#"><span class="brand-mark"></span>BENCHI</a>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <a class="brand" onclick="showDashboard('student','home');return false;" href="#"><span class="brand-mark"></span>BENCHI</a>
+        <button class="hamburger-btn sidebar-close-btn" onclick="toggleMobileNav('student')"><svg class="icon"><use href="#i-close"/></svg></button>
+      </div>
       <nav class="side-nav">
         <button class="nav-item active" data-route="student-home" onclick="showDashboard('student','home')"><svg class="icon"><use href="#i-home"/></svg>Inicio</button>
         <button class="nav-item" data-route="student-classes" onclick="showDashboard('student','classes')"><svg class="icon"><use href="#i-grid"/></svg>Mis clases</button>
@@ -616,7 +640,7 @@ svg{display:block}
       <div class="user-mini"><div class="avatar-sm" id="studentAvatarSm" style="font-size:18px">🙂</div><div><div id="studentUserName" style="font-weight:900;font-size:12px">Alex Moreno</div><div class="small-muted" id="studentUserRole">Alumno · Nivel 8</div></div></div>
     </aside>
     <div class="main">
-      <div class="top-mobile"><a href="#" class="brand" onclick="showDashboard('student','home');return false;"><span class="brand-mark"></span>BENCHI</a><button class="btn btn-light" onclick="logout()">Salir</button></div>
+      <div class="top-mobile"><div style="display:flex;align-items:center;gap:10px"><button class="hamburger-btn" onclick="toggleMobileNav('student')"><svg class="icon"><use href="#i-menu"/></svg></button><a href="#" class="brand" onclick="showDashboard('student','home');return false;"><span class="brand-mark"></span>BENCHI</a></div><button class="btn btn-light" onclick="logout()">Salir</button></div>
       <div id="student-content" class="content"></div>
     </div>
   </div>
@@ -982,9 +1006,13 @@ async function loadMyClasses(){
   }
 }
 
+function toggleMobileNav(type){
+  document.getElementById(type).classList.toggle('mobile-nav-open');
+}
 async function showDashboard(type, route='home', arg){
   showOnly(type);
   updateNav(type, route);
+  document.getElementById(type).classList.remove('mobile-nav-open');
   const contentId = type==='teacher' ? 'teacher-content' : 'student-content';
   document.getElementById(contentId).innerHTML = '<div class="panel">Cargando…</div>';
   await loadMyClasses();
@@ -1163,11 +1191,17 @@ function avatarUrl(equipped, size){
 function avatarImgHTML(equipped){
   return `<img src="${avatarUrl(equipped,96)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`;
 }
+function avatarItemPreviewEq(item){
+  if(!item||!item.asset_value) return null;
+  if(item.slot==='cara') return { cara:item.asset_value, sombrero:item.emoji||EQUIP_DEFAULTS.sombrero };
+  return { [item.slot]:item.asset_value };
+}
 const AVATAR_CATALOG={
   cara:[
-    {name:'Nova',value:'Nova'},{name:'Rex',value:'Rex'},{name:'Luna',value:'Luna'},{name:'Kai',value:'Kai'},
-    {name:'Mia',value:'Mia'},{name:'Sol',value:'Sol'},{name:'Zeta',value:'Zeta'},{name:'Leo',value:'Leo'},
-    {name:'Iris',value:'Iris'},{name:'Atlas',value:'Atlas'}
+    {name:'Nova',value:'Nova',top:'bob'},{name:'Rex',value:'Rex',top:'shortFlat'},{name:'Luna',value:'Luna',top:'longButNotTooLong'},{name:'Kai',value:'Kai',top:'shortWaved'},
+    {name:'Mia',value:'Mia',top:'curly'},{name:'Sol',value:'Sol',top:'shavedSides'},{name:'Zeta',value:'Zeta',top:'bigHair'},{name:'Leo',value:'Leo',top:'shortRound'},
+    {name:'Iris',value:'Iris',top:'bun'},{name:'Atlas',value:'Atlas',top:'sides'},{name:'Vega',value:'Vega',top:'straightAndStrand'},{name:'Milo',value:'Milo',top:'fro'},
+    {name:'Ada',value:'Ada',top:'frida'},{name:'Bruno',value:'Bruno',top:'theCaesar'},{name:'Nia',value:'Nia',top:'dreads'},{name:'Elio',value:'Elio',top:'shaggyMullet'}
   ],
   sombrero:[
     {name:'Sin gorro',value:'shortFlat'},{name:'Gorro',value:'hat'},{name:'Gorro de invierno',value:'winterHat1'},
@@ -1187,16 +1221,18 @@ const AVATAR_CATALOG={
 };
 function avatarCatalogChips(slot, classId){
   const list=AVATAR_CATALOG[slot]||[];
-  return `<div class="avatar-catalog-grid">${list.map((it,i)=>`
-    <button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}')">
-      <img src="${avatarUrl(slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value},72)}" alt="${it.name}">
+  return `<div class="avatar-catalog-grid">${list.map((it,i)=>{
+    const eq = slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value,sombrero:it.top}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value};
+    return `<button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}')">
+      <img src="${avatarUrl(eq,72)}" alt="${it.name}">
       <span>${it.name}</span>
-    </button>`).join('')}</div>`;
+    </button>`;
+  }).join('')}</div>`;
 }
 async function addCatalogAvatarItem(slot, i, classId){
   const it=AVATAR_CATALOG[slot][i];
   const cost = slot==='cara'?0:20;
-  await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji:'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
+  await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji: slot==='cara'?(it.top||''):'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
   renderTeacher('classdetail', classId);
 }
 function suggestionChips(list, kind, classId){
@@ -1279,7 +1315,7 @@ async function renderClassDetail(classId){
       </div>
     </div>`).join('')||`<div class="empty-note">${t('no_rewards')}</div>`;
   const avatarRows=(avatars||[]).map(a=>{
-    const eq=a.asset_value!==undefined&&a.asset_value!==null?{[a.slot]:a.asset_value}:null;
+    const eq=avatarItemPreviewEq(a);
     const thumb=eq?`<img src="${avatarUrl(eq,72)}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`:(a.emoji||'✦');
     return `<div class="list-card">
       <div class="list-card-icon" style="font-size:19px;overflow:hidden;padding:0">${thumb}</div>
@@ -1382,7 +1418,7 @@ async function saveMarketEdit(id, classId){
 }
 function editAvatarItem(id, classId){
   const a=window._cd.avatars.find(x=>x.id===id); if(!a) return;
-  const eq=a.asset_value?{[a.slot]:a.asset_value}:{};
+  const eq=avatarItemPreviewEq(a)||{};
   modal(`${t('edit_btn')} · ${t('skins_panel')}`, `<div class="form">
     <div style="display:flex;justify-content:center"><img src="${avatarUrl(eq,90)}" style="width:64px;height:64px;border-radius:16px;background:var(--surface-2)"></div>
     <div class="field"><label>${t('name_field')}</label><input id="editAvName" value="${a.name}"></div>
@@ -1537,7 +1573,7 @@ async function renderStudentClassDetail(classId){
     return `<article class="product"><div class="product-art b"><div class="product-icon">${ICON('i-gift')}</div></div><div class="product-name">${m.name}</div><div class="product-meta"><span class="price">${m.cost} ${t('word_points')}</span><button class="buy" ${ownedM.has(m.id)?'disabled':''} onclick="buyMarket('${m.id}')">${ownedM.has(m.id)?t('already_have'):t('redeem_btn')}</button></div></article>`;
   }
   function cardAvatar(a){
-    const eq=a.asset_value?{[a.slot]:a.asset_value}:null;
+    const eq=avatarItemPreviewEq(a);
     const thumb=eq?`<img src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:24px">${a.emoji||'✦'}</div>`;
     return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div><div class="product-meta"><span class="price">${a.cost>0?a.cost+' '+t('word_points'):a.unlock_type}</span><button class="buy" ${ownedA.has(a.id)||a.unlock_type==='logro'?'disabled':''} onclick="buyAvatar('${a.id}')">${ownedA.has(a.id)?t('already_have'):t('buy_btn')}</button></div></article>`;
   }
@@ -1597,7 +1633,7 @@ async function renderStudentProfile(){
   window._ownedAvatars=owned;
   state.equipDraft=null;
   const skinCards=owned.map(a=>{
-    const eq=a.asset_value?{[a.slot]:a.asset_value}:null;
+    const eq=avatarItemPreviewEq(a);
     const thumb=eq?`<img src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:22px">${a.emoji||'✦'}</div>`;
     return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div></article>`;
   }).join('')||`<div class="empty-note">${t('no_skins_yet')}</div>`;
@@ -1627,7 +1663,7 @@ function equipPickerGrid(slot){
   const owned=(window._ownedAvatars||[]).filter(a=>a.slot===slot);
   const noneChip = slot!=='cara' ? `<button type="button" class="avatar-catalog-item ${!current?'selected':''}" onclick="pickEquip('${slot}','')"><div style="width:52px;height:52px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;color:var(--muted);font-size:20px">–</div><span>${t('none_label')}</span></button>` : '';
   const itemsHtml=owned.map(a=>{
-    const eq={[slot]:a.asset_value};
+    const eq=avatarItemPreviewEq(a);
     const sel = current===a.asset_value;
     return `<button type="button" class="avatar-catalog-item ${sel?'selected':''}" onclick="pickEquip('${slot}','${a.asset_value}')"><img src="${avatarUrl(eq,72)}" alt="${a.name}"><span>${a.name}</span></button>`;
   }).join('');
