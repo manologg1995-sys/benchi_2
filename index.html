@@ -1276,19 +1276,46 @@ const DEFAULT_REWARDS = {
 /* ================= AVATAR ILLUSTRATIONS (DiceBear) ================= */
 const DICEBEAR_STYLE='critters';
 const DICEBEAR_BASE=`https://api.dicebear.com/10.x/${DICEBEAR_STYLE}/svg`;
-const EQUIP_DEFAULTS={ cara:'Benchi1', sombrero:'', accesorio:'', fondo:'a5b4fc' };
+const EQUIP_DEFAULTS={ cara:'conejo', sombrero:'', accesorio:'', fondo:'a5b4fc' };
+const CARA_PRESETS={
+  conejo:{bodyVariant:'round',eyesVariant:'bigPupils',mouthVariant:'smile',topVariant:'earsRound',bodyColor:'fda4af'},
+  dragon:{bodyVariant:'block',eyesVariant:'angry',mouthVariant:'teeth',topVariant:'horns',bodyColor:'6ee7b9'},
+  buho:{bodyVariant:'dome',eyesVariant:'sleepy',mouthVariant:'tinySmile',topVariant:'earsDroop',bodyColor:'c4b5fd'},
+  tiburon:{bodyVariant:'wedge',eyesVariant:'wide',mouthVariant:'open',topVariant:'fin',bodyColor:'7dd3fc'},
+  zorro:{bodyVariant:'peak',eyesVariant:'happy',mouthVariant:'grin',topVariant:'earsPointy',bodyColor:'fb923c'},
+  oruga:{bodyVariant:'blob',eyesVariant:'dots',mouthVariant:'blep',topVariant:'antennae',bodyColor:'bef264'},
+  dino:{bodyVariant:'tower',eyesVariant:'sideeye',mouthVariant:'smirk',topVariant:'spikes',bodyColor:'a5b4fc'},
+  leon:{bodyVariant:'lean',eyesVariant:'squint',mouthVariant:'grin',topVariant:'crown',bodyColor:'fcd34d'},
+  gato:{bodyVariant:'round',eyesVariant:'closedLine',mouthVariant:'smile',topVariant:'earsRound',bodyColor:'f0abfc'},
+  toro:{bodyVariant:'squat',eyesVariant:'mono',mouthVariant:'line',topVariant:'hornsSmall',bodyColor:'94a3b8'},
+  insecto:{bodyVariant:'chimney',eyesVariant:'four',mouthVariant:'ooh',topVariant:'antenna',bodyColor:'5eead4'},
+  oso:{bodyVariant:'bell',eyesVariant:'happy',mouthVariant:'catMouth',topVariant:'bobble',bodyColor:'fca5a5'},
+  rana:{bodyVariant:'steps',eyesVariant:'wink',mouthVariant:'smirk',topVariant:'sprout',bodyColor:'86efac'},
+  jabali:{bodyVariant:'wedgeInv',eyesVariant:'uneven',mouthVariant:'tooth',topVariant:'hornsIn',bodyColor:'fdba74'},
+  dragoncito:{bodyVariant:'tilt',eyesVariant:'trio',mouthVariant:'zigzag',topVariant:'spike',bodyColor:'f9a8d4'},
+  pulpo:{bodyVariant:'blob',eyesVariant:'threeRow',mouthVariant:'tongue',topVariant:'nub',bodyColor:'818cf8'}
+};
 function avatarUrl(equipped, size){
   const eq=Object.assign({}, EQUIP_DEFAULTS, equipped||{});
-  const p=new URLSearchParams({
+  const preset=CARA_PRESETS[eq.cara];
+  const top=eq.sombrero||(preset&&preset.topVariant)||'';
+  const params={
     seed:eq.cara||EQUIP_DEFAULTS.cara,
-    topVariant:eq.sombrero||'',
-    topProbability:eq.sombrero?100:0,
+    topVariant:top,
+    topProbability:top?100:0,
     patternVariant:eq.accesorio||'',
     patternProbability:eq.accesorio?100:0,
     backgroundColor:eq.fondo||EQUIP_DEFAULTS.fondo,
     backgroundType:'solid',
     radius:50
-  });
+  };
+  if(preset){
+    params.bodyVariant=preset.bodyVariant;
+    params.eyesVariant=preset.eyesVariant;
+    params.mouthVariant=preset.mouthVariant;
+    params.bodyColor=preset.bodyColor;
+  }
+  const p=new URLSearchParams(params);
   if(size) p.set('size',size);
   return `${DICEBEAR_BASE}?${p.toString()}`;
 }
@@ -1301,10 +1328,10 @@ function avatarItemPreviewEq(item){
 }
 const AVATAR_CATALOG={
   cara:[
-    {name:'Nova',value:'Nova'},{name:'Rex',value:'Rex'},{name:'Luna',value:'Luna'},{name:'Kai',value:'Kai'},
-    {name:'Mia',value:'Mia'},{name:'Sol',value:'Sol'},{name:'Zeta',value:'Zeta'},{name:'Leo',value:'Leo'},
-    {name:'Iris',value:'Iris'},{name:'Atlas',value:'Atlas'},{name:'Vega',value:'Vega'},{name:'Milo',value:'Milo'},
-    {name:'Ada',value:'Ada'},{name:'Bruno',value:'Bruno'},{name:'Nia',value:'Nia'},{name:'Elio',value:'Elio'}
+    {name:'Conejo',value:'conejo'},{name:'Dragón',value:'dragon'},{name:'Búho',value:'buho'},{name:'Tiburón',value:'tiburon'},
+    {name:'Zorro',value:'zorro'},{name:'Oruga',value:'oruga'},{name:'Dino',value:'dino'},{name:'León',value:'leon'},
+    {name:'Gato',value:'gato'},{name:'Toro',value:'toro'},{name:'Insecto',value:'insecto'},{name:'Oso',value:'oso'},
+    {name:'Rana',value:'rana'},{name:'Jabalí',value:'jabali'},{name:'Dragoncito',value:'dragoncito'},{name:'Pulpo',value:'pulpo'}
   ],
   sombrero:[
     {name:'Cuernos',value:'horns'},{name:'Cuernos curvos',value:'hornsIn'},{name:'Cuernitos',value:'hornsSmall'},
