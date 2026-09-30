@@ -846,7 +846,7 @@ const I18N = {
     no_behaviors:'Sin comportamientos.', delete_btn:'Eliminar', edit_btn:'Editar', name_field:'Nombre', value_field:'± valor', add_behavior_btn:'Añadir comportamiento',
     rewards_panel:'Recompensas', no_rewards:'Sin recompensas.', cost_field:'Coste', featured_label:'Destacada', add_reward_btn:'Añadir recompensa',
     skins_panel:'Tienda de skins', no_skins:'Sin skins.', symbol_field:'Símbolo (ej. ★)',
-    slot_bg:'fondo', slot_face:'cara', slot_hat:'sombrero', slot_acc:'accesorio',
+    slot_bg:'fondo', slot_face:'cara', slot_hat:'sombrero', slot_acc:'patrón',
     rarity_common:'Común', rarity_rare:'Rara', rarity_epic:'Épica', add_skin_btn:'Añadir skin',
     class_history_panel:'Historial del aula', no_movements:'Sin movimientos.', points_applied_toast:'puntos aplicados', manual_adjustment:'Ajuste manual',
     word_level_cap:'NIVEL', active_class_singular:'aula activa', active_class_plural:'aulas activas',
@@ -928,7 +928,7 @@ const I18N = {
     no_behaviors:'No behaviors yet.', delete_btn:'Delete', edit_btn:'Edit', name_field:'Name', value_field:'± value', add_behavior_btn:'Add behavior',
     rewards_panel:'Rewards', no_rewards:'No rewards yet.', cost_field:'Cost', featured_label:'Featured', add_reward_btn:'Add reward',
     skins_panel:'Skin shop', no_skins:'No skins yet.', symbol_field:'Symbol (e.g. ★)',
-    slot_bg:'background', slot_face:'face', slot_hat:'hat', slot_acc:'accessory',
+    slot_bg:'background', slot_face:'face', slot_hat:'hat', slot_acc:'pattern',
     rarity_common:'Common', rarity_rare:'Rare', rarity_epic:'Epic', add_skin_btn:'Add skin',
     class_history_panel:'Classroom history', no_movements:'No activity yet.', points_applied_toast:'points applied', manual_adjustment:'Manual adjustment',
     word_level_cap:'LEVEL', active_class_singular:'active classroom', active_class_plural:'active classrooms',
@@ -1274,16 +1274,17 @@ const DEFAULT_REWARDS = {
 };
 
 /* ================= AVATAR ILLUSTRATIONS (DiceBear) ================= */
-const DICEBEAR_STYLE='avataaars';
+const DICEBEAR_STYLE='critters';
 const DICEBEAR_BASE=`https://api.dicebear.com/10.x/${DICEBEAR_STYLE}/svg`;
-const EQUIP_DEFAULTS={ cara:'Benchi1', sombrero:'shortFlat', accesorio:'', fondo:'c7d2fe' };
+const EQUIP_DEFAULTS={ cara:'Benchi1', sombrero:'', accesorio:'', fondo:'a5b4fc' };
 function avatarUrl(equipped, size){
   const eq=Object.assign({}, EQUIP_DEFAULTS, equipped||{});
   const p=new URLSearchParams({
     seed:eq.cara||EQUIP_DEFAULTS.cara,
-    topVariant:eq.sombrero||EQUIP_DEFAULTS.sombrero,
-    accessoriesVariant:eq.accesorio||'',
-    accessoriesProbability:eq.accesorio?100:0,
+    topVariant:eq.sombrero||'',
+    topProbability:eq.sombrero?100:0,
+    patternVariant:eq.accesorio||'',
+    patternProbability:eq.accesorio?100:0,
     backgroundColor:eq.fondo||EQUIP_DEFAULTS.fondo,
     backgroundType:'solid',
     radius:50
@@ -1296,25 +1297,26 @@ function avatarImgHTML(equipped){
 }
 function avatarItemPreviewEq(item){
   if(!item||!item.asset_value) return null;
-  if(item.slot==='cara') return { cara:item.asset_value, sombrero:item.emoji||EQUIP_DEFAULTS.sombrero };
   return { [item.slot]:item.asset_value };
 }
 const AVATAR_CATALOG={
   cara:[
-    {name:'Nova',value:'Nova',top:'bob'},{name:'Rex',value:'Rex',top:'shortFlat'},{name:'Luna',value:'Luna',top:'longButNotTooLong'},{name:'Kai',value:'Kai',top:'shortWaved'},
-    {name:'Mia',value:'Mia',top:'curly'},{name:'Sol',value:'Sol',top:'shavedSides'},{name:'Zeta',value:'Zeta',top:'bigHair'},{name:'Leo',value:'Leo',top:'shortRound'},
-    {name:'Iris',value:'Iris',top:'bun'},{name:'Atlas',value:'Atlas',top:'sides'},{name:'Vega',value:'Vega',top:'straightAndStrand'},{name:'Milo',value:'Milo',top:'fro'},
-    {name:'Ada',value:'Ada',top:'frida'},{name:'Bruno',value:'Bruno',top:'theCaesar'},{name:'Nia',value:'Nia',top:'dreads'},{name:'Elio',value:'Elio',top:'shaggyMullet'}
+    {name:'Nova',value:'Nova'},{name:'Rex',value:'Rex'},{name:'Luna',value:'Luna'},{name:'Kai',value:'Kai'},
+    {name:'Mia',value:'Mia'},{name:'Sol',value:'Sol'},{name:'Zeta',value:'Zeta'},{name:'Leo',value:'Leo'},
+    {name:'Iris',value:'Iris'},{name:'Atlas',value:'Atlas'},{name:'Vega',value:'Vega'},{name:'Milo',value:'Milo'},
+    {name:'Ada',value:'Ada'},{name:'Bruno',value:'Bruno'},{name:'Nia',value:'Nia'},{name:'Elio',value:'Elio'}
   ],
   sombrero:[
-    {name:'Sin gorro',value:'shortFlat'},{name:'Gorro',value:'hat'},{name:'Gorro de invierno',value:'winterHat1'},
-    {name:'Gorro pompón',value:'winterHat02'},{name:'Gorro orejas',value:'winterHat03'},{name:'Gorro rayas',value:'winterHat04'},
-    {name:'Turbante',value:'turban'},{name:'Pañuelo',value:'hijab'},{name:'Rizos',value:'curly'},{name:'Moño',value:'bun'}
+    {name:'Cuernos',value:'horns'},{name:'Cuernos curvos',value:'hornsIn'},{name:'Cuernitos',value:'hornsSmall'},
+    {name:'Púa',value:'spike'},{name:'Antena',value:'antenna'},{name:'Antenas',value:'antennae'},
+    {name:'Orejas redondas',value:'earsRound'},{name:'Orejas puntiagudas',value:'earsPointy'},{name:'Orejas caídas',value:'earsDroop'},
+    {name:'Púas',value:'spikes'},{name:'Aleta',value:'fin'},{name:'Corona',value:'crown'},
+    {name:'Brote',value:'sprout'},{name:'Bulto',value:'nub'},{name:'Bolita',value:'bobble'}
   ],
   accesorio:[
-    {name:'Sin gafas',value:''},{name:'Redondas',value:'round'},{name:'Wayfarer',value:'wayfarers'},
-    {name:'De sol',value:'sunglasses'},{name:'Graduadas',value:'prescription01'},{name:'Graduadas finas',value:'prescription02'},
-    {name:'Parche pirata',value:'eyepatch'},{name:'Estilo Kurt',value:'kurt'}
+    {name:'Barriga',value:'belly'},{name:'Lunares',value:'dots'},{name:'Pecas',value:'speckles'},
+    {name:'Franja',value:'bar'},{name:'Franjas',value:'bars'},{name:'Mancha',value:'spot'},
+    {name:'Rayas',value:'stripes'},{name:'Fila de puntos',value:'dotRow'},{name:'Chevrón',value:'chevron'},{name:'Anillo',value:'ring'}
   ],
   fondo:[
     {name:'Lila',value:'c7d2fe'},{name:'Cian',value:'a7f0f0'},{name:'Rosa',value:'ffd1e6'},{name:'Amarillo',value:'ffe6a7'},
@@ -1335,7 +1337,7 @@ function avatarCatalogChips(slot, classId){
 async function addCatalogAvatarItem(slot, i, classId){
   const it=AVATAR_CATALOG[slot][i];
   const cost = slot==='cara'?0:20;
-  await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji: slot==='cara'?(it.top||''):'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
+  await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji:'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
   renderTeacher('classdetail', classId);
 }
 function suggestionChips(list, kind, classId){
@@ -1436,7 +1438,7 @@ async function renderClassDetail(classId){
 
   const tabsHtml=`<div class="teacher-tabs">${CLASS_TABS.map(tb=>`<button class="teacher-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>`;
 
-  c.innerHTML = `<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('teacher','classes')">${ICON('i-back')} ${t('my_classes')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''} · ${t('code_label')} ${cls?cls.code:''}</p></div></div>
+  c.innerHTML = `<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('teacher','classes')">${ICON('i-back')} ${t('my_classes')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''} · ${t('code_label')} ${cls?cls.code:''}</p></div><div class="head-actions"><button class="btn btn-light" onclick="confirmDeleteClass('${classId}','${(cls?cls.name:'').replace(/'/g,"\\'")}')">${ICON('i-trash')} Eliminar aula</button></div></div>
     ${tabsHtml}
     <div class="tab-panel ${activeTab==='students'?'':'hidden'}" data-panel="students">
       <div class="panel"><div class="panel-title"><h2>${t('students_panel')}</h2></div>${studentRows}</div>
@@ -1583,6 +1585,20 @@ async function deleteRow(table,id,classId){
   await sb.from(table).delete().eq('id',id);
   renderTeacher('classdetail', classId);
 }
+function confirmDeleteClass(classId, className){
+  modal('Eliminar aula', `<div class="form">
+    <p class="small-muted">Vas a eliminar <b>${className}</b> de forma permanente. Se borrarán también sus alumnos, comportamientos, recompensas, skins e historial de puntos. Esta acción no se puede deshacer.</p>
+    <button class="btn btn-primary" style="background:#e0446b" onclick="doDeleteClass('${classId}')">Sí, eliminar aula</button>
+    <button class="btn btn-light" onclick="closeModal()">Cancelar</button>
+  </div>`);
+}
+async function doDeleteClass(classId){
+  const { error } = await sb.rpc('delete_class', { p_class: classId });
+  if(error) return toast(error.message);
+  closeModal();
+  toast('Aula eliminada');
+  showDashboard('teacher','classes');
+}
 
 /* ================= STUDENT ================= */
 function studentHeader(title,sub,action=''){
@@ -1640,6 +1656,20 @@ async function doJoinClass(){
   closeModal(); toast(t('joined_toast')+found.name);
   showDashboard('student','classes');
 }
+function confirmLeaveClass(classId, className){
+  modal('Salir del aula', `<div class="form">
+    <p class="small-muted">Vas a salir de <b>${className}</b>. Perderás tus puntos y tu progreso en esta aula, pero podrás volver a unirte más adelante con el código.</p>
+    <button class="btn btn-primary" style="background:#e0446b" onclick="doLeaveClass('${classId}')">Sí, salir del aula</button>
+    <button class="btn btn-light" onclick="closeModal()">Cancelar</button>
+  </div>`);
+}
+async function doLeaveClass(classId){
+  const { error } = await sb.from('class_members').delete().eq('student_id', state.profile.id).eq('class_id', classId);
+  if(error) return toast(error.message);
+  closeModal();
+  toast('Has salido del aula');
+  showDashboard('student','classes');
+}
 function activityHTML(rows){
   if(!rows||!rows.length) return `<div class="empty-note">${t('no_movements2')}</div>`;
   return `<div class="activity">${rows.map(l=>`<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString(state.lang==='en'?'en-GB':'es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`).join('')}</div>`;
@@ -1690,7 +1720,7 @@ async function renderStudentClassDetail(classId){
   const redeemedRows=redeemedItems.map(m=>`<div class="list-card"><div class="list-card-icon">${ICON('i-gift')}</div><div class="list-card-body"><div class="list-card-name">${m.name}</div><div class="list-card-meta"><span class="pill">${m.cost} pts</span></div></div></div>`).join('')||`<div class="empty-note">${t('no_redeemed')}</div>`;
   const total=cls?cls.points||0:0;
 
-  c.innerHTML=`<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('student','classes')">${ICON('i-back')} ${t('my_classes_student')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''}</p></div>${pointsBadgeHTML(total)}</div>
+  c.innerHTML=`<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('student','classes')">${ICON('i-back')} ${t('my_classes_student')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''}</p></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">${pointsBadgeHTML(total)}<button class="btn btn-light" style="font-size:12px;padding:9px 14px" onclick="confirmLeaveClass('${classId}','${(cls?cls.name:'').replace(/'/g,"\\'")}')">Salir del aula</button></div></div>
     <div class="teacher-tabs">${STUDENT_CLASS_TABS.map(tb=>`<button class="teacher-tab student-class-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchStudentClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>
     <div class="tab-panel student-tab-panel ${activeTab==='market'?'':'hidden'}" data-panel="market">
       <div class="panel">
