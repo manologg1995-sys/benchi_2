@@ -1758,11 +1758,14 @@ function openJoinClass(){
 async function doJoinClass(){
   const code=document.getElementById('joinCode').value.trim().toUpperCase();
   if(!code) return;
-  const { data:found, error:e0 } = await sb.from('classes').select('*').eq('code',code).single();
-  if(e0||!found){ document.getElementById('joinError').textContent=t('class_code_not_found'); return; }
-  const { error } = await sb.from('class_members').insert({ student_id:state.profile.id, class_id:found.id, points:0 });
-  if(error){ document.getElementById('joinError').textContent = error.message.includes('duplicate')?t('already_in_class'):error.message; return; }
-  closeModal(); toast(t('joined_toast')+found.name);
+  const { data, error } = await sb.rpc('join_class', { p_code: code });
+  if(error){
+    const msg = error.message||'';
+    document.getElementById('joinError').textContent = msg.includes('class_code_not_found')?t('class_code_not_found'):msg.includes('duplicate')?t('already_in_class'):msg;
+    return;
+  }
+  const found = Array.isArray(data)?data[0]:data;
+  closeModal(); toast(t('joined_toast')+(found?found.class_name:''));
   showDashboard('student','classes');
 }
 function confirmLeaveClass(classId, className){
