@@ -177,17 +177,53 @@ svg{display:block}
 .plus-caption{font-size:12px;color:var(--muted);font-weight:750}
 
 .section-soft{background:linear-gradient(180deg,#fbfbfe,#f7f8fc)}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:42px;position:relative}
-.step{
-  padding:25px;border-radius:23px;background:white;border:1px solid var(--line);box-shadow:0 10px 25px rgba(31,32,66,.05);position:relative
-}
-.step-no{font-weight:950;font-size:13px;color:var(--primary);margin-bottom:30px}
-.step h3{margin:0 0 8px;font-size:20px}.step p{margin:0;color:var(--muted);font-size:14px}
 .step-icon{
   width:50px;height:50px;border-radius:17px;display:grid;place-items:center;margin-bottom:24px;
   background:linear-gradient(135deg,#eef2ff,#fef0fa);color:#635bff
 }
-.connector{position:absolute;top:50%;height:1px;background:linear-gradient(90deg,#d6d8ef,#eef0f8);left:10%;right:10%;z-index:0}
+
+/* ---------- Explainer (Así funciona) ---------- */
+.tagline-wrap{text-align:center;margin-bottom:30px}
+.tagline{font-size:clamp(24px,3vw,32px);font-weight:950;letter-spacing:-.03em;margin:0}
+.tagline-sub{color:var(--muted);font-size:15px;margin:8px 0 0}
+.explainer{background:#fff;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-columns:1fr 1fr;min-height:400px}
+.explainer-copy{padding:44px 40px;display:flex;flex-direction:column;justify-content:center}
+.explainer-copy h3{font-size:26px;letter-spacing:-.03em;margin:0 0 12px;line-height:1.2;transition:opacity .3s}
+.explainer-copy p{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 24px;transition:opacity .3s}
+.dots{display:flex;gap:10px}
+.dot-btn{width:38px;height:5px;border-radius:99px;background:var(--line);border:0;cursor:pointer;transition:.25s;padding:0}
+.dot-btn.active{background:linear-gradient(90deg,var(--primary),var(--pink))}
+.stage{position:relative;background:radial-gradient(circle at 20% 20%,rgba(99,91,255,.10),transparent 40%),radial-gradient(circle at 85% 80%,rgba(255,90,157,.10),transparent 40%),#fafaff;display:grid;place-items:center;min-height:280px}
+.explain-scene{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transform:translateY(14px) scale(.97);transition:opacity .45s ease,transform .45s ease;pointer-events:none}
+.explain-scene.active{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.explain-scene .card{background:#fff;border-radius:20px;box-shadow:0 14px 34px rgba(20,20,50,.10);padding:20px;width:260px}
+.explain-scene .card.wide{width:300px}
+.explain-scene .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #f0f1f6}
+.explain-scene .row:last-child{border:0}
+.explain-scene .who{display:flex;align-items:center;gap:9px;font-weight:800;font-size:13px}
+.explain-scene .av{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#d8d3ff,#ffd9e9);display:grid;place-items:center;font-size:14px}
+.explain-scene .plusbtn{background:#eef0ff;color:var(--primary);border:0;border-radius:9px;padding:6px 10px;font-weight:900;font-size:12px}
+.explain-scene .bump{position:absolute;right:-6px;top:-10px;background:var(--green);color:#fff;font-weight:900;font-size:11px;padding:3px 7px;border-radius:8px;opacity:0;transform:translateY(6px);transition:.35s}
+.explain-scene.scene1.active .bump{opacity:1;transform:translateY(0)}
+.explain-scene .rowwrap{position:relative}
+.explain-scene .lvlcard{text-align:center}
+.explain-scene .badge{display:inline-flex;padding:7px 12px;border-radius:999px;background:#fff;border:1px solid #eceaf7;color:#6559cf;font-size:11px;font-weight:900;margin-bottom:10px}
+.explain-scene .lvlnum{font-size:44px;font-weight:950;letter-spacing:-.04em;margin-bottom:6px}
+.explain-scene .bar{height:10px;border-radius:99px;background:#eef0f6;overflow:hidden;margin-bottom:8px}
+.explain-scene .bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--pink));width:0%;transition:width 1.1s ease}
+.explain-scene.scene2.active .bar span{width:82%}
+.explain-scene .xp{font-size:11px;color:var(--muted);font-weight:800}
+.explain-scene .rewardgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.explain-scene .mini-art{height:64px;border-radius:12px;display:grid;place-items:center;margin-bottom:8px}
+.explain-scene .mini-art.skin{background:linear-gradient(135deg,var(--primary),#cf6dff)}
+.explain-scene .mini-art.benefit{background:linear-gradient(135deg,var(--cyan),#5f72ff)}
+.explain-scene .check2{width:28px;height:28px;border-radius:50%;background:#fff;display:grid;place-items:center;opacity:0;transform:scale(.4);transition:.4s cubic-bezier(.34,1.56,.64,1)}
+.explain-scene.scene3.active .check2{opacity:1;transform:scale(1)}
+.explain-scene.scene3.active .check2.d2{transition-delay:.15s}
+.explain-scene .check2 svg{width:15px;height:15px}
+.explain-scene .mini-name{font-weight:900;font-size:12px}
+.explain-scene .mini-tag{font-size:9.5px;font-weight:800;color:var(--green);margin-top:2px}
+@media(max-width:720px){.explainer{grid-template-columns:1fr}}
 .step{z-index:1}
 
 .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:42px}
@@ -530,15 +566,51 @@ svg{display:block}
 
   <section id="how" class="section section-soft">
     <div class="container">
-      <span class="eyebrow" data-i18n="how_eyebrow">Así funciona</span>
-      <h2 class="section-title" data-i18n-html="how_title">Cada pequeño logro <span class="gradient-text">cuenta.</span></h2>
-      <p class="section-copy" data-i18n="how_copy">Una experiencia sencilla para reconocer el trabajo que ocurre dentro del aula y convertirlo en motivación visible.</p>
-      <div class="steps">
-        <div class="connector"></div>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-user"/></svg></div><div class="step-no">01</div><h3 data-i18n="step1_t">Participa</h3><p data-i18n="step1_p">El alumno trabaja, participa y se implica en clase.</p></article>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-star"/></svg></div><div class="step-no">02</div><h3 data-i18n="step2_t">Consigue puntos</h3><p data-i18n="step2_p">El profesor reconoce ese esfuerzo con puntos.</p></article>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-chart"/></svg></div><div class="step-no">03</div><h3 data-i18n="step3_t">Sube de nivel</h3><p data-i18n="step3_p">Los puntos se convierten en progreso y logros.</p></article>
-        <article class="step"><div class="step-icon"><svg class="icon"><use href="#i-gift"/></svg></div><div class="step-no">04</div><h3 data-i18n="step4_t">Canjea</h3><p data-i18n="step4_p">El alumno utiliza sus puntos para obtener recompensas.</p></article>
+      <div class="tagline-wrap">
+        <h2 class="tagline" data-i18n-html="explain_tagline">Gamificación <span class="gradient-text">hecha simple</span>.</h2>
+        <p class="tagline-sub" data-i18n="explain_tagline_sub">Sin paneles complicados ni configuraciones eternas — le das puntos a un alumno con un clic.</p>
+      </div>
+      <div class="explainer">
+        <div class="explainer-copy">
+          <span class="eyebrow" data-i18n="how_eyebrow">Así funciona</span>
+          <h3 id="explainTitle" data-i18n="explain_s1_t">El profesor reconoce el esfuerzo con un clic.</h3>
+          <p id="explainDesc" data-i18n="explain_s1_p">Cada comportamiento positivo suma puntos al instante. El alumno lo ve reflejado en su perfil en tiempo real.</p>
+          <div class="dots" id="explainDots"></div>
+        </div>
+        <div class="stage">
+          <div class="explain-scene scene1 active">
+            <div class="card rowwrap">
+              <div class="bump">+10</div>
+              <div class="row"><div class="who"><div class="av">🙂</div>Alex Moreno</div><button class="plusbtn" data-i18n="apply_btn">Aplicar</button></div>
+              <div class="row"><div class="who"><div class="av">😎</div>Lucía Fernández</div><button class="plusbtn" data-i18n="apply_btn">Aplicar</button></div>
+              <div class="row"><div class="who"><div class="av">🦊</div>Marco Ruiz</div><button class="plusbtn" data-i18n="apply_btn">Aplicar</button></div>
+            </div>
+          </div>
+          <div class="explain-scene scene2">
+            <div class="card lvlcard">
+              <span class="badge"><span data-i18n="word_level_cap">NIVEL</span> 8</span>
+              <div class="lvlnum">1.250</div>
+              <div class="bar"><span></span></div>
+              <div class="xp" data-i18n="float_progress">78% hasta nivel 9</div>
+            </div>
+          </div>
+          <div class="explain-scene scene3">
+            <div class="card wide">
+              <div class="rewardgrid">
+                <div>
+                  <div class="mini-art skin"><div class="check2"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" fill="none" stroke="#635bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+                  <div class="mini-name" data-i18n="float_skin">Skin Aurora</div>
+                  <div class="mini-tag">✓ <span data-i18n="explain_tag_cosmetic">Cosmético</span></div>
+                </div>
+                <div>
+                  <div class="mini-art benefit"><div class="check2 d2"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" fill="none" stroke="#28c6e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+                  <div class="mini-name" data-i18n="explain_reward_benefit">Elegir el sitio</div>
+                  <div class="mini-tag">✓ <span data-i18n="explain_tag_benefit">Beneficio de clase</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -798,10 +870,15 @@ const I18N = {
     float_participation:'Puntos por participación', float_activity:'Actividad completada',
     how_eyebrow:'Así funciona', how_title:'Cada pequeño logro <span class="gradient-text">cuenta.</span>',
     how_copy:'Una experiencia sencilla para reconocer el trabajo que ocurre dentro del aula y convertirlo en motivación visible.',
-    step1_t:'Participa', step1_p:'El alumno trabaja, participa y se implica en clase.',
-    step2_t:'Consigue puntos', step2_p:'El profesor reconoce ese esfuerzo con puntos.',
-    step3_t:'Sube de nivel', step3_p:'Los puntos se convierten en progreso y logros.',
-    step4_t:'Canjea', step4_p:'El alumno utiliza sus puntos para obtener recompensas.',
+    explain_tagline:'Gamificación <span class="gradient-text">hecha simple</span>.',
+    explain_tagline_sub:'Sin paneles complicados ni configuraciones eternas — le das puntos a un alumno con un clic.',
+    explain_s1_t:'El profesor reconoce el esfuerzo con un clic.',
+    explain_s1_p:'Cada comportamiento positivo suma puntos al instante. El alumno lo ve reflejado en su perfil en tiempo real.',
+    explain_s2_t:'Los puntos se convierten en progreso.',
+    explain_s2_p:'Cada aula tiene su propio nivel y barra de avance — una forma visible de ver que el esfuerzo cuenta.',
+    explain_s3_t:'El alumno canjea sus puntos por recompensas.',
+    explain_s3_p:'No solo skins: también beneficios reales dentro del aula, como elegir el sitio o librarse de deberes — todo lo define el profesor.',
+    explain_reward_benefit:'Elegir el sitio', explain_tag_cosmetic:'Cosmético', explain_tag_benefit:'Beneficio de clase',
     dual_eyebrow:'Una plataforma, dos experiencias', dual_title:'Diseñada para <span class="gradient-text">motivar.</span>',
     teachers_word:'Docentes', teachers_h:'Gestiona el aula sin perder de vista lo importante.',
     teachers_p:'Crea aulas, reconoce el esfuerzo, visualiza el progreso y convierte tus propias recompensas en dinámicas de clase.',
@@ -880,10 +957,15 @@ const I18N = {
     float_participation:'Points for participation', float_activity:'Activity completed',
     how_eyebrow:'How it works', how_title:'Every small win <span class="gradient-text">counts.</span>',
     how_copy:'A simple experience to recognize the work that happens in the classroom and turn it into visible motivation.',
-    step1_t:'Participate', step1_p:'The student works, takes part and engages in class.',
-    step2_t:'Earn points', step2_p:'The teacher recognizes that effort with points.',
-    step3_t:'Level up', step3_p:'Points turn into progress and achievements.',
-    step4_t:'Redeem', step4_p:'The student uses their points to get rewards.',
+    explain_tagline:'Gamification <span class="gradient-text">made simple</span>.',
+    explain_tagline_sub:'No complicated panels or endless setup — you give a student points with one click.',
+    explain_s1_t:'The teacher recognizes effort with one click.',
+    explain_s1_p:'Every positive behavior adds points instantly. The student sees it reflected on their profile in real time.',
+    explain_s2_t:'Points turn into progress.',
+    explain_s2_p:'Each classroom has its own level and progress bar — a visible way to see that effort counts.',
+    explain_s3_t:'Students redeem their points for rewards.',
+    explain_s3_p:'Not just skins: also real classroom perks, like choosing your seat or skipping homework — all set by the teacher.',
+    explain_reward_benefit:'Choose your seat', explain_tag_cosmetic:'Cosmetic', explain_tag_benefit:'Class perk',
     dual_eyebrow:'One platform, two experiences', dual_title:'Designed to <span class="gradient-text">motivate.</span>',
     teachers_word:'Teachers', teachers_h:"Manage your classroom without losing sight of what matters.",
     teachers_p:'Create classrooms, recognize effort, track progress, and turn your own rewards into classroom dynamics.',
@@ -1871,9 +1953,52 @@ function initCookieBanner(){
   else if(consent!=='rejected') openCookieBanner();
 }
 
+/* ---------- Landing "Así funciona" explainer ---------- */
+const EXPLAIN_SCENES=[
+  { t:'explain_s1_t', d:'explain_s1_p' },
+  { t:'explain_s2_t', d:'explain_s2_p' },
+  { t:'explain_s3_t', d:'explain_s3_p' }
+];
+let explainIdx=0, explainTimer=null;
+function explainGo(i, manual){
+  explainIdx=i;
+  const s=EXPLAIN_SCENES[i];
+  const titleEl=document.getElementById('explainTitle');
+  const descEl=document.getElementById('explainDesc');
+  if(!titleEl) return;
+  titleEl.style.opacity=0; descEl.style.opacity=0;
+  setTimeout(()=>{
+    titleEl.setAttribute('data-i18n', s.t);
+    descEl.setAttribute('data-i18n', s.d);
+    titleEl.textContent=t(s.t);
+    descEl.textContent=t(s.d);
+    titleEl.style.opacity=1; descEl.style.opacity=1;
+  }, 200);
+  document.querySelectorAll('.explain-scene').forEach((el,j)=> el.classList.toggle('active', j===i));
+  document.querySelectorAll('.explain-dot').forEach((d,j)=> d.classList.toggle('active', j===i));
+  if(manual) explainResetTimer();
+}
+function explainResetTimer(){
+  clearInterval(explainTimer);
+  explainTimer=setInterval(()=> explainGo((explainIdx+1)%EXPLAIN_SCENES.length), 3500);
+}
+function initExplainer(){
+  const dotsEl=document.getElementById('explainDots');
+  if(!dotsEl) return;
+  dotsEl.innerHTML='';
+  EXPLAIN_SCENES.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='dot-btn explain-dot'+(i===0?' active':'');
+    b.onclick=()=>explainGo(i, true);
+    dotsEl.appendChild(b);
+  });
+  explainResetTimer();
+}
+
 /* default app helpers */
 renderLangSwitcher();
 initCookieBanner();
+initExplainer();
 (async () => {
   const { data:{ session } } = await sb.auth.getSession();
   if(session){ await bootAfterAuth(); } else { showOnly('landing'); }
