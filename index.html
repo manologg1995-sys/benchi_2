@@ -461,6 +461,29 @@ svg{display:block}
 .student-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:10px;flex-wrap:wrap;transition:.18s}
 .student-row:hover{box-shadow:0 8px 20px rgba(31,32,66,.07);border-color:#dcdfec}
 .student-row select,.student-row input{border:1px solid #dde1eb;border-radius:11px;padding:9px 11px;font-size:12.5px;background:#fff}
+/* ---------- Puntuar: selector de comportamientos y puntuación masiva ---------- */
+@font-face{font-family:Nunito;font-weight:600;font-display:swap;src:url(/fonts/nunito-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:Nunito;font-weight:700;font-display:swap;src:url(/fonts/nunito-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Nunito;font-weight:800;font-display:swap;src:url(/fonts/nunito-latin-800-normal.woff2) format("woff2")}
+.beh-select{font-family:Nunito,Inter,system-ui,sans-serif!important;font-size:15px!important;font-weight:700;color:var(--ink);
+  flex:1 1 260px;min-width:220px;max-width:420px;height:46px;padding:0 42px 0 16px!important;border:1.5px solid #dcd9f7!important;border-radius:14px!important;
+  background:#faf9ff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23635bff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 15px center!important;
+  -webkit-appearance:none;appearance:none;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.beh-select:hover{border-color:#b7b0ff!important}
+.beh-select:focus{outline:none;border-color:#8c84ff!important;box-shadow:0 0 0 4px rgba(99,91,255,.12)}
+.beh-select option{font-family:Nunito,Inter,system-ui,sans-serif;font-weight:700}
+.student-row .btn-apply{height:46px;border-radius:14px;font-family:Nunito,Inter,system-ui,sans-serif;font-weight:800;font-size:15px;padding:0 18px}
+.student-row .stu-check,.bulk-bar .stu-check{width:22px;height:22px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;margin:0}
+.student-row.is-selected{border-color:#b7b0ff;background:#faf9ff;box-shadow:0 0 0 3px rgba(99,91,255,.10)}
+.student-row .custom-pts{width:76px;height:46px;border-radius:14px!important;font-family:Nunito,Inter,system-ui,sans-serif;font-size:15px!important;font-weight:700}
+.bulk-bar{position:sticky;top:10px;z-index:5;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;margin-bottom:14px;border-radius:18px;
+  background:linear-gradient(135deg,#f4f2ff,#fff0f7);border:1.5px solid #e2ddff;font-family:Nunito,Inter,system-ui,sans-serif}
+.bulk-bar .bulk-all{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;color:var(--ink);cursor:pointer;user-select:none}
+.bulk-bar .bulk-count{font-weight:700;font-size:14px;color:var(--muted);min-width:120px}
+.bulk-bar .beh-select{background-color:#fff!important}
+.bulk-bar .btn-bulk{height:46px;border-radius:14px;font-family:Nunito,Inter,system-ui,sans-serif;font-weight:800;font-size:15px;padding:0 20px}
+.bulk-bar .btn-bulk:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+@media (max-width:700px){.beh-select{max-width:none;flex-basis:100%}.bulk-bar{top:0}.bulk-bar .btn-bulk{flex:1}}
 
 /* ---------- Avatar illustration catalog ---------- */
 .avatar-catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
@@ -990,7 +1013,10 @@ const I18N = {
     word_students_lower:'alumnos', active_class_word:'Aula activa', points_given_short:'puntos dados', enter_arrow:'Entrar →',
     need_class_name:'Ponle un nombre a tu aula', class_created_toast:'Aula creada: ', emoji_saved_toast:'Emoticono guardado', profile_saved_toast:'Perfil guardado',
     code_label:'Código', students_panel:'Alumnado', no_students_joined:'Todavía no se ha unido ningún alumno con el código de aula.',
-    apply_btn:'Aplicar', custom_btn:'Custom', behaviors_panel:'Comportamientos', suggestions_label:'Sugerencias — actívalas con un clic:',
+    apply_btn:'Aplicar', custom_btn:'Ajustar', behaviors_panel:'Comportamientos',
+    select_all:'Seleccionar todos', none_selected:'Ningún alumno seleccionado', one_selected:'1 alumno seleccionado', n_selected:'{n} alumnos seleccionados',
+    apply_to_n:'Aplicar a {n}', bulk_title:'Puntuar a varios alumnos', select_student:'Seleccionar a', behavior_for:'Comportamiento para', custom_points_label:'Puntos personalizados',
+    one_student:'1 alumno', n_students:'{n} alumnos', bulk_partial:'Aplicado a {ok} de {n} alumnos. Vuelve a intentarlo con el resto.', suggestions_label:'Sugerencias — actívalas con un clic:',
     no_behaviors:'Sin comportamientos.', delete_btn:'Eliminar', edit_btn:'Editar', name_field:'Nombre', value_field:'± valor', add_behavior_btn:'Añadir comportamiento',
     rewards_panel:'Recompensas', no_rewards:'Sin recompensas.', cost_field:'Coste', featured_label:'Destacada', add_reward_btn:'Añadir recompensa',
     skins_panel:'Tienda de skins', no_skins:'Sin skins.', symbol_field:'Símbolo (ej. ★)',
@@ -1083,7 +1109,10 @@ const I18N = {
     word_students_lower:'students', active_class_word:'Active classroom', points_given_short:'points given', enter_arrow:'Enter →',
     need_class_name:'Give your classroom a name', class_created_toast:'Classroom created: ', emoji_saved_toast:'Emoji saved', profile_saved_toast:'Profile saved',
     code_label:'Code', students_panel:'Students', no_students_joined:"No students have joined with the classroom code yet.",
-    apply_btn:'Apply', custom_btn:'Custom', behaviors_panel:'Behaviors', suggestions_label:'Suggestions — activate them with one click:',
+    apply_btn:'Apply', custom_btn:'Adjust', behaviors_panel:'Behaviors',
+    select_all:'Select all', none_selected:'No students selected', one_selected:'1 student selected', n_selected:'{n} students selected',
+    apply_to_n:'Apply to {n}', bulk_title:'Score several students', select_student:'Select', behavior_for:'Behavior for', custom_points_label:'Custom points',
+    one_student:'1 student', n_students:'{n} students', bulk_partial:'Applied to {ok} of {n} students. Try again for the rest.', suggestions_label:'Suggestions — activate them with one click:',
     no_behaviors:'No behaviors yet.', delete_btn:'Delete', edit_btn:'Edit', name_field:'Name', value_field:'± value', add_behavior_btn:'Add behavior',
     rewards_panel:'Rewards', no_rewards:'No rewards yet.', cost_field:'Cost', featured_label:'Featured', add_reward_btn:'Add reward',
     skins_panel:'Skin shop', no_skins:'No skins yet.', symbol_field:'Symbol (e.g. ★)',
@@ -1574,16 +1603,17 @@ async function renderClassDetail(classId){
   ]);
   window._cd={members:members||[],behaviors:behaviors||[],market:market||[],avatars:avatars||[]};
   const slotLabel={fondo:t('slot_bg'),cara:t('slot_face'),sombrero:t('slot_hat'),accesorio:t('slot_acc')};
-  const behaviorOpts=(behaviors||[]).map(b=>`<option value="${b.id}">${b.name} (${b.value>0?'+':''}${b.value})</option>`).join('');
+  const behaviorOpts=(behaviors||[]).slice().sort((a,b)=>b.value-a.value).map(b=>`<option value="${b.id}">${b.value>0?'+':'−'}${Math.abs(b.value)} · ${b.name}</option>`).join('');
   const studentRows=(members||[]).map(m=>{
     const lv=levelInfo(m.points);
-    return `<div class="student-row">
+    return `<div class="student-row" data-row="${m.student_id}">
+      <input type="checkbox" class="stu-check" data-stu="${m.student_id}" aria-label="${t('select_student')} ${m.profiles.name}" onchange="onStudentCheck()">
       <div class="avatar-sm" style="flex-shrink:0">${avatarImgHTML(m.profiles.equipped)}</div>
       <div style="flex:1;min-width:170px"><b>${m.profiles.name}</b><div class="small-muted">@${m.profiles.alias||''} · ${t('word_level')} ${lv.level} · ${fmt(m.points)} pts</div></div>
-      <select data-beh="${m.student_id}" style="max-width:170px">${behaviorOpts}</select>
-      <button class="btn btn-light" onclick="applyBehavior('${classId}','${m.student_id}')">${t('apply_btn')}</button>
-      <input type="number" placeholder="±pts" style="width:70px" id="custom-${m.student_id}">
-      <button class="btn btn-light" onclick="applyCustom('${classId}','${m.student_id}')">${t('custom_btn')}</button>
+      ${behaviorOpts?`<select class="beh-select" data-beh="${m.student_id}" aria-label="${t('behavior_for')} ${m.profiles.name}">${behaviorOpts}</select>
+      <button class="btn btn-light btn-apply" onclick="applyBehavior('${classId}','${m.student_id}')">${t('apply_btn')}</button>`:''}
+      <input type="number" class="custom-pts" placeholder="±pts" aria-label="${t('custom_points_label')}" id="custom-${m.student_id}">
+      <button class="btn btn-light btn-apply" onclick="applyCustom('${classId}','${m.student_id}')">${t('custom_btn')}</button>
     </div>`;
   }).join('') || `<div class="empty-note">${t('no_students_joined')}</div>`;
   const behaviorRows=(behaviors||[]).map(b=>{
@@ -1627,7 +1657,14 @@ async function renderClassDetail(classId){
   c.innerHTML = `<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('teacher','classes')">${ICON('i-back')} ${t('my_classes')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''} · ${t('code_label')} ${cls?cls.code:''}</p></div><div class="head-actions"><button class="btn btn-light" onclick="confirmDeleteClass('${classId}','${(cls?cls.name:'').replace(/'/g,"\\'")}')">${ICON('i-trash')} Eliminar aula</button></div></div>
     ${tabsHtml}
     <div class="tab-panel ${activeTab==='students'?'':'hidden'}" data-panel="students">
-      <div class="panel"><div class="panel-title"><h2>${t('students_panel')}</h2></div>${studentRows}</div>
+      <div class="panel"><div class="panel-title"><h2>${t('students_panel')}</h2></div>
+        ${(members||[]).length&&behaviorOpts?`<div class="bulk-bar" role="group" aria-label="${t('bulk_title')}">
+          <label class="bulk-all"><input type="checkbox" class="stu-check" id="bulkAll" onchange="toggleAllStudents(this.checked)">${t('select_all')}</label>
+          <span class="bulk-count" id="bulkCount">${t('none_selected')}</span>
+          <select class="beh-select" id="bulkBeh" aria-label="${t('bulk_title')}">${behaviorOpts}</select>
+          <button class="btn btn-primary btn-bulk" id="bulkBtn" disabled onclick="applyBulkBehavior('${classId}')">${t('apply_btn')}</button>
+        </div>`:''}
+        ${studentRows}</div>
     </div>
     <div class="tab-panel ${activeTab==='behaviors'?'':'hidden'}" data-panel="behaviors">
       <div class="panel"><div class="panel-title"><h2>${t('behaviors_panel')}</h2></div>
@@ -1742,6 +1779,33 @@ async function applyBehavior(classId, studentId){
   const { error } = await sb.rpc('apply_points',{ p_student:studentId, p_class:classId, p_delta:b.value, p_reason:b.name, p_type:'puntuacion' });
   if(error) return toast(error.message);
   toast(`${b.value>0?'+':''}${b.value} ${t('points_applied_toast')}`);
+  renderTeacher('classdetail', classId);
+}
+function selectedStudents(){return [...document.querySelectorAll('.student-row .stu-check:checked')].map(c=>c.dataset.stu)}
+function onStudentCheck(){
+  const all=[...document.querySelectorAll('.student-row .stu-check')];
+  const sel=all.filter(c=>c.checked);
+  all.forEach(c=>c.closest('.student-row').classList.toggle('is-selected',c.checked));
+  const allBox=document.getElementById('bulkAll');
+  if(allBox){allBox.checked=sel.length>0&&sel.length===all.length;allBox.indeterminate=sel.length>0&&sel.length<all.length;}
+  const cnt=document.getElementById('bulkCount');
+  if(cnt) cnt.textContent = sel.length ? (sel.length===1?t('one_selected'):t('n_selected').replace('{n}',sel.length)) : t('none_selected');
+  const btn=document.getElementById('bulkBtn');
+  if(btn){btn.disabled=!sel.length;btn.textContent= sel.length ? t('apply_to_n').replace('{n}',sel.length) : t('apply_btn');}
+}
+function toggleAllStudents(on){
+  document.querySelectorAll('.student-row .stu-check').forEach(c=>c.checked=on);
+  onStudentCheck();
+}
+async function applyBulkBehavior(classId){
+  const ids=selectedStudents();
+  const b=window._cd.behaviors.find(x=>x.id===document.getElementById('bulkBeh').value);
+  if(!b||!ids.length) return;
+  const btn=document.getElementById('bulkBtn'); if(btn){btn.disabled=true;btn.textContent='…';}
+  const results=await Promise.all(ids.map(id=>sb.rpc('apply_points',{ p_student:id, p_class:classId, p_delta:b.value, p_reason:b.name, p_type:'puntuacion' })));
+  const failed=results.filter(r=>r.error).length;
+  if(failed) toast(t('bulk_partial').replace('{ok}',ids.length-failed).replace('{n}',ids.length));
+  else toast(`${b.value>0?'+':''}${b.value} · ${b.name} → ${ids.length===1?t('one_student'):t('n_students').replace('{n}',ids.length)}`);
   renderTeacher('classdetail', classId);
 }
 async function applyCustom(classId, studentId){
