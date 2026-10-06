@@ -3,8 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Benchi — Aprende diferente</title>
-<meta name="description" content="Benchi convierte el esfuerzo en recompensas. Prototipo visual de plataforma educativa gamificada.">
+<title>Benchi · Gamificación para el aula: puntos, niveles y recompensas</title>
+<meta name="description" content="Benchi convierte el esfuerzo del alumnado en puntos, niveles y recompensas. El profesorado crea su aula, reconoce la participación con un clic y abre un mercado de recompensas.">
+<link rel="canonical" href="https://www.playbenchi.es/">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#635bff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Benchi">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://www.playbenchi.es/">
+<meta property="og:title" content="Benchi · Aprende diferente">
+<meta property="og:description" content="Puntos, niveles y recompensas para motivar al alumnado en el aula.">
+<meta property="og:image" content="https://www.playbenchi.es/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Benchi: Aprende diferente. Puntos, niveles y recompensas para el aula.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Benchi · Aprende diferente">
+<meta name="twitter:description" content="Puntos, niveles y recompensas para motivar al alumnado en el aula.">
+<meta name="twitter:image" content="https://www.playbenchi.es/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Benchi",
+      "url": "https://www.playbenchi.es/",
+      "inLanguage": "es"
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Benchi",
+      "url": "https://www.playbenchi.es/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "es",
+      "description": "Plataforma de gamificación para el aula: el profesorado reconoce el esfuerzo con puntos y el alumnado los canjea por recompensas.",
+      "image": "https://www.playbenchi.es/og-image.png"
+    }
+  ]
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{
@@ -176,6 +220,13 @@ svg{display:block}
 .plus{font-size:28px;font-weight:950;letter-spacing:-.04em;color:#14a76b}
 .plus-caption{font-size:12px;color:var(--muted);font-weight:750}
 
+.faq{display:grid;gap:12px;max-width:860px;margin-top:28px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:0 22px}
+.faq summary{cursor:pointer;list-style:none;padding:20px 0;font-weight:800;font-size:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font-size:24px;font-weight:700;color:var(--primary);flex-shrink:0;transition:transform .2s}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq details p{margin:0 0 20px;color:var(--muted);font-size:16px;line-height:1.6}
 .section-soft{background:linear-gradient(180deg,#fbfbfe,#f7f8fc)}
 .step-icon{
   width:50px;height:50px;border-radius:17px;display:grid;place-items:center;margin-bottom:24px;
@@ -650,6 +701,20 @@ svg{display:block}
     </div>
   </section>
 
+  <section id="faq" class="section section-soft">
+    <div class="container">
+      <span class="eyebrow" data-i18n="faq_eyebrow">Preguntas frecuentes</span>
+      <h2 class="section-title" data-i18n-html="faq_title">Todo sobre <span class="gradient-text">Benchi.</span></h2>
+      <div class="faq">
+        <details><summary data-i18n="faq_q1">¿Qué es Benchi?</summary><p data-i18n="faq_a1">Benchi es una plataforma de gamificación para el aula. El profesorado reconoce el esfuerzo, la participación y el comportamiento con puntos, y el alumnado los acumula, sube de nivel y los canjea por recompensas en el mercado de su clase.</p></details>
+        <details><summary data-i18n="faq_q2">¿Cómo se une el alumnado a una clase?</summary><p data-i18n="faq_a2">Cada alumno crea su cuenta con su propio usuario y contraseña y entra en su aula introduciendo el código de clase que le facilita su profesor.</p></details>
+        <details><summary data-i18n="faq_q3">¿Qué recompensas se pueden conseguir?</summary><p data-i18n="faq_a3">Las decide cada docente: desde objetos para personalizar el avatar hasta beneficios reales dentro del aula, como elegir el sitio.</p></details>
+        <details><summary data-i18n="faq_q4">¿Los puntos solo suman?</summary><p data-i18n="faq_a4">No. El profesor configura los comportamientos de su aula y cada uno puede sumar o restar puntos, para reflejar tanto lo positivo como lo que hay que mejorar.</p></details>
+        <details><summary data-i18n="faq_q5">¿Para qué etapas está pensado?</summary><p data-i18n="faq_a5">Está pensado para Educación Secundaria y Formación Profesional, aunque cada docente adapta los comportamientos y las recompensas a su grupo.</p></details>
+      </div>
+    </div>
+  </section>
+
   <section class="cta">
     <div class="container cta-inner">
       <div><h2 data-i18n="cta_h">Haz que cada punto cuente.</h2><p data-i18n="cta_p">Benchi convierte la motivación del aula en una experiencia visual, sencilla y divertida.</p></div>
@@ -888,6 +953,12 @@ const I18N = {
     word_points_cap:'Puntos',
     cta_h:'Haz que cada punto cuente.', cta_p:'Benchi convierte la motivación del aula en una experiencia visual, sencilla y divertida.', cta_btn:'Crear mi cuenta',
     footer_tag:'Aprende diferente.', word_back:'Volver',
+    faq_eyebrow:'Preguntas frecuentes', faq_title:'Todo sobre <span class="gradient-text">Benchi.</span>',
+    faq_q1:'¿Qué es Benchi?', faq_a1:'Benchi es una plataforma de gamificación para el aula. El profesorado reconoce el esfuerzo, la participación y el comportamiento con puntos, y el alumnado los acumula, sube de nivel y los canjea por recompensas en el mercado de su clase.',
+    faq_q2:'¿Cómo se une el alumnado a una clase?', faq_a2:'Cada alumno crea su cuenta con su propio usuario y contraseña y entra en su aula introduciendo el código de clase que le facilita su profesor.',
+    faq_q3:'¿Qué recompensas se pueden conseguir?', faq_a3:'Las decide cada docente: desde objetos para personalizar el avatar hasta beneficios reales dentro del aula, como elegir el sitio.',
+    faq_q4:'¿Los puntos solo suman?', faq_a4:'No. El profesor configura los comportamientos de su aula y cada uno puede sumar o restar puntos, para reflejar tanto lo positivo como lo que hay que mejorar.',
+    faq_q5:'¿Para qué etapas está pensado?', faq_a5:'Está pensado para Educación Secundaria y Formación Profesional, aunque cada docente adapta los comportamientos y las recompensas a su grupo.',
     auth_hero_title:'El esfuerzo también se puede <span style="color:#ffd9f0">celebrar.</span>',
     auth_hero_p:'Entra en tu espacio Benchi y sigue construyendo tu experiencia de aula.',
     login_h:'Bienvenido de nuevo.', login_p:'Entra en tu espacio Benchi.',
@@ -975,6 +1046,12 @@ const I18N = {
     word_points_cap:'Points',
     cta_h:'Make every point count.', cta_p:'Benchi turns classroom motivation into a visual, simple and fun experience.', cta_btn:'Create my account',
     footer_tag:'Learn differently.', word_back:'Back',
+    faq_eyebrow:'FAQ', faq_title:'All about <span class="gradient-text">Benchi.</span>',
+    faq_q1:'What is Benchi?', faq_a1:'Benchi is a classroom gamification platform. Teachers recognise effort, participation and behaviour with points, and students collect them, level up and redeem them for rewards in their class market.',
+    faq_q2:'How do students join a class?', faq_a2:'Each student creates an account with their own username and password and joins their class by entering the class code their teacher gives them.',
+    faq_q3:'What rewards can students get?', faq_a3:'Each teacher decides: from items to customise the avatar to real classroom perks, such as choosing where to sit.',
+    faq_q4:'Do points only go up?', faq_a4:'No. Teachers set up their class behaviours and each one can add or subtract points, reflecting both the positives and what needs to improve.',
+    faq_q5:'Which school stages is it for?', faq_a5:'It is designed for secondary education and vocational training, though each teacher adapts behaviours and rewards to their group.',
     auth_hero_title:'Effort can be <span style="color:#ffd9f0">celebrated too.</span>',
     auth_hero_p:'Enter your Benchi space and keep building your classroom experience.',
     login_h:'Welcome back.', login_p:'Enter your Benchi space.',
