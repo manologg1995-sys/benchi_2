@@ -276,6 +276,7 @@ function studentHTML(d){
 
 function openHTML(d){
   const r=d.r,p=r.pools,T=sum(p),mine=r.mine,closed=d.ph==='closed',V=isVotes(r),m=V?0:maxStake();
+  if(M.pickRound!==r.id){M.pickRound=r.id;M.pick=null}   // ronda nueva: no arrastrar la elección anterior
   const cards=r.horses.map(h=>{
     const isMine=mine&&mine.horse===h.i;
     return `<button type="button" class="hg-hcard ${isMine?'mine':''}" ${mine||closed?'disabled':''} aria-pressed="${M.pick===h.i}" onclick="HG.act('pick',${h.i})">
@@ -551,10 +552,16 @@ async function launch(){
   const seed=(Date.now()^Math.floor(R()*1e9))>>>0;
   const sim=simulate(r.horses.map(h=>h.str),mulberry32(seed),false);
   const order=r.horses.map(h=>h.i).sort((a,b)=>sim.fin[a]-sim.fin[b]);
-  const ok=await rpc('horse_start_race',{p_round:r.id,p_seed:seed,p_order:order});
-  if(!M)return;
-  if(!ok){M.launching=null;M.launchFailed=r.id}       // si falló, solo reintento manual
-  M.key='';await poll();
+  const m=M;
+  try{
+    const ok=await rpc('horse_start_race',{p_round:r.id,p_seed:seed,p_order:order});
+    if(M!==m)return;
+    if(!ok)m.launchFailed=r.id;                        // si falló, solo reintento manual
+    m.key='';await poll();
+  }finally{
+    // Se libera siempre: si se quedaba marcado, la ronda siguiente no se podía lanzar
+    if(m.launching===r.id)m.launching=null;
+  }
 }
 
 window.HG={mount,unmount,act,takeDirty(){const d=!!(M&&M.dirty);if(M)M.dirty=false;return d}};
