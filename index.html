@@ -840,7 +840,23 @@ svg{display:block}
 const SUPABASE_URL = "https://gwvtamxfmsdetylzekwx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3dnRhbXhmbXNkZXR5bHpla3d4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjA4NzEsImV4cCI6MjEwNTYzNjg3MX0.xVhRy9qCe6108pu6OsqseNpdNxIltiW5P7WtDStntPo";
 /* =============================================================================================== */
+/* Recuperación de contraseña: hay que leer la URL ANTES de crear el cliente,
+   porque Supabase limpia el #access_token del enlace del correo al iniciarse. */
+const RECOVERY_FROM_URL = (() => {
+  const h = new URLSearchParams(location.hash.replace(/^#/, ''));
+  const q = new URLSearchParams(location.search);
+  if (h.get('error_code') || q.get('error_code')) return 'error';
+  if (h.get('type') === 'recovery' || q.has('reset')) return 'recovery';
+  return null;
+})();
+let PASSWORD_RECOVERY = RECOVERY_FROM_URL === 'recovery';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+sb.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    PASSWORD_RECOVERY = true;
+    setTimeout(() => showAuth('reset'), 0);
+  }
+});
 
 /* ============ DATOS LEGALES (COMPLETAR ANTES DE PUBLICAR) ============ */
 const LEGAL_CONTACT_EMAIL = "PENDIENTE-COMPLETAR@tu-dominio.com"; // email de contacto para privacidad y borrado de datos
@@ -991,6 +1007,13 @@ const I18N = {
     login_h:'Bienvenido de nuevo.', login_p:'Entra en tu espacio Benchi.',
     field_email:'Correo electrónico', field_pass:'Contraseña', ph_email:'tu@correo.com', login_btn:'Iniciar sesión',
     link_create:'Crear una cuenta', link_forgot:'¿Has olvidado tu contraseña?', toast_nodemo:'Función no disponible en esta demo',
+    forgot_h:'Recupera tu contraseña.', forgot_p:'Escribe el correo con el que te registraste y te enviaremos un enlace para crear una contraseña nueva.',
+    forgot_btn:'Enviar enlace', forgot_sent_h:'Revisa tu correo.', forgot_sent_p:'Si existe una cuenta con ese correo, te llegará un enlace en unos minutos. Mira también en la carpeta de spam.',
+    forgot_expired:'El enlace ha caducado o ya se usó. Pide uno nuevo.', link_back_login:'Volver a iniciar sesión',
+    reset_h:'Crea tu nueva contraseña.', reset_p:'Elige una contraseña nueva para tu cuenta de Benchi.',
+    field_newpass:'Nueva contraseña', reset_btn:'Guardar contraseña', reset_done:'Contraseña cambiada. ¡Ya estás dentro!',
+    err_pass_short:'La contraseña debe tener al menos 6 caracteres.', err_pass_match:'Las contraseñas no coinciden.',
+    err_reset_nosession:'El enlace no es válido o ha caducado. Pide uno nuevo.', err_too_many:'Has hecho demasiados intentos. Espera un poco y vuelve a probar.',
     choose_h:'Empieza con Benchi.', choose_p:'Elige cómo quieres utilizar la plataforma.',
     role_teacher_t:'Soy profesor', role_teacher_p:'Crea aulas y convierte el esfuerzo en recompensas.',
     role_student_t:'Soy alumno', role_student_p:'Consigue puntos, sube de nivel y desbloquea.',
@@ -1088,6 +1111,13 @@ const I18N = {
     login_h:'Welcome back.', login_p:'Enter your Benchi space.',
     field_email:'Email', field_pass:'Password', ph_email:'you@email.com', login_btn:'Log in',
     link_create:'Create an account', link_forgot:'Forgot your password?', toast_nodemo:'Feature not available in this demo',
+    forgot_h:'Reset your password.', forgot_p:'Enter the email you signed up with and we will send you a link to create a new password.',
+    forgot_btn:'Send link', forgot_sent_h:'Check your email.', forgot_sent_p:'If an account exists for that email, a link will arrive in a few minutes. Check your spam folder too.',
+    forgot_expired:'The link has expired or was already used. Request a new one.', link_back_login:'Back to log in',
+    reset_h:'Create your new password.', reset_p:'Choose a new password for your Benchi account.',
+    field_newpass:'New password', reset_btn:'Save password', reset_done:'Password changed. You are in!',
+    err_pass_short:'Password must be at least 6 characters.', err_pass_match:'Passwords do not match.',
+    err_reset_nosession:'The link is invalid or has expired. Request a new one.', err_too_many:'Too many attempts. Wait a moment and try again.',
     choose_h:'Get started with Benchi.', choose_p:'Choose how you want to use the platform.',
     role_teacher_t:"I'm a teacher", role_teacher_p:'Create classrooms and turn effort into rewards.',
     role_student_t:"I'm a student", role_student_p:'Earn points, level up and unlock.',
@@ -1217,7 +1247,38 @@ function renderAuth(mode, role){
         <div id="authError" style="color:#e0446b;font-size:12px;font-weight:700;"></div>
         <button class="btn btn-primary btn-full">${t('login_btn')} ${ICON('i-arrow')}</button>
       </form>
-      <div class="auth-links"><button onclick="showAuth('register','choose')">${t('link_create')}</button><button onclick="toast(t('toast_nodemo'))">${t('link_forgot')}</button></div>`;
+      <div class="auth-links"><button onclick="showAuth('register','choose')">${t('link_create')}</button><button onclick="showAuth('forgot')">${t('link_forgot')}</button></div>`;
+    return;
+  }
+  if(mode==='forgot' || mode==='forgot-expired'){
+    box.innerHTML=`
+      <h2>${t('forgot_h')}</h2>
+      <p>${t('forgot_p')}</p>
+      <form class="form" onsubmit="doForgot(event)">
+        <div class="field"><label>${t('field_email')}</label><input id="forgotEmail" type="email" placeholder="${t('ph_email')}" required></div>
+        <div id="authError" style="color:#e0446b;font-size:12px;font-weight:700;">${mode==='forgot-expired'?t('forgot_expired'):''}</div>
+        <button class="btn btn-primary btn-full" id="forgotBtn">${t('forgot_btn')} ${ICON('i-arrow')}</button>
+      </form>
+      <div class="auth-links"><button onclick="showAuth('login')">${t('link_back_login')}</button></div>`;
+    return;
+  }
+  if(mode==='forgot-sent'){
+    box.innerHTML=`
+      <h2>${t('forgot_sent_h')}</h2>
+      <p>${t('forgot_sent_p')}</p>
+      <div class="auth-links"><button onclick="showAuth('login')">${t('link_back_login')}</button><button onclick="showAuth('forgot')">${t('forgot_btn')}</button></div>`;
+    return;
+  }
+  if(mode==='reset'){
+    box.innerHTML=`
+      <h2>${t('reset_h')}</h2>
+      <p>${t('reset_p')}</p>
+      <form class="form" onsubmit="doResetPassword(event)">
+        <div class="field"><label>${t('field_newpass')}</label><input id="resetPass" type="password" minlength="6" autocomplete="new-password" placeholder="••••••••" required></div>
+        <div class="field"><label>${t('field_pass2')}</label><input id="resetPass2" type="password" minlength="6" autocomplete="new-password" placeholder="••••••••" required></div>
+        <div id="authError" style="color:#e0446b;font-size:12px;font-weight:700;"></div>
+        <button class="btn btn-primary btn-full" id="resetBtn">${t('reset_btn')} ${ICON('i-arrow')}</button>
+      </form>`;
     return;
   }
   if(role==='choose'){
@@ -1272,6 +1333,34 @@ async function doRegister(e, role){
   const uid=data.user.id;
   const { error:e2 } = await sb.from('profiles').insert({ id:uid, role: role==='teacher'?'profesor':'alumno', name, alias, centro });
   if(e2) return authErr(e2.message);
+  await bootAfterAuth();
+}
+async function doForgot(e){
+  e.preventDefault();
+  const email=document.getElementById('forgotEmail').value.trim();
+  const btn=document.getElementById('forgotBtn'); if(btn) btn.disabled=true;
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname + '?reset=1' });
+  if(btn) btn.disabled=false;
+  // No decimos si el correo existe o no (así nadie puede averiguar qué correos están registrados).
+  if(error && (error.status===429 || /rate|limit/i.test(error.message))) return authErr(t('err_too_many'));
+  if(error && /invalid/i.test(error.message)) return authErr(error.message);
+  renderAuth('forgot-sent');
+}
+async function doResetPassword(e){
+  e.preventDefault();
+  const pass=document.getElementById('resetPass').value;
+  const pass2=document.getElementById('resetPass2').value;
+  if(pass.length<6) return authErr(t('err_pass_short'));
+  if(pass!==pass2) return authErr(t('err_pass_match'));
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) return authErr(t('err_reset_nosession'));
+  const btn=document.getElementById('resetBtn'); if(btn) btn.disabled=true;
+  const { error } = await sb.auth.updateUser({ password: pass });
+  if(btn) btn.disabled=false;
+  if(error) return authErr(error.message);
+  PASSWORD_RECOVERY=false;
+  history.replaceState(null, '', location.pathname);
+  toast(t('reset_done'));
   await bootAfterAuth();
 }
 async function logout(){ await sb.auth.signOut(); state.session=null; state.profile=null; showLanding(); }
@@ -2167,6 +2256,8 @@ initCookieBanner();
 initExplainer();
 (async () => {
   const { data:{ session } } = await sb.auth.getSession();
+  if(RECOVERY_FROM_URL==='error'){ history.replaceState(null, '', location.pathname); return showAuth('forgot-expired'); }
+  if(PASSWORD_RECOVERY){ return session ? showAuth('reset') : showAuth('forgot-expired'); }
   if(session){ await bootAfterAuth(); } else { showOnly('landing'); }
 })();
 </script>
