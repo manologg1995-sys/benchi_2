@@ -50,6 +50,7 @@
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link rel="stylesheet" href="minijuegos.css">
 <style>
 :root{
   --ink:#172033;
@@ -566,7 +567,8 @@ svg{display:block}
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 16l4-4 3 2 5-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.7 6.3.9-4.6 4.4 1.1 6.2-5.5-2.9-5.5 2.9 1.1-6.2L3 9.6l6.3-.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 7h10a4 4 0 0 1 3.9 4.9l-.9 4.2a2.4 2.4 0 0 1-4.2.9L14.3 15H9.7l-1.5 2a2.4 2.4 0 0 1-4.2-.9l-.9-4.2A4 4 0 0 1 7 7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 10v3M6.5 11.5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="15.5" cy="10.5" r=".9" fill="currentColor"/><circle cx="17.7" cy="12.5" r=".9" fill="currentColor"/></symbol>
+  <symbol id="i-menu"viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0 0-3l-1-1a2.1 2.1 0 0 0-3 0L4 16v4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
@@ -832,6 +834,7 @@ svg{display:block}
   </div>
 </div>
 
+<script src="minijuegos.js"></script>
 <script>
 /* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE (LAS DOS LÍNEAS DE ABAJO) ============ */
 const SUPABASE_URL = "https://gwvtamxfmsdetylzekwx.supabase.co";
@@ -848,6 +851,7 @@ const LEGAL_UPDATED = "30 de septiembre de 2026";
 /* ======================================================================= */
 
 const ICON = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LEGAL_CONTENT = {
   privacy: `
     <p class="small-muted">Última actualización: ${LEGAL_UPDATED}</p>
@@ -1029,7 +1033,8 @@ const I18N = {
     my_classes_student:'Mis clases', recent_activity:'Actividad reciente', view_history:'Ver historial',
     my_classes_sub:'Consulta tus puntos y el progreso de cada aula.', join_class_btn:'Unirme a una aula',
     rewards_title:'Recompensas', rewards_sub:'Todo lo que has conseguido y gastado en Benchi.',
-    points_history:'Historial de puntos', available_suffix:'disponibles',
+    tab_minigames:'Minijuegos',
+    points_history:'Historial de puntos',available_suffix:'disponibles',
     my_profile_student_sub:'Tu identidad y tu colección.', word_points_cap:'Puntos', word_classes_cap:'Aulas', word_skins_cap:'Skins',
     save_emoji_btn:'Guardar emoticono', my_collection:'Mi colección', no_skins_yet:'Todavía no tienes skins.',
     lvl_abbr:'Nvl', progress_word:'Progreso', go_to_market:'Ir al mercado →',
@@ -1125,7 +1130,8 @@ const I18N = {
     my_classes_student:'My classes', recent_activity:'Recent activity', view_history:'View history',
     my_classes_sub:'Check your points and progress in each classroom.', join_class_btn:'Join a classroom',
     rewards_title:'Rewards', rewards_sub:"Everything you've earned and spent on Benchi.",
-    points_history:'Points history', available_suffix:'available',
+    tab_minigames:'Minigames',
+    points_history:'Points history',available_suffix:'available',
     my_profile_student_sub:'Your identity and your collection.', word_points_cap:'Points', word_classes_cap:'Classrooms', word_skins_cap:'Skins',
     save_emoji_btn:'Save emoji', my_collection:'My collection', no_skins_yet:"You don't have any skins yet.",
     lvl_abbr:'Lvl', progress_word:'Progress', go_to_market:'Go to market →',
@@ -1576,6 +1582,7 @@ const CLASS_TABS=[
   {key:'behaviors',icon:'i-star',label:'behaviors_panel'},
   {key:'rewards',icon:'i-gift',label:'rewards_panel'},
   {key:'skins',icon:'i-shop',label:'skins_panel'},
+  {key:'minigames',icon:'i-game',label:'tab_minigames'},
   {key:'history',icon:'i-chart',label:'class_history_panel'}
 ];
 function switchAvatarPickSlot(slot, classId){
@@ -1584,7 +1591,10 @@ function switchAvatarPickSlot(slot, classId){
   document.getElementById('avatarCatalogArea').innerHTML=avatarCatalogChips(slot, classId);
 }
 function switchClassTab(tab){
+  const leaving=state.teacherClassTab==='minigames'&&tab!=='minigames';
   state.teacherClassTab=tab;
+  // Si el juego movió puntos, recargar el aula para que Alumnos/Historial salgan al día
+  if(leaving&&HG.takeDirty()){renderClassDetail(state.teacherClassId);return;}
   document.querySelectorAll('.teacher-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
 }
@@ -1609,7 +1619,7 @@ async function renderClassDetail(classId){
     return `<div class="student-row" data-row="${m.student_id}">
       <input type="checkbox" class="stu-check" data-stu="${m.student_id}" aria-label="${t('select_student')} ${m.profiles.name}" onchange="onStudentCheck()">
       <div class="avatar-sm" style="flex-shrink:0">${avatarImgHTML(m.profiles.equipped)}</div>
-      <div style="flex:1;min-width:170px"><b>${m.profiles.name}</b><div class="small-muted">@${m.profiles.alias||''} · ${t('word_level')} ${lv.level} · ${fmt(m.points)} pts</div></div>
+      <div style="flex:1;min-width:170px"><b>${esc(m.profiles.name)}</b><div class="small-muted">@${esc(m.profiles.alias||'')} · ${t('word_level')} ${lv.level} · ${fmt(m.points)} pts</div></div>
       ${behaviorOpts?`<select class="beh-select" data-beh="${m.student_id}" aria-label="${t('behavior_for')} ${m.profiles.name}">${behaviorOpts}</select>
       <button class="btn btn-light btn-apply" onclick="applyBehavior('${classId}','${m.student_id}')">${t('apply_btn')}</button>`:''}
       <input type="number" class="custom-pts" placeholder="±pts" aria-label="${t('custom_points_label')}" id="custom-${m.student_id}">
@@ -1649,7 +1659,7 @@ async function renderClassDetail(classId){
   }).join('')||`<div class="empty-note">${t('no_skins')}</div>`;
   const logRows=(log||[]).map(l=>{
     const s=(members||[]).find(m=>m.student_id===l.student_id);
-    return `<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${s?s.profiles.name:'—'} · ${l.reason}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString(state.lang==='en'?'en-GB':'es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`;
+    return `<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${s?esc(s.profiles.name):'—'} · ${esc(l.reason)}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString(state.lang==='en'?'en-GB':'es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`;
   }).join('')||`<div class="empty-note">${t('no_movements')}</div>`;
 
   const tabsHtml=`<div class="teacher-tabs">${CLASS_TABS.map(tb=>`<button class="teacher-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>`;
@@ -1706,9 +1716,13 @@ async function renderClassDetail(classId){
         </div>
       </div>
     </div>
+    <div class="tab-panel ${activeTab==='minigames'?'':'hidden'}" data-panel="minigames">
+      <div id="hg-root"></div>
+    </div>
     <div class="tab-panel ${activeTab==='history'?'':'hidden'}" data-panel="history">
       <div class="panel"><div class="panel-title"><h2>${t('class_history_panel')}</h2></div><div class="activity">${logRows}</div></div>
     </div>`;
+  HG.mount('teacher', classId, document.getElementById('hg-root'));
 }
 function editBehavior(id, classId){
   const b=window._cd.behaviors.find(x=>x.id===id); if(!b) return;
@@ -1929,11 +1943,15 @@ function activityHTML(rows){
 }
 const STUDENT_CLASS_TABS=[
   {key:'market',icon:'i-shop',label:'tab_shop'},
+  {key:'minigames',icon:'i-game',label:'tab_minigames'},
   {key:'history',icon:'i-chart',label:'points_history'},
   {key:'redeemed',icon:'i-gift',label:'my_rewards_panel'}
 ];
 function switchStudentClassTab(tab){
+  const leaving=state.studentClassTab==='minigames'&&tab!=='minigames';
   state.studentClassTab=tab;
+  // Si el juego movió puntos, recargar saldo, tienda e historial
+  if(leaving&&HG.takeDirty()){loadMyClasses().then(()=>renderStudentClassDetail(state.studentClassId));return;}
   document.querySelectorAll('.student-class-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.student-tab-panel').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
 }
@@ -1986,6 +2004,9 @@ async function renderStudentClassDetail(classId){
         <div class="market-grid" id="mktGrid">${renderMktTab('destacados')}</div>
       </div>
     </div>
+    <div class="tab-panel student-tab-panel ${activeTab==='minigames'?'':'hidden'}" data-panel="minigames">
+      <div id="hg-root"></div>
+    </div>
     <div class="tab-panel student-tab-panel ${activeTab==='history'?'':'hidden'}" data-panel="history">
       <div class="panel"><div class="panel-title"><h2>${t('points_history')}</h2></div>${activityHTML(log)}</div>
     </div>
@@ -1996,6 +2017,7 @@ async function renderStudentClassDetail(classId){
       <button class="btn btn-light" style="font-size:12px;padding:9px 14px" onclick="confirmLeaveClass('${classId}','${(cls?cls.name:'').replace(/'/g,"\\'")}')">Salir del aula</button>
     </div>`;
   window._renderTab=renderMktTab;
+  HG.mount('student', classId, document.getElementById('hg-root'));
 }
 function switchMktTab(tab){
   document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
