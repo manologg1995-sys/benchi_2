@@ -45,6 +45,37 @@
       "inLanguage": "es",
       "description": "Plataforma de gamificación para el aula: el profesorado reconoce el esfuerzo con puntos y el alumnado los canjea por recompensas.",
       "image": "https://www.playbenchi.es/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "inLanguage": "es",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué es Benchi?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Benchi es una plataforma de gamificación para el aula. El profesorado reconoce el esfuerzo, la participación y el comportamiento con puntos, y el alumnado los acumula, sube de nivel y los canjea por recompensas en el mercado de su clase." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo se une el alumnado a una clase?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Cada alumno crea su cuenta con su propio usuario y contraseña y entra en su aula introduciendo el código de clase que le facilita su profesor." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué recompensas se pueden conseguir?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Las decide cada docente: desde objetos para personalizar el avatar hasta beneficios reales dentro del aula, como elegir el sitio." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Los puntos solo suman?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. El profesor configura los comportamientos de su aula y cada uno puede sumar o restar puntos, para reflejar tanto lo positivo como lo que hay que mejorar." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Para qué etapas está pensado?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Está pensado para Educación Secundaria y Formación Profesional, aunque cada docente adapta los comportamientos y las recompensas a su grupo." }
+        }
+      ]
     }
   ]
 }
@@ -378,7 +409,7 @@ svg{display:block}
    radial-gradient(circle at 95% 10%,rgba(255,90,157,.28),transparent 30%),
    linear-gradient(135deg,#6259ff,#865ef5 52%,#e85e9e)
 }
-.auth-copy{color:white;max-width:560px;position:relative;z-index:2}.auth-copy h1{font-size:clamp(45px,6vw,80px);letter-spacing:-.065em;line-height:.95;margin:18px 0}.auth-copy p{font-size:18px;color:rgba(255,255,255,.83);max-width:470px}.auth-orb{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.20);width:390px;height:390px;right:-130px;top:-120px}.auth-orb.second{width:230px;height:230px;left:-95px;bottom:30px}
+.auth-copy{color:white;max-width:560px;position:relative;z-index:2}.auth-copy h1,.auth-copy h2.auth-title{font-size:clamp(45px,6vw,80px);letter-spacing:-.065em;line-height:.95;margin:18px 0}.auth-copy p{font-size:18px;color:rgba(255,255,255,.83);max-width:470px}.auth-orb{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.20);width:390px;height:390px;right:-130px;top:-120px}.auth-orb.second{width:230px;height:230px;left:-95px;bottom:30px}
 .auth-box-wrap{display:grid;place-items:center;padding:32px;background:#fbfbfe}.auth-box{width:min(470px,100%)}.auth-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.back{border:0;background:none;color:#72798b;font-weight:800}.auth-box h2{font-size:36px;letter-spacing:-.05em;margin:0 0 8px}.auth-box p{color:var(--muted);margin:0 0 24px}.form{display:grid;gap:14px}.field{display:grid;gap:7px}.field label{font-weight:850;font-size:12px;color:#4d5569}.field input,.field select{border:1px solid #dde1eb;background:white;border-radius:14px;padding:13px 14px;outline:none;transition:border-color .18s,box-shadow .18s}.field input:focus,.field select:focus{border-color:#8c84ff;box-shadow:0 0 0 4px rgba(99,91,255,.10)}.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.role-card{border:1px solid var(--line);background:#fff;border-radius:20px;padding:20px;text-align:left;transition:.18s}.role-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}.role-card.selected{border-color:#8e86ff;box-shadow:0 0 0 4px rgba(99,91,255,.09)}.role-title{font-weight:950;font-size:18px;margin-top:13px}.role-sub{font-size:12px;color:var(--muted);margin-top:4px}.auth-links{display:flex;justify-content:space-between;gap:12px;margin-top:15px;font-size:12px;color:#6b7286}.auth-links button{border:0;background:none;color:#5a51ca;font-weight:800;padding:0}
 
 .lang-switcher{position:relative;margin-left:6px}
@@ -525,7 +556,7 @@ svg{display:block}
   .sidebar .sidebar-close-btn{display:inline-flex}
   .stats{grid-template-columns:1fr 1fr}.class-grid{grid-template-columns:1fr 1fr}.market-grid{grid-template-columns:1fr 1fr}
   .student-hero{grid-template-columns:1fr}
-  .auth-screen{grid-template-columns:1fr}.auth-art{min-height:340px;padding:35px}.auth-copy h1{font-size:58px}.auth-box-wrap{padding:28px 18px}
+  .auth-screen{grid-template-columns:1fr}.auth-art{min-height:340px;padding:35px}.auth-copy h1,.auth-copy h2.auth-title{font-size:58px}.auth-box-wrap{padding:28px 18px}
 }
 @keyframes slideInNav{from{transform:translateX(-100%)}to{transform:translateX(0)}}
 @media(max-width:650px){
@@ -534,7 +565,7 @@ svg{display:block}
   .hero-visual{transform:scale(.9);transform-origin:top center;min-height:470px;margin-bottom:-20px}.profile-card{right:1%;top:65px}.reward-float{left:-4%;top:40px}.level-float{right:-6%;bottom:52px}.points-float{left:4%;bottom:15px}
   .section{padding:65px 0}.steps{grid-template-columns:1fr}.feature-panel{min-height:530px;padding:24px}.mock-window{width:92%;right:4%}
   .footer-inner{flex-direction:column}.page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:34px}.stats{grid-template-columns:1fr 1fr}.class-grid,.market-grid{grid-template-columns:1fr}
-  .profile-big{align-items:flex-start}.student-name{font-size:25px}.auth-copy h1{font-size:50px}.role-grid{grid-template-columns:1fr}
+  .profile-big{align-items:flex-start}.student-name{font-size:25px}.auth-copy h1,.auth-copy h2.auth-title{font-size:50px}.role-grid{grid-template-columns:1fr}
   .btn{padding:9px 14px;font-size:12.5px;border-radius:11px;gap:5px}
   .btn .icon{width:14px;height:14px}
   .head-actions{width:100%}.head-actions .btn{flex:1}
@@ -758,7 +789,7 @@ svg{display:block}
       <div class="auth-copy">
         <div class="brand" style="color:#fff"><span class="brand-mark"></span>BENCHI</div>
         <span class="eyebrow" style="margin-top:45px;color:#fff;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22)" data-i18n="hero_eyebrow">Aprende diferente</span>
-        <h1 data-i18n-html="auth_hero_title">El esfuerzo también se puede <span style="color:#ffd9f0">celebrar.</span></h1>
+        <h2 class="auth-title" data-i18n-html="auth_hero_title">El esfuerzo también se puede <span style="color:#ffd9f0">celebrar.</span></h2>
         <p data-i18n="auth_hero_p">Entra en tu espacio Benchi y sigue construyendo tu experiencia de aula.</p>
       </div>
     </div>
@@ -1740,7 +1771,7 @@ async function renderClassDetail(classId){
     </div>`).join('')||`<div class="empty-note">${t('no_rewards')}</div>`;
   const avatarRows=(avatars||[]).map(a=>{
     const eq=avatarItemPreviewEq(a);
-    const thumb=eq?`<img src="${avatarUrl(eq,72)}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`:(a.emoji||'✦');
+    const thumb=eq?`<img alt="" src="${avatarUrl(eq,72)}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`:(a.emoji||'✦');
     return `<div class="list-card">
       <div class="list-card-icon" style="font-size:19px;overflow:hidden;padding:0">${thumb}</div>
       <div class="list-card-body"><div class="list-card-name">${a.name}</div><div class="list-card-meta"><span class="pill">${slotLabel[a.slot]||a.slot}</span><span class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</span>${a.cost>0?`<span class="pill">${a.cost} pts</span>`:`<span class="pill">${a.unlock_type}</span>`}</div></div>
@@ -1855,7 +1886,7 @@ function editAvatarItem(id, classId){
   const a=window._cd.avatars.find(x=>x.id===id); if(!a) return;
   const eq=avatarItemPreviewEq(a)||{};
   modal(`${t('edit_btn')} · ${t('skins_panel')}`, `<div class="form">
-    <div style="display:flex;justify-content:center"><img src="${avatarUrl(eq,90)}" style="width:64px;height:64px;border-radius:16px;background:var(--surface-2)"></div>
+    <div style="display:flex;justify-content:center"><img alt="" src="${avatarUrl(eq,90)}" style="width:64px;height:64px;border-radius:16px;background:var(--surface-2)"></div>
     <div class="field"><label>${t('name_field')}</label><input id="editAvName" value="${a.name}"></div>
     <div class="grid-2">
       <input id="editAvCost" type="number" value="${a.cost}">
@@ -2081,7 +2112,7 @@ async function renderStudentClassDetail(classId){
   }
   function cardAvatar(a){
     const eq=avatarItemPreviewEq(a);
-    const thumb=eq?`<img src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:24px">${a.emoji||'✦'}</div>`;
+    const thumb=eq?`<img alt="" src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:24px">${a.emoji||'✦'}</div>`;
     return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div><div class="product-meta"><span class="price">${a.cost>0?a.cost+' '+t('word_points'):a.unlock_type}</span><button class="buy" ${ownedA.has(a.id)||a.unlock_type==='logro'?'disabled':''} onclick="buyAvatar('${a.id}')">${ownedA.has(a.id)?t('already_have'):t('buy_btn')}</button></div></article>`;
   }
   function renderMktTab(tab){
@@ -2148,7 +2179,7 @@ async function renderStudentProfile(){
   state.equipDraft=null;
   const skinCards=owned.map(a=>{
     const eq=avatarItemPreviewEq(a);
-    const thumb=eq?`<img src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:22px">${a.emoji||'✦'}</div>`;
+    const thumb=eq?`<img alt="" src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:22px">${a.emoji||'✦'}</div>`;
     return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div></article>`;
   }).join('')||`<div class="empty-note">${t('no_skins_yet')}</div>`;
   const equipped=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped);
