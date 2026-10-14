@@ -876,7 +876,7 @@ svg{display:block}
 <div class="modal-back" id="modal-back"><div class="modal"><div class="modal-head"><h3 id="modal-title"></h3><button class="modal-close" onclick="closeModal()">×</button></div><div id="modal-body"></div></div></div>
 <div class="toast" id="toast"></div>
 <div class="cookie-banner" id="cookieBanner">
-  <p>Usamos el almacenamiento local del navegador para mantener tu sesión iniciada (esto es necesario y no requiere permiso). Si más adelante sumamos herramientas de analítica, te lo pediremos acá antes de activarlas. Más info en nuestra <a href="#" onclick="showLegalModal('cookies');return false;">Política de Cookies</a>.</p>
+  <p>Usamos el almacenamiento local del navegador para mantener tu sesión iniciada (esto es necesario y no requiere permiso). Medimos las visitas con una analítica sin cookies que no te identifica. Si más adelante sumamos herramientas que sí usen cookies, te lo pediremos aquí antes de activarlas. Más info en nuestra <a href="#" onclick="showLegalModal('cookies');return false;">Política de Cookies</a>.</p>
   <div class="cookie-banner-actions">
     <button class="btn btn-light" onclick="setCookieConsent('rejected')">Rechazar</button>
     <button class="btn btn-primary" onclick="setCookieConsent('accepted')">Aceptar</button>
@@ -912,7 +912,7 @@ const LEGAL_CONTACT_EMAIL = "PENDIENTE-COMPLETAR@tu-dominio.com"; // email de co
 const LEGAL_NIF = "[PENDIENTE]"; // tu NIF/DNI
 const LEGAL_RESPONSABLE = "Manuel Gil";
 const LEGAL_DOMICILIO = "Vélez-Málaga, Málaga, España";
-const LEGAL_UPDATED = "30 de septiembre de 2026";
+const LEGAL_UPDATED = "14 de octubre de 2026";
 /* ======================================================================= */
 
 const ICON = id => `<svg class="icon"><use href="#${id}"/></svg>`;
@@ -924,6 +924,7 @@ const LEGAL_CONTENT = {
     <p>${LEGAL_RESPONSABLE}, con domicilio en ${LEGAL_DOMICILIO}. NIF: ${LEGAL_NIF}. Email de contacto: <b>${LEGAL_CONTACT_EMAIL}</b>.</p>
     <h4>2. Qué datos recogemos</h4>
     <p>Al registrarte y usar Benchi recogemos: datos de registro (nombre, alias, email, contraseña — esta última almacenada cifrada por nuestro proveedor de autenticación, nunca en texto plano); datos de perfil (centro educativo, rol de profesor o alumno, avatar elegido); y datos de uso del servicio (aulas a las que pertenecés, puntos, niveles, comportamientos registrados por el profesorado, recompensas canjeadas e historial de movimientos de puntos).</p>
+    <p>Además, para saber cuántas personas visitan la web pública (portada y guías) y qué páginas leen, usamos Vercel Web Analytics, una herramienta que funciona sin cookies, no guarda información en tu dispositivo y no te identifica personalmente: solo registra páginas vistas y datos agregados, como el país o el tipo de dispositivo.</p>
     <h4>3. Para qué los usamos</h4>
     <p>Para prestar el servicio (cuentas, aulas, sistema de puntos y recompensas), para comunicarnos con vos sobre cuestiones del servicio, y — cuando esté activa — para gestionar el cobro de la suscripción.</p>
     <h4>4. Base legal</h4>
@@ -931,7 +932,7 @@ const LEGAL_CONTENT = {
     <h4>5. Datos de menores de edad</h4>
     <p>Benchi está pensado para usarse en un contexto educativo. Los profesores crean las aulas y dan de alta a su alumnado; respecto a los datos del alumnado, el centro educativo o el profesor actúa como responsable del tratamiento, y Benchi actúa como encargado del tratamiento (art. 28 RGPD), tratando esos datos únicamente para prestar el servicio contratado por el centro/profesor. Si sos alumno o familiar y tenés dudas sobre estos datos, te recomendamos contactar primero con tu centro educativo.</p>
     <h4>6. Con quién compartimos los datos</h4>
-    <p>Los datos se almacenan con Supabase Inc., nuestro proveedor de base de datos e infraestructura, que actúa como encargado del tratamiento bajo nuestras instrucciones. Los servidores donde se alojan los datos están ubicados en Londres, Reino Unido — un país que cuenta con decisión de adecuación de la Comisión Europea, por lo que la transferencia no requiere garantías adicionales. No vendemos ni cedemos datos a terceros con fines publicitarios.</p>
+    <p>Los datos se almacenan con Supabase Inc., nuestro proveedor de base de datos e infraestructura, que actúa como encargado del tratamiento bajo nuestras instrucciones. Los servidores donde se alojan los datos están ubicados en Londres, Reino Unido — un país que cuenta con decisión de adecuación de la Comisión Europea, por lo que la transferencia no requiere garantías adicionales. La web se aloja y se sirve a través de Vercel Inc. (Estados Unidos), que también presta la analítica de visitas descrita en el apartado 2. No vendemos ni cedemos datos a terceros con fines publicitarios.</p>
     <h4>7. Cuánto tiempo los conservamos</h4>
     <p>Mientras tu cuenta esté activa. Si solicitás la baja o el borrado, eliminamos los datos en un plazo razonable, salvo que debamos conservar algo por obligación legal.</p>
     <h4>8. Tus derechos</h4>
@@ -967,6 +968,7 @@ const LEGAL_CONTENT = {
   cookies: `
     <p class="small-muted">Última actualización: ${LEGAL_UPDATED}</p>
     <p>Actualmente Benchi no utiliza cookies de análisis ni de publicidad. Usamos el almacenamiento local del navegador (localStorage) únicamente para mantener tu sesión iniciada, algo estrictamente necesario para el funcionamiento del servicio y que no requiere consentimiento según la normativa de cookies.</p>
+    <p>Para saber cuántas personas visitan la web y qué páginas leen usamos Vercel Web Analytics, que funciona sin cookies, no guarda información en tu dispositivo y no te identifica, por lo que no necesita tu consentimiento.</p>
     <p>Si en el futuro incorporamos herramientas como Google Analytics o Meta Pixel para entender el uso de la plataforma, te lo pediremos expresamente mediante un aviso como el que ves al entrar al sitio, y esas herramientas no se activarán hasta que lo aceptes. Podés cambiar tu decisión en cualquier momento desde el enlace "Preferencias de cookies" en el pie de página.</p>
   `
 };
