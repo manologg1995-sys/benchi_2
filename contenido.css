@@ -1,0 +1,72 @@
+/* Páginas de contenido de Benchi (guías para docentes). Misma identidad que la app. */
+:root{
+  --ink:#172033; --muted:#687189; --line:#e8eaf2; --surface-2:#f6f7fb;
+  --primary:#635bff; --pink:#ff5a9d; --cyan:#28c6e8; --yellow:#ffc857; --green:#35c77f;
+  --grad:linear-gradient(105deg,#635bff,#895cf6 55%,#ff5a9d);
+  --shadow:0 18px 55px rgba(32,34,64,.10); --shadow-soft:0 10px 28px rgba(32,34,64,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#fff;line-height:1.65;font-size:17px}
+a{color:var(--primary);font-weight:700}
+.wrap{width:min(1040px,calc(100% - 40px));margin:0 auto}
+
+/* Cabecera */
+.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdrop-filter:blur(16px);border-bottom:1px solid rgba(232,234,242,.8)}
+.top-in{height:70px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.05em;font-size:24px;color:var(--ink);text-decoration:none}
+.brand-mark{width:32px;height:32px;border-radius:11px;background:linear-gradient(135deg,#635bff,#8b5cf6 55%,#ff5a9d);position:relative;overflow:hidden;box-shadow:0 8px 18px rgba(99,91,255,.23)}
+.brand-mark:before,.brand-mark:after{content:"";position:absolute;border-radius:50%;background:#fff;opacity:.95}
+.brand-mark:before{width:9px;height:9px;left:7px;top:7px}
+.brand-mark:after{width:6px;height:6px;right:7px;bottom:7px}
+.nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nav a{color:var(--muted);text-decoration:none;font-weight:800;font-size:14px;padding:9px 12px;border-radius:12px}
+.nav a:hover,.nav a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:15px;padding:13px 22px;font-weight:800;font-size:16px;text-decoration:none;color:#fff;background:var(--grad);box-shadow:0 12px 25px rgba(99,91,255,.25);transition:transform .18s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn.light{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow-soft)}
+@media (max-width:720px){.nav a:not(.btn){display:none}.top-in{height:62px}}
+
+/* Cabecera de artículo */
+.hero{background:radial-gradient(circle at 8% 10%,rgba(40,198,232,.20),transparent 30%),radial-gradient(circle at 94% 8%,rgba(255,90,157,.18),transparent 30%),linear-gradient(135deg,#f8fbff,#faf7ff 55%,#fff7fb);padding:64px 0 54px}
+.crumbs{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:18px}
+.crumbs a{color:var(--muted);text-decoration:none}
+.eyebrow{display:inline-flex;padding:7px 12px;border:1px solid rgba(99,91,255,.14);background:rgba(99,91,255,.06);color:var(--primary);border-radius:999px;font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:16px}
+h1{font-size:clamp(34px,5vw,56px);line-height:1.04;letter-spacing:-.045em;margin:0 0 18px;max-width:860px}
+.lead{font-size:clamp(18px,2vw,21px);color:#4f5973;max-width:720px;margin:0}
+.meta{margin-top:20px;font-size:13px;color:var(--muted);font-weight:700}
+
+/* Texto */
+article{padding:48px 0 24px}
+.prose{max-width:740px}
+.prose h2{font-size:clamp(25px,3vw,32px);letter-spacing:-.035em;line-height:1.15;margin:46px 0 14px}
+.prose h3{font-size:20px;letter-spacing:-.02em;margin:28px 0 8px}
+.prose p{margin:0 0 16px;color:#2c3550}
+.prose ul,.prose ol{margin:0 0 18px;padding-left:22px;color:#2c3550}
+.prose li{margin-bottom:8px}
+.callout{background:linear-gradient(135deg,#f5f3ff,#fff0f7);border:1px solid rgba(99,91,255,.12);border-radius:22px;padding:22px 24px;margin:26px 0}
+.callout p{margin:0;color:var(--ink)}
+.callout strong{color:var(--primary)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 4px 54px;margin-bottom:16px}
+.steps li:before{content:counter(s);position:absolute;left:0;top:2px;width:36px;height:36px;border-radius:12px;background:var(--grad);color:#fff;font-weight:900;display:grid;place-items:center;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:22px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow-soft)}
+.card h3{margin:0 0 8px;font-size:18px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+
+/* Cierre y pie */
+.cta{margin:54px 0 0;padding:58px 0;background:radial-gradient(circle at 12% 20%,rgba(40,198,232,.23),transparent 28%),radial-gradient(circle at 90% 10%,rgba(255,90,157,.2),transparent 31%),linear-gradient(135deg,#6259ff,#835cf7 48%,#f45d9f);color:#fff}
+.cta h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.04em;line-height:1.08;margin:0 0 12px}
+.cta p{margin:0 0 24px;max-width:620px;color:rgba(255,255,255,.88)}
+.cta .btn{background:#fff;color:#4439d1;box-shadow:0 12px 27px rgba(0,0,0,.12)}
+.more{padding:44px 0}
+.more h2{font-size:24px;letter-spacing:-.03em;margin:0 0 6px}
+.more .grid{margin-top:16px}
+.more a.card{text-decoration:none;color:inherit;display:block;transition:transform .18s ease}
+.more a.card:hover{transform:translateY(-3px)}
+.more a.card h3{color:var(--ink)}
+.foot{border-top:1px solid var(--line);padding:28px 0;color:#70788d;font-size:13px}
+.foot-in{display:flex;justify-content:space-between;gap:14px 20px;flex-wrap:wrap;align-items:center}
+.foot a{color:#70788d;text-decoration:none}
+.foot a:hover{color:var(--ink)}
