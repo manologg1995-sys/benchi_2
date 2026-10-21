@@ -1096,6 +1096,7 @@ const I18N = {
     apply_btn:'Aplicar', custom_btn:'Ajustar', behaviors_panel:'Comportamientos',
     select_all:'Seleccionar todos', none_selected:'Ningún alumno seleccionado', one_selected:'1 alumno seleccionado', n_selected:'{n} alumnos seleccionados',
     apply_to_n:'Aplicar a {n}', bulk_title:'Puntuar a varios alumnos', select_student:'Seleccionar a', behavior_for:'Comportamiento para', custom_points_label:'Puntos personalizados',
+    catalog_all_added:'Ya has añadido a la tienda todas las skins de esta categoría.', catalog_already:'Esa skin ya está en la tienda.',
     remove_student_btn:'Eliminar alumno', remove_student_title:'Eliminar alumno', remove_student_yes:'Sí, eliminar alumno', cancel_btn_word:'Cancelar', remove_student_done:'Alumno eliminado del aula',
     remove_student_p:'Vas a sacar a {name} de esta aula. Se borrarán sus {pts} puntos, su historial y lo que haya conseguido en esta aula. Su cuenta de Benchi no se elimina y podría volver a unirse con el código. Esta acción no se puede deshacer.',
     one_student:'1 alumno', n_students:'{n} alumnos', bulk_partial:'Aplicado a {ok} de {n} alumnos. Vuelve a intentarlo con el resto.', suggestions_label:'Sugerencias — actívalas con un clic:',
@@ -1202,6 +1203,7 @@ const I18N = {
     apply_btn:'Apply', custom_btn:'Adjust', behaviors_panel:'Behaviors',
     select_all:'Select all', none_selected:'No students selected', one_selected:'1 student selected', n_selected:'{n} students selected',
     apply_to_n:'Apply to {n}', bulk_title:'Score several students', select_student:'Select', behavior_for:'Behavior for', custom_points_label:'Custom points',
+    catalog_all_added:'You have already added every skin in this category to the shop.', catalog_already:'That skin is already in the shop.',
     remove_student_btn:'Remove student', remove_student_title:'Remove student', remove_student_yes:'Yes, remove student', cancel_btn_word:'Cancel', remove_student_done:'Student removed from the classroom',
     remove_student_p:'You are about to remove {name} from this classroom. Their {pts} points, history and everything earned in this classroom will be deleted. Their Benchi account is kept and they could rejoin with the code. This cannot be undone.',
     one_student:'1 student', n_students:'{n} students', bulk_partial:'Applied to {ok} of {n} students. Try again for the rest.', suggestions_label:'Suggestions — activate them with one click:',
@@ -1692,19 +1694,27 @@ const AVATAR_CATALOG={
   ]
 };
 function avatarCatalogChips(slot, classId){
-  const list=AVATAR_CATALOG[slot]||[];
-  return `<div class="avatar-catalog-grid">${list.map((it,i)=>{
+  // Las skins que ya están en la tienda del aula no se muestran, para no añadirlas dos veces
+  const inShop=new Set(((window._cd&&window._cd.avatars)||[]).filter(a=>a.slot===slot).map(a=>a.asset_value));
+  const list=(AVATAR_CATALOG[slot]||[]).map((it,i)=>({it,i})).filter(x=>!inShop.has(x.it.value));
+  if(!list.length) return `<div class="empty-note">${t('catalog_all_added')}</div>`;
+  return `<div class="avatar-catalog-grid">${list.map(({it,i})=>{
     const eq = slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value,sombrero:it.top}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value};
-    return `<button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}')">
+    return `<button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}',this)">
       <img src="${avatarUrl(eq,72)}" alt="${it.name}">
       <span>${it.name}</span>
     </button>`;
   }).join('')}</div>`;
 }
-async function addCatalogAvatarItem(slot, i, classId){
+async function addCatalogAvatarItem(slot, i, classId, btn){
   const it=AVATAR_CATALOG[slot][i];
+  const shop=(window._cd&&window._cd.avatars)||[];
+  if(shop.some(a=>a.slot===slot&&a.asset_value===it.value)) return toast(t('catalog_already'));
+  if(btn){ if(btn.disabled) return; btn.disabled=true; btn.style.opacity='.4'; }   // evita el doble clic
   const cost = slot==='cara'?0:20;
-  await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji:'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
+  const { error } = await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji:'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
+  if(error && error.code!=='23505') { if(btn){btn.disabled=false;btn.style.opacity='';} return toast(error.message); }
+  if(error) toast(t('catalog_already'));
   renderTeacher('classdetail', classId);
 }
 function suggestionChips(list, kind, classId){
