@@ -84,6 +84,7 @@
 <link rel="preconnect" href="https://gwvtamxfmsdetylzekwx.supabase.co" crossorigin>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link rel="stylesheet" href="minijuegos.css">
+<link rel="stylesheet" href="cohete.css">
 <style>
 :root{
   --ink:#172033;
@@ -884,6 +885,7 @@ svg{display:block}
 </div>
 
 <script src="minijuegos.js" defer></script>
+<script src="cohete.js" defer></script>
 <script>
 /* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE (LAS DOS LÍNEAS DE ABAJO) ============ */
 const SUPABASE_URL = "https://gwvtamxfmsdetylzekwx.supabase.co";
@@ -1738,7 +1740,7 @@ function switchClassTab(tab){
   const leaving=state.teacherClassTab==='minigames'&&tab!=='minigames';
   state.teacherClassTab=tab;
   // Si el juego movió puntos, recargar el aula para que Alumnos/Historial salgan al día
-  if(leaving&&HG.takeDirty()){renderClassDetail(state.teacherClassId);return;}
+  if(leaving&&MG.takeDirty()){renderClassDetail(state.teacherClassId);return;}
   document.querySelectorAll('.teacher-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
 }
@@ -1860,12 +1862,12 @@ async function renderClassDetail(classId){
       </div>
     </div>
     <div class="tab-panel ${activeTab==='minigames'?'':'hidden'}" data-panel="minigames">
-      <div id="hg-root"></div>
+      <div id="mg-root"></div>
     </div>
     <div class="tab-panel ${activeTab==='history'?'':'hidden'}" data-panel="history">
       <div class="panel"><div class="panel-title"><h2>${t('class_history_panel')}</h2></div><div class="activity">${logRows}</div></div>
     </div>`;
-  HG.mount('teacher', classId, document.getElementById('hg-root'));
+  MG.mountTeacher(classId, document.getElementById('mg-root'));
 }
 function editBehavior(id, classId){
   const b=window._cd.behaviors.find(x=>x.id===id); if(!b) return;
@@ -2104,7 +2106,7 @@ function switchStudentClassTab(tab){
   const leaving=state.studentClassTab==='minigames'&&tab!=='minigames';
   state.studentClassTab=tab;
   // Si el juego movió puntos, recargar saldo, tienda e historial
-  if(leaving&&HG.takeDirty()){loadMyClasses().then(()=>renderStudentClassDetail(state.studentClassId));return;}
+  if(leaving&&MG.takeDirty()){loadMyClasses().then(()=>renderStudentClassDetail(state.studentClassId));return;}
   document.querySelectorAll('.student-class-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.student-tab-panel').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
 }
@@ -2158,7 +2160,7 @@ async function renderStudentClassDetail(classId){
       </div>
     </div>
     <div class="tab-panel student-tab-panel ${activeTab==='minigames'?'':'hidden'}" data-panel="minigames">
-      <div id="hg-root"></div>
+      <div id="mg-root"></div>
     </div>
     <div class="tab-panel student-tab-panel ${activeTab==='history'?'':'hidden'}" data-panel="history">
       <div class="panel"><div class="panel-title"><h2>${t('points_history')}</h2></div>${activityHTML(log)}</div>
@@ -2170,7 +2172,7 @@ async function renderStudentClassDetail(classId){
       <button class="btn btn-light" style="font-size:12px;padding:9px 14px" onclick="confirmLeaveClass('${classId}','${(cls?cls.name:'').replace(/'/g,"\\'")}')">Salir del aula</button>
     </div>`;
   window._renderTab=renderMktTab;
-  HG.mount('student', classId, document.getElementById('hg-root'));
+  MG.mountStudent(classId, document.getElementById('mg-root'));
 }
 function switchMktTab(tab){
   document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));

@@ -69,9 +69,10 @@ function buildEvents(sim,H){
 let M=null;
 const now=()=>Date.now()+M.offset;
 
-function mount(role,classId,root){
+function mount(role,classId,root,opts){
   unmount();
-  M={role,classId,root,st:null,err:null,offset:0,view:'list',pick:null,stake:null,stakeRound:null,key:'',race:null,busy:false,launching:null,dirty:false,
+  opts=opts||{};
+  M={role,classId,root,st:null,err:null,offset:0,view:opts.start||'list',onBack:opts.onBack||null,pick:null,stake:null,stakeRound:null,key:'',race:null,busy:false,launching:null,dirty:false,
      cfg:{time:40,cap:0.2,mode:'puntos'},raf:0,polling:false};
   root.classList.add('hg');
   root.innerHTML='<div class="hg-card hg-muted">Cargando minijuegos…</div>';
@@ -243,7 +244,8 @@ function gameCard(d){
 
 /* ===== Alumno ===== */
 function studentHTML(d){
-  if(d.ph==='off')return `<div class="hg-card"><h3>Minijuegos</h3><div class="hg-muted">Tu profesor aún no ha activado ningún minijuego en esta aula.</div></div>`;
+  if(d.ph==='off')return M.onBack?`<div class="hg-phone"><button class="hg-btn ghost small hg-back" onclick="HG.act('list')">← Minijuegos</button><div class="hg-card"><h3>Carrera de caballos</h3><div class="hg-muted">Tu profesor no tiene activado este minijuego ahora mismo.</div></div></div>`
+    :`<div class="hg-card"><h3>Minijuegos</h3><div class="hg-muted">Tu profesor aún no ha activado ningún minijuego en esta aula.</div></div>`;
   if(M.view==='list')return `<div class="hg-games">${gameCard(d)}</div>`;
   const r=d.r,V=isVotes(r)&&d.ph!=='lobby';
   // En el lobby se muestra el saldo; en una ronda sin puntos, los aciertos
@@ -510,7 +512,10 @@ async function act(a,x,y){
   switch(a){
     case 'retry':poll();break;
     case 'play':M.view='game';refresh();break;
-    case 'list':M.view='list';refresh();break;
+    case 'list':
+      // Dentro del selector de minijuegos se vuelve a él; si no, a la tarjeta propia
+      if(M.onBack){const f=M.onBack,dirty=M.dirty;unmount();f(dirty);break}
+      M.view='list';refresh();break;
     case 'pick':if(M.st.round&&M.st.round.status==='open'&&!M.st.round.mine){M.pick=x;render(derive())}break;
     case 'stake':M.stake=Math.round(+x);updateStake();break;
     case 'bet':{
@@ -564,5 +569,5 @@ async function launch(){
   }
 }
 
-window.HG={mount,unmount,act,takeDirty(){const d=!!(M&&M.dirty);if(M)M.dirty=false;return d}};
+window.HG={mount,unmount,act,art:()=>horseSVG(demoHorse).replace('width="64" height="44"','width="96" height="66"'),takeDirty(){const d=!!(M&&M.dirty);if(M)M.dirty=false;return d}};
 })();
