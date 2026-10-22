@@ -115,13 +115,14 @@ function refresh(){
   if(!M.st){if(M.err)M.root.innerHTML=`<div class="hg-card"><div class="hg-notice">${esc(M.err)}</div><button class="hg-btn ghost" onclick="CR.act('retry')">Reintentar</button></div>`;return}
   const d=derive(),r=d.r;
   // Solo se repinta cuando cambia algo visible; los relojes se actualizan en live()
-  const key=JSON.stringify([d.ph,r&&r.id,r&&r.turn,r&&r.bid,r&&r.players.map(p=>p.status+(p.delta==null?'':p.delta)).join(),r&&r.events.length&&r.events[0].id,
+  const key=JSON.stringify([d.ph,r&&r.id,r&&r.turn,r&&r.bid,r&&r.players.map(p=>p.status+(p.acted?1:0)+(p.delta==null?'':p.delta)).join(),r&&r.pending,r&&r.events.length&&r.events[0].id,
     M.st.enabled,M.st.board,M.help,M.bankOpen,M.bank&&M.bank.length,M.busy,M.role==='teacher'?M.cfg:0,M.st.my_points,M.st.my_millas,M.st.last&&M.st.last.ended_at,M.st.played]);
   if(key!==M.key){
     // No perder lo que se está escribiendo al repintar
     const keep={};KEEP.forEach(id=>{const e=M.root.querySelector('#'+id);if(e)keep[id]=e.value});
     const focused=document.activeElement&&KEEP.includes(document.activeElement.id)?document.activeElement.id:null;
     if(keep['cr-num']!=null)M.draft=keep['cr-num'];
+    if(!d.myTurn)M.draft='';                       // al acabar mi turno se olvida lo escrito (si vuelve a tocar, casilla vacía)
     M.key=key;M.root.innerHTML=M.role==='teacher'?teacherHTML(d):studentHTML(d);
     KEEP.forEach(id=>{const e=M.root.querySelector('#'+id);if(e&&keep[id]!=null)e.value=keep[id]});
     const ni=M.root.querySelector('#cr-num');if(ni){ni.value=M.draft;if(!focused&&d.myTurn&&!M.help)ni.focus();updateRaise()}
@@ -178,10 +179,12 @@ function helpHTML(){
       <li><b>Turnos al azar.</b> Se sortea el orden. El primero <b>tiene que decir una cifra</b> y se convierte en el <b>capitán</b>.</li>
       <li><b>En tu turno eliges una de tres:</b>
         <ul>
-          <li><b>⬆️ Subir la cifra:</b> dices un número <b>mayor</b> que el actual y pasas a ser el capitán. El capitán anterior sigue a bordo.</li>
+          <li><b>⬆️ Subir la cifra:</b> dices un número <b>mayor</b> que el actual y pasas a ser el capitán. El capitán anterior podrá volver a decidir.</li>
           <li><b>🚢 Seguir a bordo:</b> crees que la cifra actual no se pasa y no quieres subirla más.</li>
           <li><b>✋ ${STOP}</b> crees que la cifra <b>ya se ha pasado</b> de la respuesta. Ya no vuelves a jugar en esa pregunta.</li>
         </ul></li>
+      <li><b>¡Ojo, se vuelve a decidir!</b> Cada vez que alguien <b>sube la cifra</b>, a todos los que siguen a bordo (también al capitán anterior) les vuelve a tocar elegir: subir, seguir a bordo o «${STOP}».
+        La pregunta termina cuando todos los que quedan en el barco han dicho «sigo a bordo» después de la última subida.</li>
       <li><b>Si se te acaba el tiempo:</b> si ya hay cifra, te quedas a bordo; si eras el primero y no dijiste nada, te quedas fuera de esa pregunta.</li>
       <li><b>Al final</b> el profesor revela la respuesta y se reparten las <b>millas</b> con la última cifra (la del capitán).</li>
     </ol>
@@ -274,8 +277,10 @@ function statusChip(p,r){
   if(p.status==='out')return '<span class="hg-chip white">Fuera</span>';
   if(p.status==='stopped')return '<span class="hg-chip red">✋ No pasa</span>';
   if(p.captain)return '<span class="hg-chip tint">⚓ Capitán</span>';
+  if(r.status==='playing'&&!p.acted)return '<span class="hg-chip amber">🔁 Vuelve a decidir</span>';
   return '<span class="hg-chip green">🚢 A bordo</span>';
 }
+const pendTxt=r=>{const n=r.pending||0;return n<=1?'Último por decidir':`Faltan ${n} por decidir`};
 function seatsHTML(r,big){
   return `<div class="cr-seats ${big?'big':''}">${r.players.map(p=>`<div class="cr-seat ${r.current===p.id&&r.status==='playing'?'now':''} ${p.id===M.st.me?'me':''} ${p.status}">
     <span class="cr-seat-n">${p.seat||'·'}</span><span class="cr-seat-nm">${esc(p.name)}${p.id===M.st.me?' (tú)':''}${p.auto?' <span class="hg-meta">· sin responder</span>':''}</span>${statusChip(p,r)}</div>`).join('')}</div>`;
@@ -285,7 +290,7 @@ function eventText(e,r){
   switch(e.kind){
     case 'start':return `¡Zarpamos! ${e.value} ${e.value==1?'pasajero':'pasajeros'} a bordo`;
     case 'raise':return `<b>${n}</b> sube a <b>${withUnit(e.value,esc(r.unit))}</b> y es el nuevo capitán`;
-    case 'stay':return `<b>${n}</b> se queda a bordo`;
+    case 'stay':return `<b>${n}</b> sigue a bordo`;
     case 'stop':return `<b>${n}</b>: «${STOP}» ✋`;
     case 'timeout':{const p=r.players.find(x=>x.id===e.who);return `A <b>${n}</b> se le acabó el tiempo${p&&p.status==='out'?' y se queda fuera':' y sigue a bordo'}`}
     case 'reveal':return `La respuesta era <b>${withUnit(e.value,esc(r.unit))}</b>`;
@@ -334,14 +339,15 @@ function playStudent(d){
   }else{
     const role=myRole(d);
     const txt=d.me.status==='out'?'Te quedaste fuera de esta pregunta (no diste cifra a tiempo).'
-      :d.me.status==='waiting'?`Te toca en el turno ${d.me.seat}. ${r.bid==null?'':'Ve pensando: ¿subir, seguir a bordo o «${STOP}»?'}`
-      :role==='captain'?`Eres el capitán: ${outcomeLine('captain',v)}. Si alguien sube, sigues a bordo.`
-      :role==='crew'?`Vas a bordo: ${outcomeLine('crew',v)}.`
+      :d.me.status==='waiting'?`Espera tu turno. ${r.bid==null?'':`Ve pensando: ¿subir, seguir a bordo o «${STOP}»?`}`
+      :role==='captain'?`Eres el capitán: ${outcomeLine('captain',v)}. Si alguien sube la cifra, te volverá a tocar decidir.`
+      :role==='crew'&&!d.me.acted?`🔁 Alguien ha subido la cifra: <b>te volverá a tocar decidir</b> si subes, sigues a bordo o «${STOP}».`
+      :role==='crew'?`Vas a bordo: ${outcomeLine('crew',v)}. Si alguien sube la cifra, te volverá a tocar.`
       :`Dijiste «${STOP}»: ${outcomeLine('stopped',v)}.`;
     action=`<div class="hg-card ${d.me.status==='stopped'?'':'cr-ok'}"><div class="hg-eyebrow">Tu situación</div><div style="font-size:15px">${txt}</div></div>`;
   }
   const turnLine=closed?`<div class="hg-notice">Todos han jugado. El profesor va a revelar la respuesta…</div>`
-    :d.myTurn?'':`<div class="hg-row hg-wrap"><span class="hg-chip amber">${clock()}Turno de ${esc(r.current_name||'')} · <span data-cr-turn>${secsLeft(r.turn_deadline)}</span> s</span><span class="hg-chip white">Turno ${r.turn} de ${r.seats_total}</span></div>`;
+    :d.myTurn?'':`<div class="hg-row hg-wrap"><span class="hg-chip amber">${clock()}Turno de ${esc(r.current_name||'')} · <span data-cr-turn>${secsLeft(r.turn_deadline)}</span> s</span><span class="hg-chip white">${pendTxt(r)}</span></div>`;
   return `${questionCard(r)}${bidBox(r)}${turnLine}${action}
     <div class="hg-card"><div class="hg-eyebrow">Tripulación</div>${seatsHTML(r)}</div>
     ${r.events.length?`<div class="hg-card"><div class="hg-eyebrow">Bitácora</div>${feedHTML(r,5)}</div>`:''}`;
@@ -457,7 +463,7 @@ function boardingTeacher(d){
 function playTeacher(d){
   const r=d.r,closed=d.ph==='closed';
   return `<div class="hg-card cr-stage">
-    <div class="hg-between">${closed?'<span class="hg-chip tint">Todos han jugado</span>':`<span class="hg-chip amber">${clock()}Turno de <b>${esc(r.current_name||'')}</b> · <span data-cr-turn>${secsLeft(r.turn_deadline)}</span> s</span>`}<span class="hg-chip white">Turno ${Math.min(r.turn,r.seats_total)} de ${r.seats_total}</span></div>
+    <div class="hg-between">${closed?'<span class="hg-chip tint">Todos han jugado</span>':`<span class="hg-chip amber">${clock()}Turno de <b>${esc(r.current_name||'')}</b> · <span data-cr-turn>${secsLeft(r.turn_deadline)}</span> s</span>`}<span class="hg-chip white">${closed?'':pendTxt(r)}</span></div>
     ${questionCard(r,true)}
     ${bidBox(r,true)}
     <div class="cr-cols"><div><div class="hg-eyebrow" style="margin-bottom:8px">Tripulación</div>${seatsHTML(r,true)}</div>
