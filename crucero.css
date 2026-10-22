@@ -121,3 +121,15 @@ button.cr-opt:disabled{opacity:.6;cursor:default}
 .cr details summary::-webkit-details-marker{display:none}
 
 @media (prefers-reduced-motion:reduce){.cr-ship.sail,.cr-smoke,.cr-wave{animation:none!important}}
+
+/* Millas: conversión a puntos de Benchi */
+.cr-rate{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:14px;background:linear-gradient(135deg,#e8f3ff,#f0efff);font-weight:900;font-size:14px;flex-wrap:wrap;text-align:center}
+.cr-rate-a{color:#1f6fb8}
+.cr-rate-eq{color:var(--hg-muted)}
+.cr-rate-b{color:var(--hg-primary)}
+.cr-conv{padding:10px 12px;border-radius:14px;background:var(--hg-green-soft);color:var(--hg-green-dark);font-size:14px}
+.cr-milebar{display:flex;flex-direction:column;gap:6px}
+.cr-mchip{padding:8px 11px}
+.hg-phone > .hg-between .hg-row{gap:6px}
+.hg-phone > .hg-between > .hg-btn{white-space:nowrap}
+@media (max-width:420px){.hg-phone > .hg-between .hg-balance{padding:7px 10px;font-size:14px}.hg-phone > .hg-between > .hg-btn{padding:0 10px}}
