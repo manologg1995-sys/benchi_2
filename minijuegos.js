@@ -311,7 +311,7 @@ function openHTML(d){
       <div class="hg-card"><div class="hg-between"><div><div class="hg-meta" id="hg-sb-label"></div><div style="font-size:12px" id="hg-sb-ev"></div></div><div class="hg-payout" id="hg-sb-pay"></div></div>
       <button class="hg-btn primary block" id="hg-sb-btn" onclick="HG.act('bet')"></button></div>`;
   }
-  return `<div class="hg-col" style="gap:6px"><h2 class="hg-title">Gran Premio · Ronda ${r.no}</h2>
+  return `<div class="hg-col" style="gap:6px"><h2 class="hg-title">Gran Premio</h2>
     <div class="hg-row hg-wrap"><span class="hg-chip amber">${clock()}${closed?'Cerrado':`Cierra en <span data-hg-timer>${mmss(Math.ceil((r.closes_at-now())/1000))}</span>`}</span>${onChip(`${M.st.members} en el aula`)}<span class="hg-chip white">${V?`<span data-hg-votes>${T}</span> votos`:`Bote <span data-hg-total>${fmt(T)}</span> pts`}</span>${V?'<span class="hg-chip tint">Sin puntos</span>':''}</div></div>
     <div class="hg-eyebrow">${mine?(V?'Así va la votación':'Así va el bote'):'Elige tu caballo'}</div>
     <div class="hg-hcards">${cards}</div>${stake}`;
@@ -323,7 +323,7 @@ function resultsVotesStudentHTML(d){
   const winners=r.rows.filter(x=>x.payout>0);
   let banner;
   if(!mine)banner=`<div class="hg-banner lose"><h2>Ganó ${esc(w.name)}</h2><div class="hg-muted">No votaste en esta ronda.</div></div>`;
-  else if(mine.payout>0)banner=`<div class="hg-banner win"><div><h2>¡Acertaste!</h2><div style="opacity:.88">${esc(w.name)} ganó la ronda ${r.no}</div></div><div class="big">+1 acierto</div><div>Llevas ${h} de ${total} ${total===1?'voto':'votos'}</div></div>`;
+  else if(mine.payout>0)banner=`<div class="hg-banner win"><div><h2>¡Acertaste!</h2><div style="opacity:.88">${esc(w.name)} ganó la carrera</div></div><div class="big">+1 acierto</div><div>Llevas ${h} de ${total} ${total===1?'voto':'votos'}</div></div>`;
   else banner=`<div class="hg-banner lose"><div><h2>Esta vez no</h2><div class="hg-muted">Ganó ${esc(w.name)}; tú votaste por ${esc(H[mine.horse].name)}.</div></div><div>Llevas ${h} ${h===1?'acierto':'aciertos'} de ${total} ${total===1?'voto':'votos'}</div></div>`;
   const top=M.st.hits_top||[];
   return `${banner}${podiumHTML(r)}
@@ -338,7 +338,7 @@ function resultsStudentHTML(d){
   let banner;
   if(!mine)banner=`<div class="hg-banner lose"><h2>Ganó ${esc(w.name)}</h2><div class="hg-muted">No participaste en esta ronda.</div></div>`;
   else if(ri.refund)banner=`<div class="hg-banner lose"><h2>Nadie acertó</h2><div class="hg-muted">Ganó ${esc(w.name)}, pero nadie lo eligió: se te devuelven tus ${mine.amount} pts.</div></div>`;
-  else if(mine.payout>0)banner=`<div class="hg-banner win"><div><h2>¡Acertaste!</h2><div style="opacity:.88">${esc(w.name)} ganó la ronda ${r.no}</div></div><div class="big">+${fmt(mine.payout-mine.amount)} pts</div>
+  else if(mine.payout>0)banner=`<div class="hg-banner win"><div><h2>¡Acertaste!</h2><div style="opacity:.88">${esc(w.name)} ganó la carrera</div></div><div class="big">+${fmt(mine.payout-mine.amount)} pts</div>
     <div class="hg-stats3"><div><span class="k">Pusiste</span><span class="v">${mine.amount}</span></div><div><span class="k">Recibes</span><span class="v">${mine.payout}</span></div><div><span class="k">Saldo</span><span class="v">${fmt(M.st.my_points)}</span></div></div></div>`;
   else banner=`<div class="hg-banner lose"><div><h2>Esta vez no</h2><div class="hg-muted">Ganó ${esc(w.name)}; tú ibas con ${esc(H[mine.horse].name)}.</div></div><div class="big">−${mine.amount} pts</div>
     <div class="hg-stats3"><div><span class="k">Pusiste</span><span class="v">${mine.amount}</span></div><div><span class="k">Recibes</span><span class="v">0</span></div><div><span class="k">Saldo</span><span class="v">${fmt(M.st.my_points)}</span></div></div></div>`;
@@ -380,9 +380,9 @@ function teacherHTML(d){
   if(d.ph==='lobby'||d.ph==='results'){
     main=`<div class="hg-card">
       ${d.ph==='lobby'&&r&&r.status==='cancelled'?`<div class="hg-notice">La última ronda se canceló${isVotes(r)?'.':' y se devolvieron todos los puntos.'}</div>`:''}
-      ${d.ph==='results'?teacherResultsHTML(d):`<div class="hg-eyebrow">${r?'Ronda '+(r.no+1)+' preparada':'Primera ronda'}</div>
+      ${d.ph==='results'?teacherResultsHTML(d):`<div class="hg-eyebrow">Nueva ronda</div>
       <div style="font-size:15px">Al abrir la ronda aparecen 5 caballos nuevos y el alumnado tiene ${M.cfg.time} s para ${V?'votar (sin puntos en juego)':'apostar'}. El resultado se decide al lanzar la carrera y todos la ven a la vez en sus dispositivos.</div>`}
-      <div><button class="hg-btn primary" ${M.busy?'disabled':''} onclick="HG.act('open')">${M.busy?'Preparando…':(V?'Abrir votación':'Abrir predicciones')+' · ronda '+(r?r.no+1:1)}</button></div></div>`;
+      <div><button class="hg-btn primary" ${M.busy?'disabled':''} onclick="HG.act('open')">${M.busy?'Preparando…':'Comenzar nueva ronda'}</button></div></div>`;
   }else if(d.ph==='open'||d.ph==='closed'){
     const p=r.pools,T=sum(p);
     main=`<div class="hg-card" style="gap:18px"><div class="hg-between" style="align-items:flex-start">
@@ -395,7 +395,7 @@ function teacherHTML(d){
         ${d.ph==='open'?`<button class="hg-btn ghost" onclick="HG.act('extend')">+15 s</button>`:''}
         <button class="hg-btn danger" style="margin-left:auto" onclick="HG.act('cancel')">${V?'Cancelar ronda':'Cancelar y devolver puntos'}</button></div></div>`;
   }else if(d.ph==='countdown'||d.ph==='race'){
-    main=`<div class="hg-card"><div class="hg-between"><h3 style="font-size:24px">Ronda ${r.no} · ${d.ph==='countdown'?'¡Preparados!':'En carrera'}</h3><span class="hg-chip red hg-live"><span class="hg-dot"></span>EN DIRECTO</span></div>
+    main=`<div class="hg-card"><div class="hg-between"><h3 style="font-size:24px">${d.ph==='countdown'?'¡Preparados!':'En carrera'}</h3><span class="hg-chip red hg-live"><span class="hg-dot"></span>EN DIRECTO</span></div>
       <div class="hg-muted" style="font-size:14px">${V?'Votación cerrada':'Bote cerrado'}: <b style="color:var(--hg-ink)">${V?r.total+' votos':fmt(r.total)+' pts'}</b>. Proyecta esta pantalla para que toda la clase vea la carrera.</div>
       ${trackHTML(d,true)}
       <div><div class="hg-eyebrow" style="margin-bottom:8px">Narración</div><div class="hg-feed" data-hg-feed="6"></div></div></div>`;
@@ -404,13 +404,13 @@ function teacherHTML(d){
 }
 function teacherResultsHTML(d){
   const r=d.r,ri=resultInfo(r);
-  if(isVotes(r))return `<div class="hg-between"><h3 style="font-size:24px">Ronda ${r.no} · gana ${esc(r.horses[r.winner].name)}</h3></div>
+  if(isVotes(r))return `<div class="hg-between"><h3 style="font-size:24px">Gana ${esc(r.horses[r.winner].name)}</h3></div>
     ${podiumHTML(r)}
     <div class="hg-muted" style="font-size:14px">${r.total===0?'Nadie votó en esta ronda.':`Acertaron <b style="color:var(--hg-ink)">${ri.W}</b> de ${r.total} votos. No se ha movido ningún punto.`}</div>
     ${r.rows.length?`<div style="overflow-x:auto"><table class="hg-t"><thead><tr><th>Alumno</th><th>Votó</th><th class="n">Resultado</th></tr></thead><tbody>
     ${r.rows.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(r.horses[x.horse].name)}</td><td class="n ${x.payout?'hg-pos':''}" style="${x.payout?'':'color:var(--hg-muted)'}">${x.payout?'Acierto':'Fallo'}</td></tr>`).join('')}
     </tbody></table></div>`:''}`;
-  return `<div class="hg-between"><h3 style="font-size:24px">Ronda ${r.no} · gana ${esc(r.horses[r.winner].name)}</h3></div>
+  return `<div class="hg-between"><h3 style="font-size:24px">Gana ${esc(r.horses[r.winner].name)}</h3></div>
     ${podiumHTML(r)}
     <div class="hg-muted" style="font-size:14px">${ri.T===0?'Nadie apostó en esta ronda.':ri.refund?'Nadie eligió al ganador: se han devuelto todos los puntos.':`Bote ${fmt(ri.T)} pts ÷ ${fmt(ri.W)} pts acertados → ×${fmt1(ri.mult)} por punto.`}</div>
     ${r.rows.length?`<div style="overflow-x:auto"><table class="hg-t"><thead><tr><th>Alumno</th><th>Caballo</th><th class="n">Puso</th><th class="n">Recibe</th><th class="n">Neto</th></tr></thead><tbody>
