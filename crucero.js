@@ -12,8 +12,8 @@ const STOP='¡Por aquí no paso!';
 const POLL_MS=1500;
 const KEEP=['cr-num','cr-q-text','cr-q-ans','cr-q-unit'];
 const BOARD_TIMES=[20,30,45,60,90], TURN_TIMES=[10,15,20,30,45], VALUES=[1,2,3,5];
-// En el juego se ganan MILLAS (× valor de la ronda); cada RATE millas = 1 punto de Benchi.
-// Debe coincidir con cr_reveal en supabase/crucero_millas.sql
+// En el juego se ganan MILLAS (× valor de la pregunta). Al pulsar «Terminar juego» cada RATE millas = 1 punto de Benchi.
+// Debe coincidir con cr_reveal / _cr_end_game en supabase/crucero_terminar.sql
 const PTS={captain:[4,0],crew:[2,0],stopped:[0,2],exact:6};
 const RATE=5;
 const mi=n=>`${n} ${n===1?'milla':'millas'}`;
@@ -64,7 +64,7 @@ function mount(role,classId,root,opts){
   opts=opts||{};
   M={role,classId,root,st:null,err:null,offset:0,key:'',busy:false,help:false,bank:null,bankOpen:false,
      onBack:opts.onBack||null,dirty:false,draft:'',draftRound:null,
-     cfg:{value:1,board:30,turn:20,question:'',newMatch:false,source:'benchi',level:'',newLevel:'intermedio'},polling:false};
+     cfg:{value:1,board:30,turn:20,question:'',source:'benchi',level:'',newLevel:'intermedio'},polling:false};
   root.classList.add('hg','cr');
   root.innerHTML='<div class="hg-card hg-muted">Cargando…</div>';
   M.pollT=setInterval(poll,POLL_MS);
@@ -116,7 +116,7 @@ function refresh(){
   const d=derive(),r=d.r;
   // Solo se repinta cuando cambia algo visible; los relojes se actualizan en live()
   const key=JSON.stringify([d.ph,r&&r.id,r&&r.turn,r&&r.bid,r&&r.players.map(p=>p.status+(p.delta==null?'':p.delta)).join(),r&&r.events.length&&r.events[0].id,
-    M.st.enabled,M.st.board,M.help,M.bankOpen,M.bank&&M.bank.length,M.busy,M.role==='teacher'?M.cfg:0,M.st.my_points,M.st.my_millas]);
+    M.st.enabled,M.st.board,M.help,M.bankOpen,M.bank&&M.bank.length,M.busy,M.role==='teacher'?M.cfg:0,M.st.my_points,M.st.my_millas,M.st.last&&M.st.last.ended_at,M.st.played]);
   if(key!==M.key){
     // No perder lo que se está escribiendo al repintar
     const keep={};KEEP.forEach(id=>{const e=M.root.querySelector('#'+id);if(e)keep[id]=e.value});
@@ -126,7 +126,7 @@ function refresh(){
     KEEP.forEach(id=>{const e=M.root.querySelector('#'+id);if(e&&keep[id]!=null)e.value=keep[id]});
     const ni=M.root.querySelector('#cr-num');if(ni){ni.value=M.draft;if(!focused&&d.myTurn&&!M.help)ni.focus();updateRaise()}
     if(focused){const f=M.root.querySelector('#'+focused);if(f){f.focus();try{f.setSelectionRange(f.value.length,f.value.length)}catch(e){}}}
-    if(M.role==='student'&&d.ph==='revealed')syncPoints(d);
+    if(M.role==='student'&&(d.ph==='revealed'||d.ph==='lobby'))syncPoints(d);
   }
   live();
   tabAlert(d);
@@ -174,22 +174,23 @@ function helpHTML(){
     <div class="hg-between"><h2 id="cr-help-t">Cómo se juega</h2><button class="hg-btn ghost small" onclick="CR.act('help')" aria-label="Cerrar">Cerrar</button></div>
     <p class="cr-lead">Todas las respuestas son <b>números</b>. No hace falta saberla exacta: gana quien se acerca <b>sin pasarse</b>.</p>
     <ol class="cr-steps">
-      <li><b>Sube a bordo.</b> El profesor lanza una pregunta y tienes unos segundos para subir al crucero. Si no subes, esa ronda solo miras.</li>
+      <li><b>Sube a bordo.</b> El profesor lanza una pregunta y tienes unos segundos para subir al crucero. Si no subes, esa pregunta solo miras.</li>
       <li><b>Turnos al azar.</b> Se sortea el orden. El primero <b>tiene que decir una cifra</b> y se convierte en el <b>capitán</b>.</li>
       <li><b>En tu turno eliges una de tres:</b>
         <ul>
           <li><b>⬆️ Subir la cifra:</b> dices un número <b>mayor</b> que el actual y pasas a ser el capitán. El capitán anterior sigue a bordo.</li>
           <li><b>🚢 Seguir a bordo:</b> crees que la cifra actual no se pasa y no quieres subirla más.</li>
-          <li><b>✋ ${STOP}</b> crees que la cifra <b>ya se ha pasado</b> de la respuesta. Ya no vuelves a jugar en esa ronda.</li>
+          <li><b>✋ ${STOP}</b> crees que la cifra <b>ya se ha pasado</b> de la respuesta. Ya no vuelves a jugar en esa pregunta.</li>
         </ul></li>
-      <li><b>Si se te acaba el tiempo:</b> si ya hay cifra, te quedas a bordo; si eras el primero y no dijiste nada, te quedas fuera de la ronda.</li>
+      <li><b>Si se te acaba el tiempo:</b> si ya hay cifra, te quedas a bordo; si eras el primero y no dijiste nada, te quedas fuera de esa pregunta.</li>
       <li><b>Al final</b> el profesor revela la respuesta y se reparten las <b>millas</b> con la última cifra (la del capitán).</li>
     </ol>
-    <h3>Cómo se puntúa ${v>1?`<span class="hg-chip tint">esta ronda vale ×${v}</span>`:''}</h3>
+    <h3>Cómo se puntúa ${v>1?`<span class="hg-chip tint">esta pregunta vale ×${v}</span>`:''}</h3>
     ${scoreTable(v)}
-    <div class="cr-note">En el crucero se juega con <b>millas</b>. Cada vez que juntas <b>${RATE} millas</b>, se convierten solas en <b>1 punto de Benchi</b>;
-      las que sobran se guardan para la próxima ronda (por ejemplo, con 7 millas ganas 1 punto y te quedan 2).
-      <b>Aquí no se apuesta: nunca pierdes nada</b>, como mucho ganas 0 millas esa ronda.</div>
+    <div class="cr-note">En el crucero se juega con <b>millas</b>, que vas sumando pregunta a pregunta.
+      Cuando el profesor pulse <b>«Terminar juego»</b>, tus millas se convierten en puntos de Benchi: <b>cada ${RATE} millas = 1 punto</b>
+      (por ejemplo, 17 millas = 3 puntos; las que no llegan a ${RATE} no se convierten). Después, el juego vuelve a empezar de cero.
+      <b>Aquí no se apuesta: nunca pierdes nada</b>, como mucho ganas 0 millas en una pregunta.</div>
     <h3>Trucos</h3>
     <ul class="cr-tips">
       <li>Si eres el primero, empieza con una cifra <b>baja y segura</b>: el riesgo lo correrán los demás.</li>
@@ -202,7 +203,7 @@ function helpHTML(){
 /* ===================================================== ALUMNO ===================================================== */
 function balChip(d){
   const m=M.st.my_millas||0;
-  return `<div class="hg-balance cr-mchip" title="Millas guardadas: al llegar a ${RATE} se convierten en 1 punto">⚓<span>${m}/${RATE}</span></div>
+  return `<div class="hg-balance cr-mchip" title="Millas de este juego: al terminar, cada ${RATE} = 1 punto">⚓<span>${m}</span></div>
     <div class="hg-balance">${coin()}<span>${num(M.st.my_points||0)}</span> pts</div>`;
 }
 function studentHTML(d){
@@ -223,23 +224,35 @@ function heroHTML(title,sub,flame){
 function boardHTML(title){
   const b=M.st.board||[];
   if(!b.length)return '';
-  return `<div class="hg-card"><div class="hg-between"><div class="hg-eyebrow">${title||'Marcador de la partida'}</div><div class="hg-meta">${M.st.match_rounds} ${M.st.match_rounds===1?'ronda':'rondas'}</div></div>
+  return `<div class="hg-card"><div class="hg-between"><div class="hg-eyebrow">${title||'Marcador del juego'}</div><div class="hg-meta">millas acumuladas</div></div>
     <div class="hg-plist">${b.map((x,k)=>`<div class="hg-prow ${x.id===M.st.me?'me':''}"><b style="width:18px">${k+1}</b><div class="nm">${esc(x.name)}${x.id===M.st.me?' (tú)':''}</div><b class="${x.score>0?'hg-pos':''}">${mi(x.score||0)}</b></div>`).join('')}</div></div>`;
 }
 function lobbyStudent(d){
   return `${heroHTML(NAME,'Adivina la cifra… ¡sin pasarte!')}
+    ${lastStudent()}
     <div class="hg-card"><div class="hg-eyebrow">En pocas palabras</div>
       <div class="cr-mini"><span>⬆️</span><div><b>Sube</b> la cifra y serás el capitán.</div></div>
       <div class="cr-mini"><span>🚢</span><div><b>Sigue a bordo</b> si crees que no se pasa.</div></div>
       <div class="cr-mini"><span>✋</span><div>Di <b>«${STOP}»</b> si crees que ya se ha pasado.</div></div>
-      <div class="cr-mini"><span>⚓</span><div>Ganas <b>millas</b>: cada <b>${RATE} millas = 1 punto</b> de Benchi. Nunca pierdes nada.</div></div>
+      <div class="cr-mini"><span>⚓</span><div>Vas sumando <b>millas</b>. Al terminar el juego, cada <b>${RATE} millas = 1 punto</b> de Benchi. Nunca pierdes nada.</div></div>
       <button class="hg-btn ghost small" style="align-self:flex-start" onclick="CR.act('help')">${helpIcon()} Ver normas y puntuación</button></div>
-    ${d.r&&d.r.status==='cancelled'?'<div class="hg-notice">La última ronda se canceló. No se ha movido ningún punto.</div>':''}
+    ${d.r&&d.r.status==='cancelled'?'<div class="hg-notice">La última pregunta se canceló. No se ha movido ninguna milla.</div>':''}
     <div class="hg-card" style="align-items:center;text-align:center">${onChip('Esperando al profesor')}<div class="hg-muted">En cuanto lance una pregunta podrás subir a bordo.</div></div>
     ${boardHTML()}`;
 }
+// Resumen del último juego terminado (solo hasta que empieza la primera pregunta del juego nuevo)
+function lastStudent(){
+  const L=M.st.last;
+  if(!L||M.st.played||(M.st.round&&M.st.round.status!=='cancelled'))return '';
+  const me=(L.rows||[])[0];
+  if(!me)return `<div class="hg-card"><div class="hg-eyebrow">Juego terminado</div><div class="hg-muted">No ganaste millas en el último juego. ¡En el siguiente!</div></div>`;
+  return `<div class="hg-banner win"><div class="hg-meta" style="color:rgba(255,255,255,.85)">¡Juego terminado!</div>
+    <div class="cr-answer"><div><div class="cr-bid-k">Tus millas</div><div class="cr-final">⚓ ${me.millas}</div></div>
+      <div><div class="cr-bid-k">Puntos de Benchi</div><div class="big">+${me.points}</div></div></div>
+    <div style="opacity:.9">${me.points?`${me.points*RATE} millas convertidas a ${RATE} por punto.`:`Necesitabas al menos ${RATE} millas para ganar un punto.`} Tu saldo: <b>${num(M.st.my_points)} pts</b></div></div>`;
+}
 function questionCard(r,big){
-  return `<div class="cr-q ${big?'big':''}"><div class="cr-q-k">Pregunta · ronda ${r.no}${r.value>1?` · vale ×${r.value}`:''}</div><div class="cr-q-t">${esc(r.question)}</div>${r.unit?`<div class="cr-q-u">Respuesta en: <b>${esc(r.unit)}</b></div>`:''}</div>`;
+  return `<div class="cr-q ${big?'big':''}"><div class="cr-q-k">Pregunta${r.value>1?` · vale ×${r.value}`:''}</div><div class="cr-q-t">${esc(r.question)}</div>${r.unit?`<div class="cr-q-u">Respuesta en: <b>${esc(r.unit)}</b></div>`:''}</div>`;
 }
 function boardingStudent(d){
   const r=d.r,aboard=r.players.length;
@@ -248,7 +261,7 @@ function boardingStudent(d){
     <div class="hg-row hg-wrap"><span class="hg-chip amber">${clock()}Zarpa en <span data-cr-board>${mmss(secsLeft(r.boarding_closes_at))}</span></span>${onChip(`${aboard} de ${M.st.members} a bordo`)}</div>
     ${d.me?`<div class="hg-card cr-ok"><div class="hg-row">${shipSVG(36)}<div><b>¡Estás a bordo!</b><div class="hg-meta">Cuando zarpe se sorteará el orden de los turnos. Ve pensando tu cifra.</div></div></div></div>`
       :`<button class="hg-btn primary block cr-big-btn" ${M.busy?'disabled':''} onclick="CR.act('board')">🚢 Subir a bordo</button>
-        <div class="hg-meta" style="text-align:center">Si no subes, esta ronda solo podrás mirar.</div>`}
+        <div class="hg-meta" style="text-align:center">Si no subes, esta pregunta solo podrás mirar.</div>`}
     ${crewChips(r)}`;
 }
 function crewChips(r){
@@ -317,10 +330,10 @@ function playStudent(d){
       </div>`}
     </div>`;
   }else if(!d.me){
-    action=`<div class="hg-card hg-muted">No subiste a bordo en esta ronda. ¡Mira cómo juegan los demás!</div>`;
+    action=`<div class="hg-card hg-muted">No subiste a bordo en esta pregunta. ¡Mira cómo juegan los demás!</div>`;
   }else{
     const role=myRole(d);
-    const txt=d.me.status==='out'?'Te quedaste fuera de esta ronda (no diste cifra a tiempo).'
+    const txt=d.me.status==='out'?'Te quedaste fuera de esta pregunta (no diste cifra a tiempo).'
       :d.me.status==='waiting'?`Te toca en el turno ${d.me.seat}. ${r.bid==null?'':'Ve pensando: ¿subir, seguir a bordo o «${STOP}»?'}`
       :role==='captain'?`Eres el capitán: ${outcomeLine('captain',v)}. Si alguien sube, sigues a bordo.`
       :role==='crew'?`Vas a bordo: ${outcomeLine('crew',v)}.`
@@ -341,15 +354,13 @@ function verdict(r){
 function revealStudent(d){
   const r=d.r,vd=verdict(r),me=d.me;
   let mine;
-  if(!me)mine=`<div class="hg-muted">No subiste a bordo en esta ronda.</div>`;
+  if(!me)mine=`<div class="hg-muted">No subiste a bordo en esta pregunta.</div>`;
   else{
     const role=me.status==='out'?'Te quedaste fuera':me.status==='stopped'?'Dijiste «'+STOP+'»':r.captain===M.st.me?'Eras el capitán':'Ibas a bordo';
-    const left=M.st.my_millas||0,need=RATE-left;
+    const tot=M.st.my_millas||0,pts=Math.floor(tot/RATE);
     mine=`<div class="hg-between"><div><div class="hg-meta">${role}</div><div class="cr-delta ${me.delta>0?'hg-pos':''}">+${me.delta||0} <span style="font-size:22px">${me.delta===1?'milla':'millas'}</span></div></div>
-      <div style="text-align:right"><div class="hg-meta">Saldo</div><b style="font-size:20px">${num(M.st.my_points)} pts</b></div></div>
-      ${me.points>0?`<div class="cr-conv">🎉 Se han convertido <b>${me.points*RATE} millas</b> en <b>+${me.points} ${me.points===1?'punto':'puntos'}</b> de Benchi</div>`:''}
-      <div class="cr-milebar"><div class="hg-between hg-meta"><span>Millas guardadas: <b>${left} de ${RATE}</b></span><span>${need===RATE?'':'te '+(need===1?'falta 1 milla':'faltan '+need+' millas')+' para el próximo punto'}</span></div>
-        <div class="hg-bar" style="height:10px"><div style="width:${left/RATE*100}%;background:var(--hg-grad)"></div></div></div>`;
+      <div style="text-align:right"><div class="hg-meta">En este juego</div><b style="font-size:20px">⚓ ${mi(tot)}</b></div></div>
+      <div class="cr-conv">Si el profesor terminara ahora el juego, ganarías <b>${pts} ${pts===1?'punto':'puntos'}</b> de Benchi${tot%RATE?` (te ${RATE-tot%RATE===1?'falta 1 milla':'faltan '+(RATE-tot%RATE)+' millas'} para el siguiente)`:''}.</div>`;
   }
   return `<div class="hg-banner ${vd.ok===false?'lose':'win'}">
       <div class="hg-meta" style="${vd.ok===false?'':'color:rgba(255,255,255,.85)'}">${esc(r.question)}</div>
@@ -357,7 +368,7 @@ function revealStudent(d){
         <div><div class="cr-bid-k">Cifra final${r.captain_name?' · '+esc(r.captain_name):''}</div><div class="cr-final">${withUnit(r.bid,esc(r.unit))}</div></div></div>
       <h2>${vd.t}</h2></div>
     <div class="hg-card">${mine}</div>
-    <div class="hg-card"><div class="hg-eyebrow">Resultados de la ronda</div>${resultRows(r)}</div>
+    <div class="hg-card"><div class="hg-eyebrow">Resultados de esta pregunta</div>${resultRows(r)}</div>
     ${boardHTML()}
     <div class="hg-card hg-muted" style="font-size:14px">Cuando el profesor lance otra pregunta aparecerá aquí.</div>`;
 }
@@ -372,7 +383,7 @@ function resultRows(r){
 function teacherHTML(d){
   const on=M.st.enabled;
   const head=`<div class="hg-card"><div class="hg-between"><div class="hg-row" style="gap:14px"><div class="cr-logo">${shipSVG(44)}</div>
-    <div><h3 style="font-size:20px">${NAME}</h3><div class="hg-muted" style="font-size:14px">Preguntas con respuesta numérica: suben la cifra, siguen a bordo o dicen «¡Por aquí no paso!». Se ganan millas: ${RATE} millas = 1 punto.</div></div></div>
+    <div><h3 style="font-size:20px">${NAME}</h3><div class="hg-muted" style="font-size:14px">Preguntas con respuesta numérica: suben la cifra, siguen a bordo o dicen «¡Por aquí no paso!». Suman millas y al terminar el juego ${RATE} millas = 1 punto.</div></div></div>
     <div class="hg-row"><button class="cr-help-btn" onclick="CR.act('help')" aria-label="Normas y puntuación" title="Normas y puntuación">${helpIcon()}</button><span class="hg-chip ${on?'green':'white'}">${on?'Activado':'Desactivado'}</span><button type="button" class="hg-switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="Activar ${NAME} para los alumnos" onclick="CR.act('toggle')"></button></div></div></div>`;
   if(!on)return `<div class="hg-col">${head}<div class="hg-card hg-muted">Los alumnos no ven este minijuego. Actívalo para que aparezca en su pestaña «Minijuegos».</div></div>${M.help?helpHTML():''}`;
   const r=d.r,active=['boarding','playing','closed'].includes(d.ph);
@@ -387,11 +398,11 @@ function rulesTeacher(d,locked){
   const val=locked?r.value:c.value;
   const sel=(k,opts,cur,f)=>`<select ${locked?'disabled':''} onchange="CR.act('cfg','${k}',this.value)">${opts.map(o=>`<option value="${o}" ${o==cur?'selected':''}>${f(o)}</option>`).join('')}</select>`;
   return `<div class="hg-card" style="gap:2px"><h3 style="font-size:18px;margin-bottom:6px">Reglas</h3>
-    <div class="hg-kv"><span class="hg-muted">Valor de la ronda</span>${sel('value',VALUES,val,o=>'×'+o)}</div>
+    <div class="hg-kv"><span class="hg-muted">Valor de la pregunta</span>${sel('value',VALUES,val,o=>'×'+o)}</div>
     ${locked?'':`<div class="hg-kv"><span class="hg-muted">Tiempo para subir</span>${sel('board',BOARD_TIMES,c.board,o=>o+' s')}</div>`}
     <div class="hg-kv"><span class="hg-muted">Tiempo por turno</span>${sel('turn',TURN_TIMES,locked?r.turn_secs:c.turn,o=>o+' s')}</div>
     <div style="margin-top:10px">${scoreTable(val)}</div>
-    <div class="hg-meta" style="padding:10px 12px;border-radius:12px;background:#f6f7fb;margin-top:8px">Al revelar, cada alumno suma sus millas; cada ${RATE} se convierten solas en 1 punto de Benchi y lo que sobra se guarda. Nadie apuesta ni pierde puntos.</div></div>`;
+    <div class="hg-meta" style="padding:10px 12px;border-radius:12px;background:#f6f7fb;margin-top:8px">Cada pregunta suma millas. Al pulsar «Terminar juego» se reparten: ${RATE} millas = 1 punto de Benchi, y el juego vuelve a cero. Nadie apuesta ni pierde puntos.</div></div>`;
 }
 const LEVELS=[['principiante','Principiante'],['intermedio','Intermedio'],['avanzado','Avanzado']];
 const levelName=l=>(LEVELS.find(x=>x[0]===l)||[,''])[1];
@@ -407,15 +418,16 @@ function readyTeacher(d){
   const r=d.r,c=M.cfg;
   let res='';
   if(d.ph==='revealed')res=revealTeacher(d);
-  else if(r&&r.status==='cancelled')res='<div class="hg-notice">La última ronda se canceló. No se dio ningún punto.</div>';
-  const next=r?r.no+1:1,list=pool(),mineN=(M.bank||[]).filter(q=>q.mine).length;
+  else if(r&&r.status==='cancelled')res='<div class="hg-notice">La última pregunta se canceló. No se dio ninguna milla.</div>';
+  else if(M.st.last&&!M.st.played)res=lastTeacher();
+  const list=pool(),mineN=(M.bank||[]).filter(q=>q.mine).length,started=M.st.played>0||M.st.game_millas>0;
   if(c.question&&!list.some(q=>q.id===c.question))c.question='';
   const cats=[...new Set(list.map(q=>q.category))];
   const opts=`<option value="">🎲 Al azar entre ${list.length} ${list.length===1?'pregunta':'preguntas'}</option>`+
     cats.map(cat=>`<optgroup label="${esc(cat)}">${list.filter(q=>q.category===cat).map(q=>`<option value="${q.id}" ${q.id===c.question?'selected':''}>${c.level?'':'['+levelName(q.level).slice(0,5)+'.] '}${esc(q.text.length>80?q.text.slice(0,78)+'…':q.text)}</option>`).join('')}</optgroup>`).join('');
   const empty=M.bank&&!list.length;
   return `${res}<div class="hg-card">
-    <div class="hg-between"><div class="hg-eyebrow">${r?'Ronda '+next+' preparada':'Primera ronda'}</div><span class="hg-chip white">Solo lo ves tú</span></div>
+    <div class="hg-between"><div class="hg-eyebrow">${started?'Siguiente pregunta':'Juego nuevo · primera pregunta'}</div><span class="hg-chip white">Solo lo ves tú</span></div>
     <div class="cr-qsel">
       <div><div class="hg-muted cr-lbl">Banco de preguntas</div>${seg('source',c.source,[['benchi','Banco de Benchi'],['mias',`Mis preguntas (${mineN})`],['todas','Los dos']])}</div>
       <div><div class="hg-muted cr-lbl">Nivel</div>${seg('level',c.level,[['','Todos']].concat(LEVELS))}</div>
@@ -424,10 +436,12 @@ function readyTeacher(d){
       :`<label class="cr-field"><span class="hg-muted">Pregunta</span><select onchange="CR.act('cfg','question',this.value)" ${M.bank?'':'disabled'}>${M.bank?opts:'<option>Cargando…</option>'}</select></label>`}
     <div class="hg-meta">El alumnado tendrá ${c.board} s para subir a bordo y ${c.turn} s en cada turno. La respuesta no sale en esta pantalla hasta que la reveles: puedes proyectarla.</div>
     <div class="hg-row hg-wrap">
-      <button class="hg-btn primary" ${M.busy||empty||!M.bank?'disabled':''} onclick="CR.act('open')">${M.busy?'Preparando…':'🚢 Lanzar pregunta · ronda '+next}</button>
+      <button class="hg-btn primary" ${M.busy||empty||!M.bank?'disabled':''} onclick="CR.act('open')">${M.busy?'Preparando…':'🚢 Lanzar pregunta'}</button>
       <button class="hg-btn ghost" onclick="CR.act('bank')">${M.bankOpen?'Ocultar preguntas':'✏️ Mis preguntas y banco'}</button>
-      ${r?`<label class="cr-check"><input type="checkbox" ${c.newMatch?'checked':''} onchange="CR.act('cfg','newMatch',this.checked)"> Empezar partida nueva (marcador a 0)</label>`:''}
     </div></div>
+    ${started?`<div class="hg-card cr-end"><div class="hg-between hg-wrap"><div style="flex:1;min-width:220px"><h3 style="font-size:18px">🏁 Terminar juego</h3>
+        <div class="hg-muted" style="font-size:14px">Se convierten las millas de todos en puntos de Benchi (${RATE} millas = 1 punto) y el juego vuelve a empezar de cero.</div></div>
+        <button class="hg-btn primary" ${M.busy?'disabled':''} onclick="CR.act('end')">Terminar juego y repartir puntos</button></div></div>`:''}
     ${d.ph!=='revealed'?boardHTML():''}`;
 }
 function boardingTeacher(d){
@@ -438,7 +452,7 @@ function boardingTeacher(d){
     <div class="cr-crew big">${r.players.length?r.players.map(p=>`<span class="cr-pchip">${esc(p.name)}</span>`).join(''):'<span class="hg-muted">Esperando a que suban los primeros pasajeros…</span>'}</div>
     <div class="hg-row hg-wrap" style="padding-top:14px;border-top:1px solid #eef0f5">
       <button class="hg-btn primary" ${!r.players.length||M.busy?'disabled':''} onclick="CR.act('start')">Zarpar ya</button>
-      <button class="hg-btn danger" style="margin-left:auto" onclick="CR.act('cancel')">Cancelar ronda</button></div></div>`;
+      <button class="hg-btn danger" style="margin-left:auto" onclick="CR.act('cancel')">Cancelar pregunta</button></div></div>`;
 }
 function playTeacher(d){
   const r=d.r,closed=d.ph==='closed';
@@ -451,19 +465,27 @@ function playTeacher(d){
     <div class="hg-row hg-wrap" style="padding-top:14px;border-top:1px solid #eef0f5">
       ${closed?`<button class="hg-btn primary cr-big-btn" ${M.busy?'disabled':''} onclick="CR.act('reveal')">🔭 Revelar la respuesta</button>`
         :`<button class="hg-btn ghost" onclick="CR.act('skip')">Pasar el turno de ${esc(first(r.current_name))}</button>`}
-      <button class="hg-btn danger" style="margin-left:auto" onclick="CR.act('cancel')">Cancelar ronda</button></div></div>`;
+      <button class="hg-btn danger" style="margin-left:auto" onclick="CR.act('cancel')">Cancelar pregunta</button></div></div>`;
 }
 function revealTeacher(d){
   const r=d.r,vd=verdict(r);
   return `<div class="hg-card cr-stage">
-    <div class="hg-between"><h3 style="font-size:22px">Ronda ${r.no} · ${vd.t}</h3><span class="hg-chip tint">${RATE} millas = 1 punto</span></div>
+    <div class="hg-between"><h3 style="font-size:22px">${vd.t}</h3><span class="hg-chip tint">Las millas se reparten al terminar el juego</span></div>
     <div class="cr-q-t" style="font-size:18px">${esc(r.question)}</div>
     <div class="cr-reveal"><div><div class="cr-bid-k">Respuesta</div><div class="cr-answer-big">${withUnit(r.answer,esc(r.unit))}</div></div>
       <div><div class="cr-bid-k">Cifra final${r.captain_name?' · '+esc(r.captain_name):''}</div><div class="cr-answer-big ${vd.ok===false?'hg-neg':vd.ok?'hg-pos':''}">${withUnit(r.bid,esc(r.unit))}</div></div></div>
-    ${r.players.length?`<div style="overflow-x:auto"><table class="hg-t"><thead><tr><th>Alumno</th><th>Papel</th><th class="n">Millas</th><th class="n">Puntos Benchi</th></tr></thead><tbody>
-      ${r.players.slice().sort((a,b)=>(b.delta||0)-(a.delta||0)).map(p=>`<tr><td>${esc(p.name)}</td><td>${p.status==='out'?'Fuera':p.status==='stopped'?'No pasó':p.captain?'Capitán':'A bordo'}</td><td class="n ${p.delta>0?'hg-pos':''}">+${p.delta||0}</td><td class="n ${p.points>0?'hg-pos':''}">${p.points>0?'+'+p.points:'—'}</td></tr>`).join('')}
+    ${r.players.length?`<div style="overflow-x:auto"><table class="hg-t"><thead><tr><th>Alumno</th><th>Papel</th><th class="n">Millas</th></tr></thead><tbody>
+      ${r.players.slice().sort((a,b)=>(b.delta||0)-(a.delta||0)).map(p=>`<tr><td>${esc(p.name)}</td><td>${p.status==='out'?'Fuera':p.status==='stopped'?'No pasó':p.captain?'Capitán':'A bordo'}</td><td class="n ${p.delta>0?'hg-pos':''}">+${p.delta||0}</td></tr>`).join('')}
       </tbody></table></div>`:''}
     </div>${boardHTML()}`;
+}
+function lastTeacher(){
+  const L=M.st.last,rows=L.rows||[];
+  return `<div class="hg-card cr-stage"><div class="hg-between"><h3 style="font-size:22px">🏁 Juego terminado</h3><span class="hg-chip green">+${L.total} puntos repartidos</span></div>
+    ${rows.length?`<div style="overflow-x:auto"><table class="hg-t"><thead><tr><th>Alumno</th><th class="n">Millas</th><th class="n">Puntos de Benchi</th></tr></thead><tbody>
+      ${rows.map(x=>`<tr><td>${esc(x.name)}</td><td class="n">${x.millas}</td><td class="n ${x.points>0?'hg-pos':''}">${x.points>0?'+'+x.points:'0'}</td></tr>`).join('')}
+    </tbody></table></div>`:'<div class="hg-muted">Nadie había ganado millas en ese juego.</div>'}
+    <div class="hg-meta">El juego ha vuelto a cero. Cuando lances la siguiente pregunta empezará uno nuevo.</div></div>`;
 }
 function bankHTML(){
   const b=M.bank,c=M.cfg;
@@ -487,7 +509,7 @@ function bankHTML(){
 /* ---------- Alumno: puntos de la cabecera ---------- */
 function syncPoints(d){
   if(!M.st||M.st.my_points==null)return;
-  if(d.me&&d.me.points>0)M.dirty=true;
+  if(M.st.last&&M.st.last.rows&&M.st.last.rows[0]&&M.st.last.rows[0].points>0)M.dirty=true;
   const p=M.st.my_points;
   try{
     const c=state.myClasses.find(x=>x.id===M.classId);
@@ -543,12 +565,13 @@ async function act(a,x,y){
       await poll();break;
     }
     case 'cfg':
-      if(['question','source','level','newLevel'].includes(x))M.cfg[x]=y;else if(x==='newMatch')M.cfg.newMatch=!!y;else M.cfg[x]=+y;
+      if(['question','source','level','newLevel'].includes(x))M.cfg[x]=y;else M.cfg[x]=+y;
       if(x==='source'||x==='level')M.cfg.question='';
       refresh();break;
     case 'toggle':{
       const on=M.st.enabled;
-      if(on&&r&&['boarding','playing','closed'].includes(r.status)&&!confirm('Hay una ronda en marcha. Si desactivas el minijuego se cancelará (no se mueve ningún punto). ¿Continuar?'))break;
+      if(on&&(M.st.game_millas>0||(r&&['boarding','playing','closed'].includes(r.status)))
+         &&!confirm('Al desactivar el minijuego se termina el juego: se cancela la pregunta en marcha (si la hay) y se reparten las millas ganadas ('+RATE+' millas = 1 punto). Al volver a activarlo se empieza de cero. ¿Continuar?'))break;
       if((await rpc('set_minigame',{p_class:M.classId,p_game:'crucero',p_enabled:!on})).ok)say(on?'Minijuego desactivado':'Minijuego activado para el aula');
       await poll();break;
     }
@@ -571,9 +594,19 @@ async function act(a,x,y){
       M.busy=true;refresh();
       const c=M.cfg;
       const res=await rpc('cr_open_round',{p_class:M.classId,p_question:c.question||null,p_mode:'millas',p_value:c.value,
-        p_board_secs:c.board,p_turn_secs:c.turn,p_new_match:!!c.newMatch,p_source:c.source,p_level:c.level||null});
+        p_board_secs:c.board,p_turn_secs:c.turn,p_source:c.source,p_level:c.level||null});
       if(!M)return;
-      M.busy=false;if(res.ok){c.newMatch=false;c.question='';M.bankOpen=false}
+      M.busy=false;if(res.ok){c.question='';M.bankOpen=false}
+      await poll();break;
+    }
+    case 'end':{
+      if(M.busy)break;
+      const n=(M.st.board||[]).length;
+      if(!confirm(`¿Terminar el juego? Se convertirán las millas de ${n} ${n===1?'alumno':'alumnos'} en puntos de Benchi (${RATE} millas = 1 punto) y el juego volverá a cero.`))break;
+      M.busy=true;refresh();
+      const res=await rpc('cr_end_game',{p_class:M.classId});
+      if(!M)return;M.busy=false;
+      if(res.ok)say(`Juego terminado: +${res.data.total} puntos repartidos`);
       await poll();break;
     }
     case 'start':if(r&&(await rpc('cr_start_now',{p_round:r.id})).ok)await poll();break;
@@ -585,7 +618,7 @@ async function act(a,x,y){
       if(!M)return;M.busy=false;await poll();break;
     }
     case 'cancel':
-      if(r&&confirm('¿Cancelar la ronda? No se moverá ningún punto.')&&(await rpc('cr_cancel_round',{p_round:r.id})).ok)await poll();
+      if(r&&confirm('¿Cancelar esta pregunta? Nadie ganará millas con ella.')&&(await rpc('cr_cancel_round',{p_round:r.id})).ok)await poll();
       break;
   }
 }

@@ -133,3 +133,5 @@ button.cr-opt:disabled{opacity:.6;cursor:default}
 .hg-phone > .hg-between .hg-row{gap:6px}
 .hg-phone > .hg-between > .hg-btn{white-space:nowrap}
 @media (max-width:420px){.hg-phone > .hg-between .hg-balance{padding:7px 10px;font-size:14px}.hg-phone > .hg-between > .hg-btn{padding:0 10px}}
+/* Terminar juego */
+.cr-end{background:linear-gradient(135deg,#f0f7ff,#f4f2ff);border-color:#d9e2ff}
