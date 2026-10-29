@@ -736,11 +736,11 @@ function teacherTab(game){
   h.root.innerHTML=`<div class="mg-tabs hg" role="tablist">
       <button role="tab" aria-selected="${game==='horses'}" onclick="MG.teacherTab('horses')">🏇 Carrera de caballos</button>
       <button role="tab" aria-selected="${game==='crucero'}" onclick="MG.teacherTab('crucero')">🚢 ${NAME}</button>
-      <button role="tab" aria-selected="${game==='neae'}" onclick="MG.teacherTab('neae')">🧩 Juegos NEAE</button></div>
+      <button role="tab" aria-selected="${game==='neae'}" onclick="MG.teacherTab('neae')">🛒 ${SP().NAME}</button></div>
     <div id="mg-game"></div>`;
   const el=h.root.querySelector('#mg-game');
   if(game==='neae'){
-    el.innerHTML=`<div class="hg-card" style="margin-bottom:14px"><h3>Minijuegos adaptados (NEAE)</h3>
+    el.innerHTML=`<div class="hg-card" style="margin-bottom:14px"><h3>${SP().NAME}</h3>
       <div class="hg-muted">Los alumnos marcados como <b>NEAE</b> en la pestaña Alumnado ven estos juegos en lugar de los comunes. Aquí puedes probarlos con todos los niveles abiertos; tu partida no cuenta para nadie.</div></div>
       <div id="sp-preview"></div>`;
     SP().mount(el.querySelector('#sp-preview'),{storeKey:'profesor-vista-previa',allUnlocked:true});
