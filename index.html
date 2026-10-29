@@ -85,6 +85,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link rel="stylesheet" href="minijuegos.css">
 <link rel="stylesheet" href="crucero.css">
+<link rel="stylesheet" href="super.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
 <style>
 :root{
   --ink:#172033;
@@ -508,6 +511,11 @@ svg{display:block}
 .beh-select:focus{outline:none;border-color:#8c84ff!important;box-shadow:0 0 0 4px rgba(99,91,255,.12)}
 .beh-select option{font-family:Nunito,Inter,system-ui,sans-serif;font-weight:700}
 .student-row .icon-btn.danger{width:46px;height:46px;border-radius:14px;margin-left:auto}.student-row .icon-btn.danger .icon{width:17px;height:17px}
+.neae-toggle{height:36px;padding:0 12px;border-radius:999px;border:1.5px dashed #c9cce0;background:#fff;color:#687189;font-weight:850;font-size:12.5px;letter-spacing:.04em;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:Nunito,Inter,system-ui,sans-serif}
+.neae-toggle .neae-dot{width:10px;height:10px;border-radius:50%;border:2px solid currentColor}
+.neae-toggle.on{border:1.5px solid #635bff;background:#f0efff;color:#4d45d0}
+.neae-toggle.on .neae-dot{background:currentColor}
+.neae-toggle:focus-visible{outline:3px solid #ffc857;outline-offset:2px}
 .student-row .btn-apply{height:46px;border-radius:14px;font-family:Nunito,Inter,system-ui,sans-serif;font-weight:800;font-size:15px;padding:0 18px}
 .student-row .stu-check,.bulk-bar .stu-check{width:22px;height:22px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;margin:0}
 .student-row.is-selected{border-color:#b7b0ff;background:#faf9ff;box-shadow:0 0 0 3px rgba(99,91,255,.10)}
@@ -885,6 +893,7 @@ svg{display:block}
 </div>
 
 <script src="minijuegos.js" defer></script>
+<script src="super.js" defer></script>
 <script src="crucero.js" defer></script>
 <script>
 /* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE (LAS DOS LÍNEAS DE ABAJO) ============ */
@@ -1112,7 +1121,7 @@ const I18N = {
     my_classes_student:'Mis clases', recent_activity:'Actividad reciente', view_history:'Ver historial',
     my_classes_sub:'Consulta tus puntos y el progreso de cada aula.', join_class_btn:'Unirme a una aula',
     rewards_title:'Recompensas', rewards_sub:'Todo lo que has conseguido y gastado en Benchi.',
-    tab_minigames:'Minijuegos',
+    tab_minigames:'Minijuegos', neae_hint:'Marca si el alumno es NEAE: verá los minijuegos adaptados', neae_on_toast:'marcado como NEAE (minijuegos adaptados)', neae_off_toast:'ya no es NEAE (minijuegos comunes)',
     points_history:'Historial de puntos',available_suffix:'disponibles',
     my_profile_student_sub:'Tu identidad y tu colección.', word_points_cap:'Puntos', word_classes_cap:'Aulas', word_skins_cap:'Skins',
     save_emoji_btn:'Guardar emoticono', my_collection:'Mi colección', no_skins_yet:'Todavía no tienes skins.',
@@ -1219,7 +1228,7 @@ const I18N = {
     my_classes_student:'My classes', recent_activity:'Recent activity', view_history:'View history',
     my_classes_sub:'Check your points and progress in each classroom.', join_class_btn:'Join a classroom',
     rewards_title:'Rewards', rewards_sub:"Everything you've earned and spent on Benchi.",
-    tab_minigames:'Minigames',
+    tab_minigames:'Minigames', neae_hint:'Mark if the student has special educational needs: they will see the adapted minigames', neae_on_toast:'marked as SEN (adapted minigames)', neae_off_toast:'no longer SEN (common minigames)',
     points_history:'Points history',available_suffix:'available',
     my_profile_student_sub:'Your identity and your collection.', word_points_cap:'Points', word_classes_cap:'Classrooms', word_skins_cap:'Skins',
     save_emoji_btn:'Save emoji', my_collection:'My collection', no_skins_yet:"You don't have any skins yet.",
@@ -1761,7 +1770,7 @@ async function renderClassDetail(classId){
   const activeTab=state.teacherClassTab||'students';
   const cls = state.myClasses.find(x=>x.id===classId);
   const [{data:members},{data:behaviors},{data:market},{data:avatars},{data:log}] = await Promise.all([
-    sb.from('class_members').select('student_id,points,profiles(name,alias,avatar_emoji,equipped)').eq('class_id',classId),
+    sb.from('class_members').select('student_id,points,neae,profiles(name,alias,avatar_emoji,equipped)').eq('class_id',classId),
     sb.from('behaviors').select('*').eq('class_id',classId),
     sb.from('market_items').select('*').eq('class_id',classId),
     sb.from('avatar_items').select('*').eq('class_id',classId),
@@ -1776,6 +1785,7 @@ async function renderClassDetail(classId){
       <input type="checkbox" class="stu-check" data-stu="${m.student_id}" aria-label="${t('select_student')} ${m.profiles.name}" onchange="onStudentCheck()">
       <div class="avatar-sm" style="flex-shrink:0">${avatarImgHTML(m.profiles.equipped)}</div>
       <div style="flex:1;min-width:170px"><b>${esc(m.profiles.name)}</b><div class="small-muted">@${esc(m.profiles.alias||'')} · ${t('word_level')} ${lv.level} · ${fmt(m.points)} pts</div></div>
+      <button class="neae-toggle ${m.neae?'on':''}" data-neae="${m.student_id}" aria-pressed="${!!m.neae}" title="${t('neae_hint')}" onclick="toggleNeae('${classId}','${m.student_id}')"><span class="neae-dot"></span>NEAE</button>
       ${behaviorOpts?`<select class="beh-select" data-beh="${m.student_id}" aria-label="${t('behavior_for')} ${m.profiles.name}">${behaviorOpts}</select>
       <button class="btn btn-light btn-apply" onclick="applyBehavior('${classId}','${m.student_id}')">${t('apply_btn')}</button>`:''}
       <button class="icon-btn danger" title="${t('remove_student_btn')}" aria-label="${t('remove_student_btn')} ${esc(m.profiles.name)}" onclick="removeStudent('${classId}','${m.student_id}')">${ICON('i-trash')}</button>
@@ -1976,6 +1986,19 @@ async function applyBulkBehavior(classId){
   if(failed) toast(t('bulk_partial').replace('{ok}',ids.length-failed).replace('{n}',ids.length));
   else toast(`${b.value>0?'+':''}${b.value} · ${b.name} → ${ids.length===1?t('one_student'):t('n_students').replace('{n}',ids.length)}`);
   renderTeacher('classdetail', classId);
+}
+async function toggleNeae(classId, studentId){
+  const btn=document.querySelector(`[data-neae="${studentId}"]`);
+  const m=(window._cd&&window._cd.members||[]).find(x=>x.student_id===studentId);
+  if(!btn||!m||btn.disabled) return;
+  const next=!m.neae;
+  btn.disabled=true;
+  const { error } = await sb.rpc('set_student_neae',{ p_class:classId, p_student:studentId, p_neae:next });
+  btn.disabled=false;
+  if(error) return toast(error.message);
+  m.neae=next;
+  btn.classList.toggle('on',next); btn.setAttribute('aria-pressed',String(next));
+  toast(`${m.profiles.name}: ${next?t('neae_on_toast'):t('neae_off_toast')}`);
 }
 function removeStudent(classId, studentId){
   const m=(window._cd?.members||[]).find(x=>x.student_id===studentId);

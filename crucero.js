@@ -641,11 +641,18 @@ window.CR={mount,unmount,act,ship:shipSVG,NAME,takeDirty(){const d=!!(M&&M.dirty
 /* ===================================================== SELECTOR DE MINIJUEGOS =====================================================
    Une la carrera de caballos (HG) y el crucero (CR) en la pestaña «Minijuegos». */
 let H=null;   // estado del selector
+const SP=()=>window.SUPER||{mount(){},unmount(){},NAME:'El Súper de Clase'};
 function hubStop(){if(H){clearInterval(H.t);H=null}}
-function mountStudent(classId,root){
-  hubStop();HG.unmount();CR.unmount();
-  H={role:'student',classId,root,dirty:false,data:null,t:null};
+async function mountStudent(classId,root){
+  hubStop();HG.unmount();CR.unmount();SP().unmount();
+  const h=H={role:'student',classId,root,dirty:false,data:null,t:null,neae:null,uid:null};
   root.classList.add('hg');
+  root.innerHTML='<div class="hg-card hg-muted">Cargando minijuegos…</div>';
+  // ¿Es alumno NEAE en esta aula? (RLS: el alumno solo ve su propia matrícula)
+  const[{data:u},{data:cm}]=await Promise.all([sb.auth.getUser(),sb.from('class_members').select('neae').eq('class_id',classId).maybeSingle()]);
+  if(H!==h)return;
+  h.uid=u&&u.user?u.user.id:'anon';
+  h.neae=!!(cm&&cm.neae);
   hubList();
 }
 async function hubPoll(){
@@ -660,6 +667,7 @@ function hubList(dirty){
   const h=H;if(!h)return;
   if(dirty)h.dirty=true;
   h.view='list';
+  if(h.neae){neaeRender();return}
   h.root.innerHTML='<div class="hg-card hg-muted">Cargando minijuegos…</div>';
   hubPoll();clearInterval(h.t);h.t=setInterval(hubPoll,3000);
 }
@@ -687,6 +695,15 @@ function hubRender(){
   h.root.innerHTML=cards.length?`<div class="hg-games">${cards.join('')}</div>`
     :`<div class="hg-card"><h3>Minijuegos</h3><div class="hg-muted">Tu profesor aún no ha activado ningún minijuego en esta aula.</div></div>`;
 }
+/* Alumnado NEAE: catálogo de minijuegos adaptados */
+const SUPER_ART='<div style="font-size:64px;line-height:1">🛒</div>';
+function neaeRender(){
+  const h=H;if(!h)return;
+  const el=document.querySelector('.teacher-tab[data-tab="minigames"]');if(el)el.classList.remove('hg-tab-live');
+  h.root.innerHTML=`<div class="hg-games">${cardHTML('super',SUPER_ART,SP().NAME,
+    'Ve al súper: suma la cesta, paga con las monedas de tu cartera y da el cambio.',
+    '<span class="hg-chip green">Para ti</span>','8 niveles. Haz 3 compras para abrir el siguiente.')}</div>`;
+}
 function cardHTML(game,art,title,desc,chip,hint){
   return `<div class="hg-game"><div class="hg-game-art ${game==='crucero'?'cr-art':''}">${art}</div>
     <div class="hg-game-body"><div class="hg-between"><h3>${title}</h3>${chip}</div>
@@ -697,6 +714,7 @@ function play(game){
   const h=H;if(!h)return;
   h.view=game;clearInterval(h.t);
   const back=dirty=>{if(H===h)hubList(dirty)};
+  if(game==='super'){h.root.classList.remove('hg');SP().mount(h.root,{storeKey:h.classId+':'+h.uid,onBack:()=>{h.root.classList.add('hg');back()}});return}
   if(game==='horses')HG.mount('student',h.classId,h.root,{start:'game',onBack:back});
   else CR.mount('student',h.classId,h.root,{onBack:back});
 }
@@ -704,7 +722,8 @@ function play(game){
 function mountTeacher(classId,root){
   // Al volver a la misma aula se recuerda la última pestaña elegida
   const last=H&&H.classId===classId&&H.lastGame||'horses',dirty=!!(H&&H.dirty);
-  hubStop();HG.unmount();CR.unmount();
+  hubStop();HG.unmount();CR.unmount();SP().unmount();
+  root.classList.add('hg');
   H={role:'teacher',classId,root,dirty,view:null,lastGame:last};
   teacherTab(last);
 }
@@ -712,14 +731,21 @@ function teacherTab(game){
   const h=H;if(!h)return;
   if(HG.takeDirty())h.dirty=true;
   if(CR.takeDirty())h.dirty=true;
-  HG.unmount();CR.unmount();
+  HG.unmount();CR.unmount();SP().unmount();
   h.view=game;h.lastGame=game;
   h.root.innerHTML=`<div class="mg-tabs hg" role="tablist">
       <button role="tab" aria-selected="${game==='horses'}" onclick="MG.teacherTab('horses')">🏇 Carrera de caballos</button>
-      <button role="tab" aria-selected="${game==='crucero'}" onclick="MG.teacherTab('crucero')">🚢 ${NAME}</button></div>
+      <button role="tab" aria-selected="${game==='crucero'}" onclick="MG.teacherTab('crucero')">🚢 ${NAME}</button>
+      <button role="tab" aria-selected="${game==='neae'}" onclick="MG.teacherTab('neae')">🧩 Juegos NEAE</button></div>
     <div id="mg-game"></div>`;
   const el=h.root.querySelector('#mg-game');
-  if(game==='horses')HG.mount('teacher',h.classId,el);else CR.mount('teacher',h.classId,el);
+  if(game==='neae'){
+    el.innerHTML=`<div class="hg-card" style="margin-bottom:14px"><h3>Minijuegos adaptados (NEAE)</h3>
+      <div class="hg-muted">Los alumnos marcados como <b>NEAE</b> en la pestaña Alumnado ven estos juegos en lugar de los comunes. Aquí puedes probarlos con todos los niveles abiertos; tu partida no cuenta para nadie.</div></div>
+      <div id="sp-preview"></div>`;
+    SP().mount(el.querySelector('#sp-preview'),{storeKey:'profesor-vista-previa',allUnlocked:true});
+  }
+  else if(game==='horses')HG.mount('teacher',h.classId,el);else CR.mount('teacher',h.classId,el);
 }
 window.MG={mountStudent,mountTeacher,play,teacherTab,
   takeDirty(){const d=HG.takeDirty()|CR.takeDirty()|!!(H&&H.dirty);if(H)H.dirty=false;return !!d}};
