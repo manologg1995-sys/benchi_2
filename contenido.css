@@ -70,3 +70,6 @@ article{padding:48px 0 24px}
 .foot-in{display:flex;justify-content:space-between;gap:14px 20px;flex-wrap:wrap;align-items:center}
 .foot a{color:#70788d;text-decoration:none}
 .foot a:hover{color:var(--ink)}
+
+.guide-fig{margin:0 0 30px}.guide-fig img{display:block;width:100%;height:auto;border-radius:22px;box-shadow:0 18px 40px rgba(40,40,90,.10)}
+.nav a.btn,.nav a.btn:hover{color:#fff;background:var(--grad)}

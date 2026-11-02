@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Benchi · Gamificación para el aula: puntos, niveles y recompensas</title>
-<meta name="description" content="Benchi convierte el esfuerzo del alumnado en puntos, niveles y recompensas. El profesorado crea su aula, reconoce la participación con un clic y abre un mercado de recompensas.">
+<title>Benchi · Gamificación en el aula: puntos y recompensas</title>
+<meta name="description" content="Gamificación en el aula para ESO y FP: Benchi convierte el esfuerzo del alumnado en puntos, niveles y recompensas que el profesorado da con un clic.">
 <link rel="canonical" href="https://www.playbenchi.es/">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#635bff">
@@ -98,7 +98,9 @@
 <link rel="stylesheet" href="crucero.css">
 <link rel="stylesheet" href="super.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap"></noscript>
+<link rel="preload" href="/fonts/nunito-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 :root{
   --ink:#172033;
@@ -213,8 +215,10 @@ svg{display:block}
 .orb-c{width:130px;height:130px;background:linear-gradient(135deg,#ffc857,#ff8b45);right:28%;top:84px;opacity:.18}
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;position:relative;z-index:2}
 .hero h1{
-  font-size:clamp(58px,7.4vw,98px);line-height:.93;letter-spacing:-.065em;margin:18px 0 23px;max-width:770px
+  font-size:clamp(58px,7.4vw,98px);line-height:.93;letter-spacing:-.065em;margin:0 0 23px;max-width:770px
 }
+.hero h1 .hero-kicker{display:flex;width:fit-content;line-height:normal;margin:0 0 18px}
+.hero h1 .hero-slogan{display:block}
 .hero p{font-size:19px;color:#646d84;max-width:630px;margin-bottom:32px}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
 .hero-proof{display:flex;gap:20px;flex-wrap:wrap;margin-top:28px;color:#667086;font-size:13px;font-weight:750}
@@ -650,8 +654,7 @@ svg{display:block}
     <span class="hero-orb orb-a"></span><span class="hero-orb orb-b"></span><span class="hero-orb orb-c"></span>
     <div class="container hero-grid">
       <div>
-        <span class="eyebrow" data-i18n="hero_eyebrow">Gamificación educativa</span>
-        <h1 data-i18n-html="hero_title">Aprende <span class="gradient-text">diferente.</span></h1>
+        <h1><span class="eyebrow hero-kicker" data-i18n="hero_eyebrow">Gamificación en el aula</span><span class="hero-slogan" data-i18n-html="hero_title">Aprende <span class="gradient-text">diferente.</span></span></h1>
         <p data-i18n="hero_p">Convierte el esfuerzo, la participación y el trabajo diario en puntos, niveles y recompensas. Benchi conecta la motivación del aula con una experiencia que engancha.</p>
         <div class="hero-actions">
           <button class="btn btn-primary" onclick="showRoleChoice()"><span data-i18n="hero_cta1">Empezar ahora</span> <svg class="icon"><use href="#i-arrow"/></svg></button>
@@ -1043,7 +1046,7 @@ const state = { session:null, profile:null, myClasses:[], teacherClassId:null, t
 const I18N = {
   es: {
     nav_login:'Iniciar sesión', nav_signup:'Crear cuenta',
-    hero_eyebrow:'Gamificación educativa',
+    hero_eyebrow:'Gamificación en el aula',
     hero_title:'Aprende <span class="gradient-text">diferente.</span>',
     hero_p:'Convierte el esfuerzo, la participación y el trabajo diario en puntos, niveles y recompensas. Benchi conecta la motivación del aula con una experiencia que engancha.',
     hero_cta1:'Empezar ahora', hero_cta2:'Descubrir Benchi',
@@ -1150,7 +1153,7 @@ const I18N = {
   },
   en: {
     nav_login:'Log in', nav_signup:'Sign up',
-    hero_eyebrow:'Educational gamification',
+    hero_eyebrow:'Classroom gamification',
     hero_title:'Learn <span class="gradient-text">differently.</span>',
     hero_p:'Turn effort, participation and daily work into points, levels and rewards. Benchi connects classroom motivation with an experience that hooks.',
     hero_cta1:'Get started', hero_cta2:'Discover Benchi',
