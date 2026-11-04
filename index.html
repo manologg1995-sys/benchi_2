@@ -406,6 +406,44 @@ svg{display:block}
 .banner-purple{background:linear-gradient(135deg,#635bff,#a162ff)}
 .banner-cyan{background:linear-gradient(135deg,#25c4e4,#5d7cf7)}
 .banner-pink{background:linear-gradient(135deg,#ff5a9d,#ff8f70)}
+.banner-sunset{background:linear-gradient(135deg,#ff512f,#f9a826)}
+.banner-ocean{background:linear-gradient(135deg,#2193b0,#6dd5ed)}
+.banner-forest{background:linear-gradient(135deg,#11998e,#38ef7d)}
+.banner-lavender{background:linear-gradient(135deg,#a18cd1,#fbc2eb)}
+.banner-midnight{background:linear-gradient(135deg,#0f2027,#2c5364)}
+.banner-candy{background:linear-gradient(135deg,#f093fb,#f5576c)}
+.banner-lemon{background:linear-gradient(135deg,#f7971e,#ffd200)}
+.banner-mint{background:linear-gradient(135deg,#00c9a7,#92fe9d)}
+.banner-berry{background:linear-gradient(135deg,#7f00ff,#e100ff)}
+.banner-aurora{background:linear-gradient(135deg,#43cea2,#185a9d)}
+.banner-rainbow{background:linear-gradient(135deg,#635bff,#28c6e8 28%,#35c77f 52%,#ffc857 76%,#ff5a9d)}
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:10px}
+.color-swatch{height:48px;border-radius:14px;border:3px solid #fff;box-shadow:0 0 0 1.5px #dde1eb;cursor:pointer;padding:0;position:relative;overflow:hidden;transition:transform .15s ease,box-shadow .15s ease}
+.color-swatch:hover{transform:translateY(-2px)}
+.color-swatch:focus-visible{outline:3px solid #ffc857;outline-offset:2px}
+.color-swatch[aria-pressed=true]{box-shadow:0 0 0 3px var(--primary)}
+.color-swatch[aria-pressed=true]:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:900;font-size:20px;text-shadow:0 1px 4px rgba(0,0,0,.45)}
+.class-hero{position:relative;overflow:hidden;border-radius:28px;padding:20px 26px 28px;color:#fff;margin-bottom:24px;box-shadow:0 18px 40px rgba(32,34,64,.16);text-shadow:0 2px 10px rgba(0,0,0,.22)}
+.class-hero:before,.class-hero:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.2);pointer-events:none}
+.class-hero:before{width:340px;height:340px;right:-90px;top:-170px}.class-hero:after{width:190px;height:190px;left:36%;bottom:-120px;background:rgba(255,255,255,.14)}
+.class-hero>*{position:relative;z-index:1}
+.class-hero .hero-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:34px}
+.class-hero .btn-light,.class-hero .hero-gear{text-shadow:none}
+.class-hero .hero-gear{width:46px;height:46px;border-radius:14px;border:0;background:rgba(255,255,255,.92);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 20px rgba(20,20,50,.18);transition:transform .2s ease}
+.class-hero .hero-gear:hover{transform:rotate(45deg)}
+.class-hero .hero-gear:focus-visible{outline:3px solid #ffc857;outline-offset:2px}
+.class-hero .hero-gear .icon{width:22px;height:22px}
+.class-hero h1{font-size:46px;letter-spacing:-.05em;line-height:1;margin:0 0 8px}
+.class-hero .hero-course{margin:0;font-size:17px;font-weight:800;opacity:.95}
+.class-hero .hero-desc{margin:8px 0 0;font-size:14.5px;opacity:.92;max-width:560px}
+.class-hero .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;align-items:center}
+.class-hero .hero-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.24);backdrop-filter:blur(6px);font-weight:800;font-size:13.5px;border:1px solid rgba(255,255,255,.35)}
+.class-hero .hero-points{margin-left:auto}
+.class-hero.on-light{color:#172033;text-shadow:none}
+.class-hero.on-light .hero-chip{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.7)}
+.settings-danger{margin-top:6px;padding-top:16px;border-top:1px solid var(--line)}
+@media (max-width:640px){.class-hero{padding:16px 18px 22px;border-radius:22px}.class-hero h1{font-size:34px}.class-hero .hero-top{margin-bottom:24px}.class-hero .hero-points{margin-left:0}}
+.color-name{margin-top:8px;font-size:12.5px;color:var(--muted);font-weight:700}
 .class-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.class-name{font-weight:950;font-size:19px}.class-sub{font-size:12px;color:var(--muted);margin-top:3px}.pill{font-size:10px;font-weight:900;padding:6px 8px;border-radius:999px;background:#f1efff;color:#5b50d0}.class-foot{display:flex;justify-content:space-between;align-items:center;margin-top:17px;font-size:12px;color:#7a8092}.enter-link{color:#5b50d0;font-weight:900}
 
 .student-hero{
@@ -629,6 +667,7 @@ svg{display:block}
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M7 16l4-4 3 2 5-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.7 6.3.9-4.6 4.4 1.1 6.2-5.5-2.9-5.5 2.9 1.1-6.2L3 9.6l6.3-.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.4-2.3.9a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.3-.9-2 3.4 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.4 2.3-.9a7.6 7.6 0 0 0 2.6 1.5l.5 2.5h4l.5-2.5a7.6 7.6 0 0 0 2.6-1.5l2.3.9 2-3.4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 7h10a4 4 0 0 1 3.9 4.9l-.9 4.2a2.4 2.4 0 0 1-4.2.9L14.3 15H9.7l-1.5 2a2.4 2.4 0 0 1-4.2-.9l-.9-4.2A4 4 0 0 1 7 7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 10v3M6.5 11.5h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="15.5" cy="10.5" r=".9" fill="currentColor"/><circle cx="17.7" cy="12.5" r=".9" fill="currentColor"/></symbol>
   <symbol id="i-menu"viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
@@ -1114,14 +1153,14 @@ const I18N = {
     create_class_title:'Crear nueva aula', create_class_sub:'Configura el espacio de tu grupo.',
     field_classname:'Nombre del aula', ph_classname:'Ej. Economía · 4º ESO', field_course:'Curso', ph_course:'Ej. 4º ESO',
     field_desc:'Descripción', ph_desc:'Una breve descripción del aula', field_classimage:'Imagen del aula',
-    opt_purple:'Gradiente violeta', opt_cyan:'Gradiente turquesa', opt_pink:'Gradiente coral',
+    opt_purple:'Violeta', opt_cyan:'Turquesa', opt_pink:'Coral', opt_sunset:'Atardecer', opt_ocean:'Océano', opt_forest:'Bosque', opt_lavender:'Lavanda', opt_midnight:'Medianoche', opt_candy:'Chicle', opt_lemon:'Limón', opt_mint:'Menta', opt_berry:'Frutos rojos', opt_aurora:'Aurora', opt_rainbow:'Arcoíris',
     my_profile:'Mi perfil', profile_sub_teacher:'Personaliza tu identidad docente.', word_teacher:'Profesor',
     choose_emoji:'Elige tu emoticono', field_fullname:'Nombre completo', field_school:'Centro educativo', field_mail:'Correo',
     save_changes:'Guardar cambios', settings_title:'Configuración', settings_sub:'Preferencias generales de tu cuenta.',
     field_notifications:'Notificaciones', opt_on:'Activadas', opt_important:'Solo importantes', opt_off:'Desactivadas',
     field_appearance:'Apariencia', opt_light:'Benchi claro', opt_auto:'Benchi automático', save_btn:'Guardar', settings_saved:'Configuración guardada',
     word_students_lower:'alumnos', active_class_word:'Aula activa', points_given_short:'puntos dados', enter_arrow:'Entrar →',
-    need_class_name:'Ponle un nombre a tu aula', class_created_toast:'Aula creada: ', emoji_saved_toast:'Emoticono guardado', profile_saved_toast:'Perfil guardado',
+    need_class_name:'Ponle un nombre a tu aula', class_settings:'Ajustes del aula', class_settings_save:'Guardar cambios', class_updated_toast:'Aula actualizada', class_students_chip:'alumnos', class_danger_zone:'Zona peligrosa', class_created_toast:'Aula creada: ', emoji_saved_toast:'Emoticono guardado', profile_saved_toast:'Perfil guardado',
     code_label:'Código', students_panel:'Alumnado', no_students_joined:'Todavía no se ha unido ningún alumno con el código de aula.',
     apply_btn:'Aplicar', custom_btn:'Ajustar', behaviors_panel:'Comportamientos',
     select_all:'Seleccionar todos', none_selected:'Ningún alumno seleccionado', one_selected:'1 alumno seleccionado', n_selected:'{n} alumnos seleccionados',
@@ -1221,14 +1260,14 @@ const I18N = {
     create_class_title:'Create new classroom', create_class_sub:"Set up your group's space.",
     field_classname:'Classroom name', ph_classname:'E.g. Economics · Grade 10', field_course:'Grade', ph_course:'E.g. Grade 10',
     field_desc:'Description', ph_desc:'A short description of the classroom', field_classimage:'Classroom image',
-    opt_purple:'Purple gradient', opt_cyan:'Cyan gradient', opt_pink:'Coral gradient',
+    opt_purple:'Purple', opt_cyan:'Cyan', opt_pink:'Coral', opt_sunset:'Sunset', opt_ocean:'Ocean', opt_forest:'Forest', opt_lavender:'Lavender', opt_midnight:'Midnight', opt_candy:'Candy', opt_lemon:'Lemon', opt_mint:'Mint', opt_berry:'Berry', opt_aurora:'Aurora', opt_rainbow:'Rainbow',
     my_profile:'My profile', profile_sub_teacher:'Personalize your teacher identity.', word_teacher:'Teacher',
     choose_emoji:'Choose your emoji', field_fullname:'Full name', field_school:'School', field_mail:'Email',
     save_changes:'Save changes', settings_title:'Settings', settings_sub:'General preferences for your account.',
     field_notifications:'Notifications', opt_on:'On', opt_important:'Important only', opt_off:'Off',
     field_appearance:'Appearance', opt_light:'Benchi light', opt_auto:'Benchi automatic', save_btn:'Save', settings_saved:'Settings saved',
     word_students_lower:'students', active_class_word:'Active classroom', points_given_short:'points given', enter_arrow:'Enter →',
-    need_class_name:'Give your classroom a name', class_created_toast:'Classroom created: ', emoji_saved_toast:'Emoji saved', profile_saved_toast:'Profile saved',
+    need_class_name:'Give your classroom a name', class_settings:'Classroom settings', class_settings_save:'Save changes', class_updated_toast:'Classroom updated', class_students_chip:'students', class_danger_zone:'Danger zone', class_created_toast:'Classroom created: ', emoji_saved_toast:'Emoji saved', profile_saved_toast:'Profile saved',
     code_label:'Code', students_panel:'Students', no_students_joined:"No students have joined with the classroom code yet.",
     apply_btn:'Apply', custom_btn:'Adjust', behaviors_panel:'Behaviors',
     select_all:'Select all', none_selected:'No students selected', one_selected:'1 student selected', n_selected:'{n} students selected',
@@ -1534,7 +1573,7 @@ async function renderTeacher(route, arg){
           <div class="field"><label>${t('field_classname')}</label><input id="newClassName" placeholder="${t('ph_classname')}"></div>
           <div class="field"><label>${t('field_course')}</label><input id="newClassCourse" placeholder="${t('ph_course')}"></div>
           <div class="field"><label>${t('field_desc')}</label><input id="newClassDesc" placeholder="${t('ph_desc')}"></div>
-          <div class="field"><label>${t('field_classimage')}</label><select id="newClassColor"><option value="banner-purple">${t('opt_purple')}</option><option value="banner-cyan">${t('opt_cyan')}</option><option value="banner-pink">${t('opt_pink')}</option></select></div>
+          ${colorPickerHTML('banner-purple','newClassColor')}
           <button class="btn btn-primary" onclick="createClass()">${t('create_class_btn')} ${ICON('i-arrow')}</button>
         </div>
       </div>`;
@@ -1565,6 +1604,53 @@ async function teacherClassCards(){
     return `<article class="class-card"><div class="class-banner ${x.color||'banner-purple'}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${students} ${t('word_students_lower')} · ${x.curso||t('active_class_word')}</div></div><span class="pill">${x.code}</span></div><div class="class-foot"><span>${fmt(pts)} ${t('points_given_short')}</span><button class="enter-link" onclick="showDashboard('teacher','classdetail','${x.id}')">${t('enter_arrow')}</button></div></article>`;
   }));
   return rows.join('');
+}
+const CLASS_COLORS=['purple','cyan','pink','sunset','ocean','forest','lavender','midnight','candy','lemon','mint','berry','aurora','rainbow'];
+const LIGHT_BANNERS=['banner-lavender','banner-lemon','banner-mint'];   // fondos claros: el texto del encabezado va oscuro
+function colorPickerHTML(current,inputId){
+  const cur=CLASS_COLORS.includes((current||'').replace('banner-',''))?current:'banner-purple';
+  return `<div class="field color-field"><label>${t('field_classimage')}</label><input type="hidden" id="${inputId}" value="${cur}">
+    <div class="color-grid" role="group" aria-label="${t('field_classimage')}">${CLASS_COLORS.map(c=>`<button type="button" class="color-swatch banner-${c}" aria-pressed="${'banner-'+c===cur}" aria-label="${t('opt_'+c)}" title="${t('opt_'+c)}" onclick="pickClassColor('banner-${c}',this)"></button>`).join('')}</div>
+    <div class="color-name">${t('opt_'+cur.replace('banner-',''))}</div></div>`;
+}
+function pickClassColor(value,btn){
+  const f=btn.closest('.color-field');
+  f.querySelector('input[type=hidden]').value=value;
+  f.querySelectorAll('.color-swatch').forEach(b=>b.setAttribute('aria-pressed',b===btn));
+  f.querySelector('.color-name').textContent=btn.title;
+}
+/* Encabezado grande de la clase (profesor y alumno): fondo con el gradiente elegido + datos de la clase */
+function classHeroHTML(cls,o){
+  const color=(cls&&cls.color)||'banner-purple';
+  return `<div class="class-hero ${color} ${LIGHT_BANNERS.includes(color)?'on-light':''}">
+    <div class="hero-top">${o.back}${o.actions||''}</div>
+    <h1>${esc(cls?cls.name:'')}</h1>
+    ${cls&&cls.curso?`<p class="hero-course">${esc(cls.curso)}</p>`:''}
+    ${cls&&cls.descripcion?`<p class="hero-desc">${esc(cls.descripcion)}</p>`:''}
+    <div class="hero-meta">${o.meta||''}</div></div>`;
+}
+function openClassSettings(classId){
+  const cls=state.myClasses.find(x=>x.id===classId);if(!cls)return;
+  modal(t('class_settings'),`<div class="form">
+    <div class="field"><label>${t('field_classname')}</label><input id="editClassName" value="${esc(cls.name)}" maxlength="60"></div>
+    <div class="field"><label>${t('field_course')}</label><input id="editClassCourse" value="${esc(cls.curso||'')}" maxlength="60"></div>
+    ${colorPickerHTML(cls.color,'editClassColor')}
+    <button class="btn btn-primary" onclick="saveClassSettings('${classId}')">${t('class_settings_save')}</button>
+    <div class="settings-danger"><button class="btn btn-light" onclick="confirmDeleteClass('${classId}')">${ICON('i-trash')} Eliminar aula</button></div>
+  </div>`);
+}
+async function saveClassSettings(classId){
+  const name=document.getElementById('editClassName').value.trim();
+  const curso=document.getElementById('editClassCourse').value.trim();
+  const color=document.getElementById('editClassColor').value;
+  if(!name) return toast(t('need_class_name'));
+  const { data, error } = await sb.from('classes').update({ name, curso, color }).eq('id',classId).select('id');
+  if(error) return toast(error.message);
+  if(!data||!data.length) return toast('No se ha podido guardar');
+  closeModal();
+  toast(t('class_updated_toast'));
+  await loadMyClasses();
+  renderClassDetail(classId);
 }
 async function createClass(){
   const name=document.getElementById('newClassName').value.trim();
@@ -1849,7 +1935,11 @@ async function renderClassDetail(classId){
 
   const tabsHtml=`<div class="teacher-tabs">${CLASS_TABS.map(tb=>`<button class="teacher-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>`;
 
-  c.innerHTML = `<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('teacher','classes')">${ICON('i-back')} ${t('my_classes')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''} · ${t('code_label')} ${cls?cls.code:''}</p></div><div class="head-actions"><button class="btn btn-light" onclick="confirmDeleteClass('${classId}','${(cls?cls.name:'').replace(/'/g,"\\'")}')">${ICON('i-trash')} Eliminar aula</button></div></div>
+  const heroHtml=classHeroHTML(cls,{
+    back:`<button class="btn btn-light" onclick="showDashboard('teacher','classes')">${ICON('i-back')} ${t('my_classes')}</button>`,
+    actions:`<button class="hero-gear" onclick="openClassSettings('${classId}')" title="${t('class_settings')}" aria-label="${t('class_settings')}">${ICON('i-gear')}</button>`,
+    meta:`<span class="hero-chip">${t('code_label')} <b>${esc(cls?cls.code:'')}</b></span><span class="hero-chip">${(members||[]).length} ${t('class_students_chip')}</span>`});
+  c.innerHTML = `${heroHtml}
     ${tabsHtml}
     <div class="tab-panel ${activeTab==='students'?'':'hidden'}" data-panel="students">
       <div class="panel"><div class="panel-title"><h2>${t('students_panel')}</h2></div>
@@ -2057,7 +2147,9 @@ async function deleteRow(table,id,classId){
   await sb.from(table).delete().eq('id',id);
   renderTeacher('classdetail', classId);
 }
-function confirmDeleteClass(classId, className){
+function confirmDeleteClass(classId){
+  const cls=state.myClasses.find(x=>x.id===classId);
+  const className=esc(cls?cls.name:'');
   modal('Eliminar aula', `<div class="form">
     <p class="small-muted">Vas a eliminar <b>${className}</b> de forma permanente. Se borrarán también sus alumnos, comportamientos, recompensas, skins e historial de puntos. Esta acción no se puede deshacer.</p>
     <button class="btn btn-primary" style="background:#e0446b" onclick="doDeleteClass('${classId}')">Sí, eliminar aula</button>
@@ -2199,7 +2291,10 @@ async function renderStudentClassDetail(classId){
   const redeemedRows=redeemedItems.map(m=>`<div class="list-card"><div class="list-card-icon">${ICON('i-gift')}</div><div class="list-card-body"><div class="list-card-name">${m.name}</div><div class="list-card-meta"><span class="pill">${m.cost} pts</span></div></div></div>`).join('')||`<div class="empty-note">${t('no_redeemed')}</div>`;
   const total=cls?cls.points||0:0;
 
-  c.innerHTML=`<div class="page-head"><div><button class="btn btn-light" style="margin-bottom:10px" onclick="showDashboard('student','classes')">${ICON('i-back')} ${t('my_classes_student')}</button><h1>${cls?cls.name:''}</h1><p>${cls?(cls.curso||''):''}</p></div>${pointsBadgeHTML(total)}</div>
+  const heroHtml=classHeroHTML(cls,{
+    back:`<button class="btn btn-light" onclick="showDashboard('student','classes')">${ICON('i-back')} ${t('my_classes_student')}</button>`,
+    meta:`<span class="hero-points">${pointsBadgeHTML(total)}</span>`});
+  c.innerHTML=`${heroHtml}
     <div class="teacher-tabs">${STUDENT_CLASS_TABS.map(tb=>`<button class="teacher-tab student-class-tab ${activeTab===tb.key?'active':''}" data-tab="${tb.key}" onclick="switchStudentClassTab('${tb.key}')">${ICON(tb.icon)}${t(tb.label)}</button>`).join('')}</div>
     <div class="tab-panel student-tab-panel ${activeTab==='market'?'':'hidden'}" data-panel="market">
       <div class="panel">
