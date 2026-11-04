@@ -48,5 +48,7 @@ button.pp-cell:focus-visible{outline:3px solid rgba(99,91,255,.45);outline-offse
   .pp-cell{padding:4px 1px}
   .pp-cell .t{font-size:9.5px;letter-spacing:-.02em}
   .pp-grid{gap:4px}
+  .pp-grid[style*="--n:5"] .pp-cell .t{font-size:8.5px;letter-spacing:-.03em}
+  .pp-grid[style*="--n:5"] .pp-cell .e{font-size:21px}
 }
 @media (prefers-reduced-motion:reduce){button.pp-cell{transition:none}}

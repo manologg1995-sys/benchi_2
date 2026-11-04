@@ -513,6 +513,8 @@ svg{display:block}
 .add-card-head{font-weight:900;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
 
 .student-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:10px;flex-wrap:wrap;transition:.18s}
+.student-row .stu-pts{font-size:26px;font-weight:950;letter-spacing:-.03em;line-height:1.1;color:var(--primary);margin-top:2px}
+.student-row .stu-pts span{font-size:13px;font-weight:800;letter-spacing:0;color:var(--muted)}
 .student-row:hover{box-shadow:0 8px 20px rgba(31,32,66,.07);border-color:#dcdfec}
 .student-row select,.student-row input{border:1px solid #dde1eb;border-radius:11px;padding:9px 11px;font-size:12.5px;background:#fff}
 /* ---------- Puntuar: selector de comportamientos y puntuación masiva ---------- */
@@ -1799,11 +1801,10 @@ async function renderClassDetail(classId){
   const slotLabel={fondo:t('slot_bg'),cara:t('slot_face'),sombrero:t('slot_hat'),accesorio:t('slot_acc')};
   const behaviorOpts=(behaviors||[]).slice().sort((a,b)=>b.value-a.value).map(b=>`<option value="${b.id}">${b.value>0?'+':'−'}${Math.abs(b.value)} · ${b.name}</option>`).join('');
   const studentRows=(members||[]).map(m=>{
-    const lv=levelInfo(m.points);
     return `<div class="student-row" data-row="${m.student_id}">
       <input type="checkbox" class="stu-check" data-stu="${m.student_id}" aria-label="${t('select_student')} ${m.profiles.name}" onchange="onStudentCheck()">
       <div class="avatar-sm" style="flex-shrink:0">${avatarImgHTML(m.profiles.equipped)}</div>
-      <div style="flex:1;min-width:170px"><b>${esc(m.profiles.name)}</b><div class="small-muted">@${esc(m.profiles.alias||'')} · ${t('word_level')} ${lv.level} · ${fmt(m.points)} pts</div></div>
+      <div style="flex:1;min-width:170px"><b>${esc(m.profiles.name)}</b><div class="stu-pts">${fmt(m.points)} <span>pts</span></div></div>
       <button class="neae-toggle ${m.neae?'on':''}" data-neae="${m.student_id}" aria-pressed="${!!m.neae}" title="${t('neae_hint')}" onclick="toggleNeae('${classId}','${m.student_id}')"><span class="neae-dot"></span>NEAE</button>
       ${behaviorOpts?`<select class="beh-select" data-beh="${m.student_id}" aria-label="${t('behavior_for')} ${m.profiles.name}">${behaviorOpts}</select>
       <button class="btn btn-light btn-apply" onclick="applyBehavior('${classId}','${m.student_id}')">${t('apply_btn')}</button>`:''}
