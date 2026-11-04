@@ -1,4 +1,4 @@
--- Minijuego "Perfil Perfecto" (game = 'perfil'). Aplicar después de crucero_terminar.sql (que define la última set_minigame).
+-- Minijuego "¡Encuentra el misterio!" (game = 'perfil'). Aplicar después de crucero_terminar.sql (que define la última set_minigame).
 -- Puzle de deducción para toda la clase: el profesor genera un caso (en el navegador) y lo lanza; cada alumno lo
 -- resuelve por su cuenta y cada colocación se comprueba aquí. Tiene 2 vidas; el alumnado nunca pierde puntos.
 -- Igual que los otros minijuegos: las tablas no se leen directamente (RLS sin políticas) y la solución
@@ -86,7 +86,7 @@ declare v_id uuid; v_no integer; v_n integer; v_k integer; v_cat integer;
 begin
   if not is_teacher_of(p_class) then raise exception 'Solo el profesor de la clase puede lanzar casos'; end if;
   if not coalesce((select enabled from class_minigames where class_id = p_class and game = 'perfil'), false) then
-    raise exception 'Perfil Perfecto no está activado en esta aula';
+    raise exception 'El juego «¡Encuentra el misterio!» no está activado en esta aula';
   end if;
   if exists (select 1 from pp_rounds where class_id = p_class and status = 'open') then
     raise exception 'Ya hay un caso abierto: ciérralo o cancélalo antes de lanzar otro';
@@ -188,7 +188,7 @@ begin
     where round_id = p_round and student_id = v_uid;
   update class_members set points = points + v_pts where student_id = v_uid and class_id = r.class_id;
   insert into points_log (class_id, student_id, delta, reason, type)
-    values (r.class_id, v_uid, v_pts, 'Perfil Perfecto: ' || r.title, 'minijuego');
+    values (r.class_id, v_uid, v_pts, '¡Encuentra el misterio!: ' || r.title, 'minijuego');
   return jsonb_build_object('correct', true, 'lives', me.lives, 'done', true, 'points', v_pts, 'rank', v_rank);
 end; $$;
 

@@ -1,4 +1,4 @@
-/* Minijuegos de Benchi · "Perfil Perfecto" (puzle de deducción para toda la clase).
+/* Minijuegos de Benchi · «¡Encuentra el misterio!» (puzle de deducción para toda la clase).
    El profesor genera un caso (tema + dificultad) y lo lanza: todo el alumnado resuelve la misma cuadrícula
    con las pistas, cada uno en su dispositivo. Cada colocación se comprueba en el servidor (tienes 2 vidas);
    quien termina gana puntos y nunca se quitan. La solución no sale del servidor hasta que el profesor cierra el caso.
@@ -8,7 +8,7 @@
 (function(){
 'use strict';
 
-const NAME='Perfil Perfecto';
+const NAME='¡Encuentra el misterio!';
 const POLL_MS=2000;
 const LIVES=2;
 const ALL=['same','not','at','notAt','next','adj','before','edge'];
@@ -313,9 +313,9 @@ function finishedCard(){
 /* ===================================================== PROFESOR ===================================================== */
 function teacherHTML(d){
   const on=M.st.enabled;
-  const head=`<div class="hg-card"><div class="hg-between"><div class="hg-row" style="gap:14px"><div class="hg-badge" style="width:48px;height:48px;background:var(--hg-grad);color:#fff;font-size:24px">🕵️</div>
+  const head=`<div class="hg-card"><div class="hg-head"><div class="hg-head-main"><div class="hg-badge" style="width:48px;height:48px;background:var(--hg-grad);color:#fff;font-size:24px">🕵️</div>
     <div><h3 style="font-size:20px">${NAME}</h3><div class="hg-muted" style="font-size:14px">Un caso de deducción para toda la clase: mismas pistas, cada alumno en su dispositivo.</div></div></div>
-    <div class="hg-row"><span class="hg-chip ${on?'green':'white'}">${on?'Activado':'Desactivado'}</span><button type="button" class="hg-switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="Activar ${NAME} para los alumnos" onclick="PP.act('toggle')"></button></div></div></div>`;
+    <div class="hg-head-ctl"><span class="hg-chip ${on?'green':'white'}">${on?'Activado':'Desactivado'}</span><button type="button" class="hg-switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="Activar ${NAME} para los alumnos" onclick="PP.act('toggle')"></button></div></div></div>`;
   if(!on)return `<div class="hg-col">${head}<div class="hg-card hg-muted">Los alumnos no ven este minijuego. Actívalo para que aparezca en su pestaña «Minijuegos».</div></div>`;
   const live=d.ph==='open'||d.ph==='closed';
   return `<div class="hg-col">${head}${live?liveTeacher(d):''}${d.ph==='open'?'':setupTeacher()}</div>`;

@@ -163,3 +163,15 @@ table.hg-t td.n,table.hg-t th.n{text-align:right;font-variant-numeric:tabular-nu
 .hg-seg button{flex:1;min-height:36px;padding:0 8px;border-radius:10px;border:none;background:transparent;color:var(--hg-muted);font-weight:850;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit}
 .hg-seg button[aria-pressed="true"]{background:#fff;color:var(--hg-ink);box-shadow:0 6px 16px rgba(31,32,66,.09)}
 .hg-seg button:disabled{cursor:not-allowed;opacity:.7}
+
+/* Cabecera de cada minijuego en la vista del profesor: texto + interruptor. En móvil el interruptor baja a su propia fila. */
+.hg-head{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.hg-head-main{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+.hg-head-main>div:last-child{min-width:0}
+.hg-head-ctl{display:flex;align-items:center;gap:8px;flex:none}
+@media (max-width:640px){
+  .hg-head{flex-direction:column;align-items:stretch;gap:14px}
+  .hg-head-main{align-items:flex-start}
+  .hg-head-ctl{padding-top:14px;border-top:1px solid var(--hg-line-soft)}
+  .hg-head-ctl .hg-switch{margin-left:auto}
+}

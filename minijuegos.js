@@ -353,9 +353,9 @@ function resultsStudentHTML(d){
 /* ===== Profesor ===== */
 function teacherHTML(d){
   const on=M.st.enabled;
-  const head=`<div class="hg-card"><div class="hg-between"><div class="hg-row" style="gap:14px"><div class="hg-badge" style="width:48px;height:48px;background:var(--hg-grad);color:#fff;font-size:22px">🏇</div>
+  const head=`<div class="hg-card"><div class="hg-head"><div class="hg-head-main"><div class="hg-badge" style="width:48px;height:48px;background:var(--hg-grad);color:#fff;font-size:22px">🏇</div>
     <div><h3 style="font-size:20px">Carrera de caballos</h3><div class="hg-muted" style="font-size:14px">Los alumnos apuestan puntos por un caballo y se reparten el bote.</div></div></div>
-    <div class="hg-row"><span class="hg-chip ${on?'green':'white'}">${on?'Activado':'Desactivado'}</span><button type="button" class="hg-switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="Activar la carrera de caballos para los alumnos" onclick="HG.act('toggle')"></button></div></div></div>`;
+    <div class="hg-head-ctl"><span class="hg-chip ${on?'green':'white'}">${on?'Activado':'Desactivado'}</span><button type="button" class="hg-switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="Activar la carrera de caballos para los alumnos" onclick="HG.act('toggle')"></button></div></div></div>`;
   if(!on)return `<div class="hg-col">${head}<div class="hg-card hg-muted">Los alumnos no ven este minijuego. Actívalo para que aparezca en su pestaña «Minijuegos».</div></div>`;
   const locked=d.ph==='open'||d.ph==='closed'||d.ph==='countdown'||d.ph==='race';
   // Con una ronda en curso se muestra el modo de esa ronda; si no, el que elige el profesor

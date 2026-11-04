@@ -1,4 +1,4 @@
-/* Perfil Perfecto · catálogo de temas.
+/* ¡Encuentra el misterio! · catálogo de temas.
    Cada tema es una lista de categorías; de cada categoría se eligen al azar tantos elementos como posiciones tenga el caso.
    Para añadir un tema: copia un bloque, cambia id/title/emoji/desc/rec y rellena las categorías (mínimo 4 categorías
    para poder jugar en Difícil/Experto, y 8 elementos en cada una para que los casos no se repitan).

@@ -388,9 +388,9 @@ function resultRows(r){
 /* ===================================================== PROFESOR ===================================================== */
 function teacherHTML(d){
   const on=M.st.enabled;
-  const head=`<div class="hg-card"><div class="hg-between"><div class="hg-row" style="gap:14px"><div class="cr-logo">${shipSVG(44)}</div>
+  const head=`<div class="hg-card"><div class="hg-head"><div class="hg-head-main"><div class="cr-logo">${shipSVG(44)}</div>
     <div><h3 style="font-size:20px">${NAME}</h3><div class="hg-muted" style="font-size:14px">Preguntas con respuesta numérica: suben la cifra, siguen a bordo o dicen «¡Por aquí no paso!». Suman millas y al terminar el juego ${RATE} millas = 1 punto.</div></div></div>
-    <div class="hg-row"><button class="cr-help-btn" onclick="CR.act('help')" aria-label="Normas y puntuación" title="Normas y puntuación">${helpIcon()}</button><span class="hg-chip ${on?'green':'white'}">${on?'Activado':'Desactivado'}</span><button type="button" class="hg-switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="Activar ${NAME} para los alumnos" onclick="CR.act('toggle')"></button></div></div></div>`;
+    <div class="hg-head-ctl"><button class="cr-help-btn" onclick="CR.act('help')" aria-label="Normas y puntuación" title="Normas y puntuación">${helpIcon()}</button><span class="hg-chip ${on?'green':'white'}">${on?'Activado':'Desactivado'}</span><button type="button" class="hg-switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="Activar ${NAME} para los alumnos" onclick="CR.act('toggle')"></button></div></div></div>`;
   if(!on)return `<div class="hg-col">${head}<div class="hg-card hg-muted">Los alumnos no ven este minijuego. Actívalo para que aparezca en su pestaña «Minijuegos».</div></div>${M.help?helpHTML():''}`;
   const r=d.r,active=['boarding','playing','closed'].includes(d.ph);
   let main;
@@ -642,7 +642,7 @@ window.CR={mount,unmount,act,ship:shipSVG,NAME,takeDirty(){const d=!!(M&&M.dirty
    Une la carrera de caballos (HG) y el crucero (CR) en la pestaña «Minijuegos». */
 let H=null;   // estado del selector
 const SP=()=>window.SUPER||{mount(){},unmount(){},NAME:'El Súper de Clase'};
-const PF=()=>window.PP||{mount(){},unmount(){},takeDirty(){return false},NAME:'Perfil Perfecto',art(){return ''}};
+const PF=()=>window.PP||{mount(){},unmount(){},takeDirty(){return false},NAME:'¡Encuentra el misterio!',art(){return ''}};
 function hubStop(){if(H){clearInterval(H.t);H=null}}
 async function mountStudent(classId,root){
   hubStop();HG.unmount();CR.unmount();SP().unmount();PF().unmount();
