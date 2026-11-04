@@ -642,9 +642,10 @@ window.CR={mount,unmount,act,ship:shipSVG,NAME,takeDirty(){const d=!!(M&&M.dirty
    Une la carrera de caballos (HG) y el crucero (CR) en la pestaña «Minijuegos». */
 let H=null;   // estado del selector
 const SP=()=>window.SUPER||{mount(){},unmount(){},NAME:'El Súper de Clase'};
+const PF=()=>window.PP||{mount(){},unmount(){},takeDirty(){return false},NAME:'Perfil Perfecto',art(){return ''}};
 function hubStop(){if(H){clearInterval(H.t);H=null}}
 async function mountStudent(classId,root){
-  hubStop();HG.unmount();CR.unmount();SP().unmount();
+  hubStop();HG.unmount();CR.unmount();SP().unmount();PF().unmount();
   const h=H={role:'student',classId,root,dirty:false,data:null,t:null,neae:null,uid:null};
   root.classList.add('hg');
   root.innerHTML='<div class="hg-card hg-muted">Cargando minijuegos…</div>';
@@ -658,9 +659,9 @@ async function mountStudent(classId,root){
 async function hubPoll(){
   const h=H;if(!h||h.view!=='list')return;
   if(!document.body.contains(h.root)){hubStop();return}
-  const[a,b]=await Promise.all([sb.rpc('horse_state',{p_class:h.classId}),sb.rpc('cr_state',{p_class:h.classId})]);
+  const[a,b,c]=await Promise.all([sb.rpc('horse_state',{p_class:h.classId}),sb.rpc('cr_state',{p_class:h.classId}),sb.rpc('pp_state',{p_class:h.classId})]);
   if(H!==h||h.view!=='list')return;
-  h.data={horses:a.error?null:a.data,crucero:b.error?null:b.data};
+  h.data={horses:a.error?null:a.data,crucero:b.error?null:b.data,perfil:c.error?null:c.data};
   hubRender();
 }
 function hubList(dirty){
@@ -689,7 +690,15 @@ function hubRender(){
     const hint=st==='boarding'?(me?'Ya estás a bordo.':'¡Sube a bordo antes de que zarpe!'):st==='playing'?(r.current===cs.me?'¡Te toca jugar!':me?'Estás en la partida.':'Puedes mirar la partida.'):'Esperando a que el profesor lance una pregunta.';
     cards.push(cardHTML('crucero',shipSVG(72),NAME,'Adivina la cifra sin pasarte: sube, sigue a bordo o di «¡Por aquí no paso!».',chip,hint));
   }
-  const alert=(cs&&cs.enabled&&cs.round&&((cs.round.status==='boarding'&&!cs.round.players.some(p=>p.id===cs.me))||(cs.round.status==='playing'&&cs.round.current===cs.me)))
+  const ps=dt.perfil;
+  if(ps&&ps.enabled){
+    const r=ps.round,open=r&&r.status==='open',m=ps.mine,st=m&&m.status;
+    const chip=open?(st==='done'?'<span class="hg-chip green">Resuelto</span>':st==='out'?'<span class="hg-chip red">Sin vidas</span>':onChip('Caso abierto')):'<span class="hg-chip tint">Activo</span>';
+    const hint=open?(st==='done'?'Has resuelto el caso. ¡Bien hecho!':st==='out'?'Te has quedado sin vidas en este caso.':'¡Hay un caso nuevo! Resuélvelo con las pistas.'):'Esperando a que el profesor lance un caso.';
+    cards.push(cardHTML('perfil',PF().art(),PF().NAME,'Resuelve el caso con las pistas: deduce qué va en cada posición. Tienes 2 vidas.',chip,hint));
+  }
+  const alert=(ps&&ps.enabled&&ps.round&&ps.round.status==='open'&&ps.mine&&ps.mine.status==='playing'&&!Object.keys(ps.mine.cells||{}).length)
+    ||(cs&&cs.enabled&&cs.round&&((cs.round.status==='boarding'&&!cs.round.players.some(p=>p.id===cs.me))||(cs.round.status==='playing'&&cs.round.current===cs.me)))
     ||(hs&&hs.enabled&&hs.round&&hs.round.status==='open'&&!hs.round.mine&&hs.now<hs.round.closes_at);
   const el=document.querySelector('.teacher-tab[data-tab="minigames"]');if(el)el.classList.toggle('hg-tab-live',!!alert);
   h.root.innerHTML=cards.length?`<div class="hg-games">${cards.join('')}</div>`
@@ -716,13 +725,14 @@ function play(game){
   const back=dirty=>{if(H===h)hubList(dirty)};
   if(game==='super'){h.root.classList.remove('hg');SP().mount(h.root,{storeKey:h.classId+':'+h.uid,onBack:()=>{h.root.classList.add('hg');back()}});return}
   if(game==='horses')HG.mount('student',h.classId,h.root,{start:'game',onBack:back});
+  else if(game==='perfil')PF().mount('student',h.classId,h.root,{onBack:back});
   else CR.mount('student',h.classId,h.root,{onBack:back});
 }
 /* Profesor: pestañas para elegir qué minijuego configurar */
 function mountTeacher(classId,root){
   // Al volver a la misma aula se recuerda la última pestaña elegida
   const last=H&&H.classId===classId&&H.lastGame||'horses',dirty=!!(H&&H.dirty);
-  hubStop();HG.unmount();CR.unmount();SP().unmount();
+  hubStop();HG.unmount();CR.unmount();SP().unmount();PF().unmount();
   root.classList.add('hg');
   H={role:'teacher',classId,root,dirty,view:null,lastGame:last};
   teacherTab(last);
@@ -731,11 +741,13 @@ function teacherTab(game){
   const h=H;if(!h)return;
   if(HG.takeDirty())h.dirty=true;
   if(CR.takeDirty())h.dirty=true;
-  HG.unmount();CR.unmount();SP().unmount();
+  if(PF().takeDirty())h.dirty=true;
+  HG.unmount();CR.unmount();SP().unmount();PF().unmount();
   h.view=game;h.lastGame=game;
   h.root.innerHTML=`<div class="mg-tabs hg" role="tablist">
       <button role="tab" aria-selected="${game==='horses'}" onclick="MG.teacherTab('horses')">🏇 Carrera de caballos</button>
       <button role="tab" aria-selected="${game==='crucero'}" onclick="MG.teacherTab('crucero')">🚢 ${NAME}</button>
+      <button role="tab" aria-selected="${game==='perfil'}" onclick="MG.teacherTab('perfil')">🕵️ ${PF().NAME}</button>
       <button role="tab" aria-selected="${game==='neae'}" onclick="MG.teacherTab('neae')">🛒 ${SP().NAME}</button></div>
     <div id="mg-game"></div>`;
   const el=h.root.querySelector('#mg-game');
@@ -745,8 +757,10 @@ function teacherTab(game){
       <div id="sp-preview"></div>`;
     SP().mount(el.querySelector('#sp-preview'),{storeKey:'profesor-vista-previa',allUnlocked:true});
   }
-  else if(game==='horses')HG.mount('teacher',h.classId,el);else CR.mount('teacher',h.classId,el);
+  else if(game==='horses')HG.mount('teacher',h.classId,el);
+  else if(game==='perfil')PF().mount('teacher',h.classId,el);
+  else CR.mount('teacher',h.classId,el);
 }
 window.MG={mountStudent,mountTeacher,play,teacherTab,
-  takeDirty(){const d=HG.takeDirty()|CR.takeDirty()|!!(H&&H.dirty);if(H)H.dirty=false;return !!d}};
+  takeDirty(){const d=HG.takeDirty()|CR.takeDirty()|PF().takeDirty()|!!(H&&H.dirty);if(H)H.dirty=false;return !!d}};
 })();
