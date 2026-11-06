@@ -1,7 +1,7 @@
 /* Minijuegos de Benchi · «¡Encuentra el misterio!» (puzle de deducción para toda la clase).
    El profesor genera un caso (tema + dificultad) y lo lanza: todo el alumnado resuelve la misma cuadrícula
    con las pistas, cada uno en su dispositivo. Cada colocación se comprueba en el servidor (tienes 2 vidas);
-   quien termina gana puntos y nunca se quitan. La solución no sale del servidor hasta que el profesor cierra el caso.
+   quien termina gana puntos. Si te quedas sin vidas puedes comprar más (10 puntos cada una) y seguir. La solución no sale del servidor hasta que el profesor cierra el caso.
    Todo lo que toca puntos pasa por funciones de Supabase (supabase/perfil.sql).
    Los temas viven en perfil-temas.js (window.PP_THEMES).
    Uso: PP.mount('teacher'|'student', classId, el, {onBack}). */
@@ -11,6 +11,7 @@
 const NAME='¡Encuentra el misterio!';
 const POLL_MS=2000;
 const LIVES=2;
+const LIFE_PRICE=10;   // precio de cada vida al quedarse sin ninguna. Debe coincidir con pp_buy_lives (perfil_vidas.sql)
 const ALL=['same','not','at','notAt','next','adj','before','edge'];
 const LEVELS={
   facil:{t:'Fácil',n:3,k:3,types:['same','at','next']},
@@ -246,8 +247,8 @@ function solutionGrid(r){
 const rulesCard=()=>`<div class="hg-card"><div class="hg-eyebrow">Cómo se juega</div>
   <div class="cr-mini"><span>🔎</span><div>Lee las <b>pistas</b> y averigua qué elementos van en cada <b>posición</b> (de izquierda a derecha).</div></div>
   <div class="cr-mini"><span>👆</span><div>Toca una casilla, elige el elemento y se comprueba al momento.</div></div>
-  <div class="cr-mini"><span>❤️</span><div>Tienes <b>${LIVES} vidas</b>: dos fallos y te quedas sin caso. Piensa antes de elegir.</div></div>
-  <div class="cr-mini"><span>🏆</span><div>Ganas puntos al resolverlo, y más si eres de los primeros o no fallas. <b>Nunca pierdes puntos.</b></div></div></div>`;
+  <div class="cr-mini"><span>❤️</span><div>Tienes <b>${LIVES} vidas</b>. Si las pierdes, puedes <b>comprar más</b> a ${LIFE_PRICE} puntos cada una y seguir jugando.</div></div>
+  <div class="cr-mini"><span>🏆</span><div>Ganas puntos al resolverlo, y más si eres de los primeros o no fallas. Solo gastas puntos si decides comprar vidas.</div></div></div>`;
 const heroHTML=(title,sub)=>`<div class="cr-hero"><div class="pp-lens" aria-hidden="true">🕵️</div><div><h2 class="hg-title">${title}</h2>${sub?`<div class="cr-hero-sub">${sub}</div>`:''}</div></div>`;
 
 /* ===================================================== ALUMNO ===================================================== */
@@ -270,7 +271,7 @@ function caseStudent(d){
   const playing=!closed&&mine.status==='playing';
   let banner='';
   if(mine.status==='done')banner=`<div class="hg-banner win"><div><h2>¡Caso resuelto!</h2><div style="opacity:.9">${mine.rank?`Has sido el ${mine.rank}.º en resolverlo.`:''}${mine.mistakes?'':' Sin ningún fallo.'}</div></div><div class="big">+${pts(mine.points||0)}</div></div>`;
-  else if(mine.status==='out')banner=`<div class="hg-banner lose"><div><h2>Te has quedado sin vidas</h2><div class="hg-muted">Esta vez no ha podido ser. Cuando el profesor cierre el caso verás la solución.</div></div></div>`;
+  else if(mine.status==='out')banner=closed?`<div class="hg-banner lose"><div><h2>Te quedaste sin vidas</h2><div class="hg-muted">Aquí tienes la solución del caso.</div></div></div>`:buyHTML(mine);
   else if(closed)banner=`<div class="hg-banner lose"><div><h2>Caso cerrado</h2><div class="hg-muted">${done?'Te quedaste a medias.':'No llegaste a jugar este caso.'} Aquí tienes la solución.</div></div></div>`;
   const grid=gridHTML(p,(c,s)=>{
     const k=c+'-'+s,it=cells[k]!=null?p.cats[c].items[cells[k]]:null;
@@ -288,6 +289,16 @@ function caseStudent(d){
   <div class="hg-card"><div class="hg-between"><div class="hg-eyebrow">Pistas</div><div class="hg-meta">Toca una para tacharla</div></div>${cluesHTML(p,true)}</div>
   <div class="hg-card"><div class="hg-eyebrow">Posiciones, de izquierda a derecha</div>${grid}${playing?pickerHTML(d):''}</div>
   ${finishedCard()}`;
+}
+function buyHTML(mine){
+  const bal=+mine.balance||0;
+  const opt=n=>{const cost=n*LIFE_PRICE,ok=bal>=cost;
+    return `<button type="button" class="hg-btn ${n===1?'primary':'ghost'}" ${ok&&!M.busy?'':'disabled'} onclick="PP.act('buy',${n})">${'❤️'.repeat(n)} Comprar ${n===1?'1 vida':n+' vidas'} · ${pts(cost)}</button>`};
+  const enough=bal>=LIFE_PRICE;
+  return `<div class="hg-banner lose pp-buy"><div><h2>Te has quedado sin vidas</h2>
+    <div class="hg-muted">Puedes comprar vidas para seguir con este caso: <b>${pts(LIFE_PRICE)} cada una</b>. Tienes <b>${pts(bal)}</b>.</div></div>
+    <div class="hg-row hg-wrap">${opt(1)}${opt(2)}</div>
+    ${enough?'':`<div class="hg-meta">No tienes puntos suficientes para comprar una vida. Cuando el profesor cierre el caso verás la solución.</div>`}</div>`;
 }
 function pickerHTML(d){
   const p=d.r.puzzle,cells=(d.mine&&d.mine.cells)||{};
@@ -333,7 +344,7 @@ function setupTeacher(){
     <div class="hg-kv" style="flex-direction:column;align-items:stretch"><span class="hg-muted">Dificultad</span>${seg(Object.entries(LEVELS).map(([k,v])=>[k,v.t]),c.level,'level')}
       <div class="hg-meta">${L.n} posiciones y ${L.k} categorías (${L.n*L.k} casillas).</div></div>
     <div class="hg-kv"><span class="hg-muted">Puntos base</span><select onchange="PP.act('cfg','value',this.value)">${[1,2,3,4,5].map(v=>`<option value="${v}" ${v===+c.value?'selected':''}>${pts(v)}</option>`).join('')}</select></div>
-    <div class="hg-meta" style="padding:10px 12px;border-radius:12px;background:#f6f7fb">Puntos por alumno: base + podio (1.º +${PODIUM[0]}, 2.º +${PODIUM[1]}, 3.º +${PODIUM[2]}) + 1 si no falla. Con base ${c.value}: entre ${c.value} y ${+c.value+PODIUM[0]+1}. Nunca se quitan puntos.</div>
+    <div class="hg-meta" style="padding:10px 12px;border-radius:12px;background:#f6f7fb">Puntos por alumno: base + podio (1.º +${PODIUM[0]}, 2.º +${PODIUM[1]}, 3.º +${PODIUM[2]}) + 1 si no falla. Con base ${c.value}: entre ${c.value} y ${+c.value+PODIUM[0]+1}. Quien se queda sin vidas puede comprar más a ${LIFE_PRICE} puntos cada una.</div>
     <div><button class="hg-btn primary" ${M.gen?'disabled':''} onclick="PP.act('gen')">${M.gen?'Generando…':M.draft?'Generar otro caso':'Generar caso'}</button></div></div>`;
   if(M.draft){
     const dr=M.draft,p=dr.puzzle;
@@ -354,8 +365,8 @@ function liveTeacher(d){
         <div class="hg-muted">Nivel ${esc(lvName(r.level))} · base ${pts(r.value)}</div></div>
       <div style="text-align:right"><div class="hg-eyebrow">Resuelto</div><div class="hg-bigstat" style="margin-top:8px">${doneN} <span class="hg-muted" style="font-size:16px">de ${M.st.members}</span></div>
         <div class="hg-meta">${pl.length-doneN-outN} jugando · ${outN} sin vidas · ${Math.max(0,M.st.members-pl.length)} sin empezar</div></div></div>
-    ${rows.length?`<div style="overflow-x:auto"><table class="hg-t"><thead><tr><th>Alumno</th><th>Estado</th><th class="n">Casillas</th><th class="n">Vidas</th><th class="n">Puntos</th></tr></thead><tbody>
-      ${rows.map(x=>`<tr><td>${esc(x.name)}</td><td>${stat[x.status]||''}</td><td class="n">${x.cells}/${total}</td><td class="n">${x.status==='done'||x.status==='out'?x.lives:hearts(x.lives)}</td><td class="n ${x.points?'hg-pos':''}">${x.points?'+'+x.points:'—'}</td></tr>`).join('')}</tbody></table></div>`
+    ${rows.length?`<div style="overflow-x:auto"><table class="hg-t"><thead><tr><th>Alumno</th><th>Estado</th><th class="n">Casillas</th><th class="n">Vidas</th><th class="n">Compradas</th><th class="n">Puntos</th></tr></thead><tbody>
+      ${rows.map(x=>`<tr><td>${esc(x.name)}</td><td>${stat[x.status]||''}</td><td class="n">${x.cells}/${total}</td><td class="n">${x.status==='done'||x.status==='out'?x.lives:hearts(x.lives)}</td><td class="n">${x.bought?`${x.bought} <span class="hg-meta">(−${x.bought*LIFE_PRICE})</span>`:'—'}</td><td class="n ${x.points?'hg-pos':''}">${x.points?'+'+x.points:'—'}</td></tr>`).join('')}</tbody></table></div>`
       :'<div class="hg-muted">Nadie ha empezado todavía.</div>'}
     <div class="hg-row hg-wrap" style="padding-top:14px;border-top:1px solid #eef0f5">
       ${closed?'<span class="hg-muted">Caso cerrado. Puedes preparar el siguiente más abajo.</span>'
@@ -375,6 +386,17 @@ async function act(a,x,y){
     case 'strike':M.struck[x]=!M.struck[x];saveLocal();bump();break;
     case 'mode':M.mode=x;bump();break;
     case 'cell':M.sel=(M.sel&&M.sel[0]===x&&M.sel[1]===y)?null:[x,y];M.msg=null;bump();break;
+    case 'buy':{
+      if(!r||M.busy)break;
+      const n=x===2?2:1,cost=n*LIFE_PRICE;
+      if(!confirm(`¿Comprar ${n===1?'1 vida':n+' vidas'} por ${pts(cost)}? Los puntos se descuentan de tu saldo.`))break;
+      M.busy=true;bump();
+      const res=await rpc('pp_buy_lives',{p_round:r.id,p_count:n});
+      if(!M)return;
+      M.busy=false;
+      if(res.ok){M.msg={t:`¡Vuelves al caso con ${n===1?'1 vida':n+' vidas'}! (−${pts(cost)})`};say(`Has gastado ${pts(cost)} en vidas`)}
+      await poll();bump();break;
+    }
     case 'item':{
       if(!r||!M.sel||M.busy)break;
       const[c,s]=M.sel,key=c+'-'+s;

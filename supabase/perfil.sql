@@ -1,3 +1,4 @@
+-- Si se reaplica este archivo, vuelve a aplicar después perfil_vidas.sql (redefine pp_state con saldo y vidas compradas).
 -- Minijuego "¡Encuentra el misterio!" (game = 'perfil'). Aplicar después de crucero_terminar.sql (que define la última set_minigame).
 -- Puzle de deducción para toda la clase: el profesor genera un caso (en el navegador) y lo lanza; cada alumno lo
 -- resuelve por su cuenta y cada colocación se comprueba aquí. Tiene 2 vidas; el alumnado nunca pierde puntos.
