@@ -1,5 +1,5 @@
 /* Banner de LetrasIA (publicidad cruzada) - colores corporativos: crema #f6ede0, amarillo #f4c430, marrón #69573f, verde oscuro #17231f */
-.lia-wrap{position:relative;margin:26px 0 8px;touch-action:pan-y}
+.lia-wrap{position:relative;margin:26px 0 8px}
 .lia{position:relative;display:flex;align-items:center;gap:22px;padding:22px 26px 22px 22px;border-radius:24px;color:#17231f;overflow:hidden;
   background:#f6ede0;border:2px solid #e6d6bb;box-shadow:0 14px 34px rgba(105,87,63,.18)}
 .lia:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(105,87,63,.13) 1.3px,transparent 1.4px);background-size:18px 18px;pointer-events:none}
@@ -16,20 +16,12 @@
 .lia-cta{position:relative;flex-shrink:0;background:#f4c430;color:#17231f;font-weight:900;font-size:15px;padding:13px 22px;border-radius:99px;text-decoration:none;white-space:nowrap;
   box-shadow:0 3px 0 #d7ae17;transition:transform .15s}
 .lia-cta:hover{transform:translateY(-2px)}
-.lia-handle{position:absolute;top:8px;right:10px;z-index:2;display:flex;gap:6px}
-.lia-handle button{width:30px;height:30px;border-radius:9px;border:0;background:rgba(105,87,63,.12);color:#69573f;font-size:15px;font-weight:900;cursor:pointer;line-height:1}
-.lia-handle .lia-grab{cursor:grab}
-.lia-wrap.dragging{z-index:50}
-.lia-wrap.dragging .lia{cursor:grabbing;box-shadow:0 26px 56px rgba(105,87,63,.35);transform:rotate(-.6deg) scale(1.01)}
-.lia-wrap.dragging .lia-grab{cursor:grabbing}
-.lia-hint{font-size:12px;color:var(--muted);margin:6px 4px 0;text-align:right}
 @keyframes lia-bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
 @media (prefers-reduced-motion:reduce){.lia-letters{animation:none}}
 @media (max-width:720px){
   .lia{flex-direction:column;align-items:flex-start;padding:22px 20px 26px}
   .lia-letters{width:72px;height:72px;font-size:30px}
   .lia-cta{width:100%;box-sizing:border-box;text-align:center}
-  .lia-handle{top:10px;right:10px}
-}
+  }
 /* Versión de la portada: sin asas, dentro de una sección */
 .lia-wrap.lia-static{margin:34px auto 0;max-width:980px}
