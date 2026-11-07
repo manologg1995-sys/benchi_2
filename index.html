@@ -98,6 +98,7 @@
 <link rel="stylesheet" href="crucero.css?v=20261104">
 <link rel="stylesheet" href="super.css?v=20261104">
 <link rel="stylesheet" href="perfil.css?v=20261104">
+<link rel="stylesheet" href="letrasia.css?v=20261107">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap"></noscript>
@@ -824,6 +825,7 @@ svg{display:block}
           </div>
         </article>
       </div>
+      <div id="liaLanding"></div>
     </div>
   </section>
 
@@ -954,6 +956,7 @@ svg{display:block}
 <script src="super.js?v=20261104" defer></script>
 <script src="perfil-temas.js?v=20261104" defer></script>
 <script src="perfil.js?v=20261106" defer></script>
+<script src="letrasia.js?v=20261107" defer></script>
 <script src="crucero.js?v=20261104" defer></script>
 <script>
 /* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE (LAS DOS LÍNEAS DE ABAJO) ============ */
@@ -1562,7 +1565,8 @@ async function renderTeacher(route, arg){
     </div>
     <div class="panel"><div class="panel-title"><h2>${t('my_classes')}</h2><button onclick="showDashboard('teacher','classes')">${t('view_all')}</button></div>
       <div class="class-grid">${state.myClasses.length? await teacherClassCards() : `<div class="empty-note">${t('no_classes_yet')}</div>`}</div>
-    </div>`;
+    </div>${liaHTML(true)}`;
+    initLiaDrag();
   }else if(route==='classes'){
     c.innerHTML=teacherHeader(t('my_classes'),t('manage_classes_sub'),'<button class="btn btn-primary" onclick="showDashboard(\'teacher\',\'create\')">'+ICON('i-plus')+' '+t('create_class_btn')+'</button>')+
       `<div class="class-grid">${state.myClasses.length? await teacherClassCards() : `<div class="empty-note">${t('no_classes_yet')}</div>`}</div>`;
