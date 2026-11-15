@@ -99,6 +99,7 @@
 <link rel="stylesheet" href="super.css?v=20261104">
 <link rel="stylesheet" href="perfil.css?v=20261104">
 <link rel="stylesheet" href="letrasia.css?v=20261113">
+<link rel="stylesheet" href="tutorial.css?v=20261115">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap"></noscript>
@@ -966,6 +967,7 @@ svg{display:block}
 <script src="perfil.js?v=20261106" defer></script>
 <script src="letrasia.js?v=20261113" defer></script>
 <script src="crucero.js?v=20261115" defer></script>
+<script src="tutorial.js?v=20261115" defer></script>
 <script>
 /* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE (LAS DOS LÍNEAS DE ABAJO) ============ */
 const SUPABASE_URL = "https://gwvtamxfmsdetylzekwx.supabase.co";
@@ -1518,6 +1520,11 @@ async function bootAfterAuth(){
   document.getElementById(`${p}UserName`).textContent = profile.name;
   document.getElementById(`${p}UserRole`).textContent = profile.role==='profesor' ? 'Profesor' : 'Alumno';
   await showDashboard(type,'home');
+  // Tutorial de bienvenida: solo profesorado nuevo (sin aulas y sin haberlo visto o saltado)
+  if(type==='teacher'){
+    if(window.BenchiTour) BenchiTour.maybeStart();
+    else document.addEventListener('DOMContentLoaded',()=>window.BenchiTour&&BenchiTour.maybeStart(),{once:true});
+  }
 }
 
 async function loadMyClasses(){
@@ -1605,7 +1612,7 @@ async function renderTeacher(route, arg){
       ${deleteDataSection()}</div>`;
   }else{
     c.innerHTML=teacherHeader(t('settings_title'),t('settings_sub'),'<button class="btn btn-light" onclick="showDashboard(\'teacher\',\'home\')">'+ICON('i-back')+' '+t('word_back')+'</button>')+
-      `<div class="panel" style="max-width:760px"><div class="field"><label>${t('field_notifications')}</label><select><option>${t('opt_on')}</option><option>${t('opt_important')}</option><option>${t('opt_off')}</option></select></div><div class="field" style="margin-top:15px"><label>${t('field_appearance')}</label><select><option>${t('opt_light')}</option><option>${t('opt_auto')}</option></select></div><button class="btn btn-primary" style="margin-top:18px" onclick="toast(t('settings_saved'))">${t('save_btn')}</button></div>`;
+      `<div class="panel" style="max-width:760px"><div class="field"><label>${t('field_notifications')}</label><select><option>${t('opt_on')}</option><option>${t('opt_important')}</option><option>${t('opt_off')}</option></select></div><div class="field" style="margin-top:15px"><label>${t('field_appearance')}</label><select><option>${t('opt_light')}</option><option>${t('opt_auto')}</option></select></div>${window.BenchiTour?BenchiTour.settingsHTML():''}<button class="btn btn-primary" style="margin-top:18px" onclick="toast(t('settings_saved'))">${t('save_btn')}</button></div>`;
   }
 }
 async function teacherClassCards(){
