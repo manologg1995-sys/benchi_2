@@ -753,7 +753,7 @@ function teacherTab(game){
   const el=h.root.querySelector('#mg-game');
   if(game==='neae'){
     el.innerHTML=`<div class="hg-card" style="margin-bottom:14px"><h3>${SP().NAME}</h3>
-      <div class="hg-muted">Los alumnos marcados como <b>NEAE</b> en la pestaña Alumnado ven estos juegos en lugar de los comunes. Aquí puedes probarlos con todos los niveles abiertos; tu partida no cuenta para nadie.</div></div>
+      <div class="hg-muted">Los alumnos marcados como <b>NEE</b> en la pestaña Alumnado ven estos juegos en lugar de los comunes. Aquí puedes probarlos con todos los niveles abiertos; tu partida no cuenta para nadie.</div></div>
       <div id="sp-preview"></div>`;
     SP().mount(el.querySelector('#sp-preview'),{storeKey:'profesor-vista-previa',allUnlocked:true});
   }

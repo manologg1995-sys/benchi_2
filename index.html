@@ -649,6 +649,11 @@ svg{display:block}
 /* tiny utility visuals */
 .pulse{animation:pulse 3.8s ease-in-out infinite}@keyframes pulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .float{animation:float 6s ease-in-out infinite}@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(-.6deg)}}
+.solidario{position:relative;background:linear-gradient(90deg,#635bff,#8b5cf6 55%,#ff5a9d);color:#fff;font-size:14px;line-height:1.4}
+.solidario-inner{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 0;text-align:center}
+.solidario-ico{flex-shrink:0;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.2);font-size:14px}
+.solidario b{font-weight:900}
+@media (max-width:600px){.solidario{font-size:13px}.solidario-inner{padding:9px 0}}
 </style>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
@@ -679,6 +684,9 @@ svg{display:block}
 
 <!-- LANDING -->
 <section id="landing" class="landing screen active">
+  <div class="solidario" role="note">
+    <div class="container solidario-inner"><span class="solidario-ico" aria-hidden="true">💜</span><span data-i18n-html="solidario_banner">El <b>10% de los beneficios</b> de Benchi se destina al <b>Centro Educativo SAFA-ICET</b>.</span></div>
+  </div>
   <header class="topbar">
     <div class="container topbar-inner">
       <a href="#" class="brand" onclick="showLanding();return false;"><span class="brand-mark"></span>BENCHI</a>
@@ -1120,7 +1128,7 @@ const I18N = {
     students_p:'Consulta tus puntos, evoluciona tu perfil, desbloquea skins y utiliza el mercado para convertir tus logros en recompensas.',
     word_points_cap:'Puntos',
     cta_h:'Haz que cada punto cuente.', cta_p:'Benchi convierte la motivación del aula en una experiencia visual, sencilla y divertida.', cta_btn:'Crear mi cuenta',
-    footer_tag:'Aprende diferente.', word_back:'Volver',
+    footer_tag:'Aprende diferente.', solidario_banner:'El <b>10% de los beneficios</b> de Benchi se destina al <b>Centro Educativo SAFA-ICET</b>.', word_back:'Volver',
     faq_eyebrow:'Preguntas frecuentes', faq_title:'Todo sobre <span class="gradient-text">Benchi.</span>',
     faq_q1:'¿Qué es Benchi?', faq_a1:'Benchi es una plataforma de gamificación para el aula. El profesorado reconoce el esfuerzo, la participación y el comportamiento con puntos, y el alumnado los acumula, sube de nivel y los canjea por recompensas en el mercado de su clase.',
     faq_q2:'¿Cómo se une el alumnado a una clase?', faq_a2:'Cada alumno crea su cuenta con su propio usuario y contraseña y entra en su aula introduciendo el código de clase que le facilita su profesor.',
@@ -1184,7 +1192,7 @@ const I18N = {
     my_classes_student:'Mis clases', recent_activity:'Actividad reciente', view_history:'Ver historial',
     my_classes_sub:'Consulta tus puntos y el progreso de cada aula.', join_class_btn:'Unirme a una aula',
     rewards_title:'Recompensas', rewards_sub:'Todo lo que has conseguido y gastado en Benchi.',
-    tab_minigames:'Minijuegos', neae_hint:'Marca si el alumno es NEAE: verá los minijuegos adaptados', neae_on_toast:'marcado como NEAE (minijuegos adaptados)', neae_off_toast:'ya no es NEAE (minijuegos comunes)',
+    tab_minigames:'Minijuegos', neae_hint:'Marca si el alumno es NEE: verá los minijuegos adaptados', neae_on_toast:'marcado como NEE (minijuegos adaptados)', neae_off_toast:'ya no es NEE (minijuegos comunes)',
     points_history:'Historial de puntos',available_suffix:'disponibles',
     my_profile_student_sub:'Tu identidad y tu colección.', word_points_cap:'Puntos', word_classes_cap:'Aulas', word_skins_cap:'Skins',
     save_emoji_btn:'Guardar emoticono', my_collection:'Mi colección', no_skins_yet:'Todavía no tienes skins.',
@@ -1227,7 +1235,7 @@ const I18N = {
     students_p:'Check your points, evolve your profile, unlock skins, and use the market to turn your achievements into rewards.',
     word_points_cap:'Points',
     cta_h:'Make every point count.', cta_p:'Benchi turns classroom motivation into a visual, simple and fun experience.', cta_btn:'Create my account',
-    footer_tag:'Learn differently.', word_back:'Back',
+    footer_tag:'Learn differently.', solidario_banner:'<b>10% of Benchi\'s profits</b> go to the <b>SAFA-ICET school</b>.', word_back:'Back',
     faq_eyebrow:'FAQ', faq_title:'All about <span class="gradient-text">Benchi.</span>',
     faq_q1:'What is Benchi?', faq_a1:'Benchi is a classroom gamification platform. Teachers recognise effort, participation and behaviour with points, and students collect them, level up and redeem them for rewards in their class market.',
     faq_q2:'How do students join a class?', faq_a2:'Each student creates an account with their own username and password and joins their class by entering the class code their teacher gives them.',
@@ -1894,7 +1902,7 @@ async function renderClassDetail(classId){
       <input type="checkbox" class="stu-check" data-stu="${m.student_id}" aria-label="${t('select_student')} ${m.profiles.name}" onchange="onStudentCheck()">
       <div class="avatar-sm" style="flex-shrink:0">${avatarImgHTML(m.profiles.equipped)}</div>
       <div style="flex:1;min-width:170px"><b>${esc(m.profiles.name)}</b><div class="stu-pts">${fmt(m.points)} <span>pts</span></div></div>
-      <button class="neae-toggle ${m.neae?'on':''}" data-neae="${m.student_id}" aria-pressed="${!!m.neae}" title="${t('neae_hint')}" onclick="toggleNeae('${classId}','${m.student_id}')"><span class="neae-dot"></span>NEAE</button>
+      <button class="neae-toggle ${m.neae?'on':''}" data-neae="${m.student_id}" aria-pressed="${!!m.neae}" title="${t('neae_hint')}" onclick="toggleNeae('${classId}','${m.student_id}')"><span class="neae-dot"></span>NEE</button>
       ${behaviorOpts?`<select class="beh-select" data-beh="${m.student_id}" aria-label="${t('behavior_for')} ${m.profiles.name}">${behaviorOpts}</select>
       <button class="btn btn-light btn-apply" onclick="applyBehavior('${classId}','${m.student_id}')">${t('apply_btn')}</button>`:''}
       <button class="icon-btn danger" title="${t('remove_student_btn')}" aria-label="${t('remove_student_btn')} ${esc(m.profiles.name)}" onclick="removeStudent('${classId}','${m.student_id}')">${ICON('i-trash')}</button>
