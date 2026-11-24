@@ -175,3 +175,8 @@ table.hg-t td.n,table.hg-t th.n{text-align:right;font-variant-numeric:tabular-nu
   .hg-head-ctl{padding-top:14px;border-top:1px solid var(--hg-line-soft)}
   .hg-head-ctl .hg-switch{margin-left:auto}
 }
+
+/* Aviso del modo prueba del profesor en la pestaña Minijuegos */
+.pv-note{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px;padding:16px 18px;border-radius:20px;background:linear-gradient(135deg,#f0efff,#fff1f8);border:1.5px solid #ddd8ff;color:#3c4356;font-size:14.5px;line-height:1.5}
+.pv-note b{color:#1c223d}
+.pv-note-ico{flex-shrink:0;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#fff;font-size:20px;box-shadow:0 4px 12px rgba(99,91,255,.15)}

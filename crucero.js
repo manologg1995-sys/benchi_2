@@ -704,15 +704,15 @@ function hubRender(){
     ||(cs&&cs.enabled&&cs.round&&((cs.round.status==='boarding'&&!cs.round.players.some(p=>p.id===cs.me))||(cs.round.status==='playing'&&cs.round.current===cs.me)))
     ||(hs&&hs.enabled&&hs.round&&hs.round.status==='open'&&!hs.round.mine&&hs.now<hs.round.closes_at);
   const el=document.querySelector('.teacher-tab[data-tab="minigames"]');if(el)el.classList.toggle('hg-tab-live',!!alert);
-  h.root.innerHTML=cards.length?`<div class="hg-games">${cards.join('')}</div>`
-    :`<div class="hg-card"><h3>Minijuegos</h3><div class="hg-muted">Tu profesor aún no ha activado ningún minijuego en esta aula.</div></div>`;
+  h.root.innerHTML=previewNote()+(cards.length?`<div class="hg-games">${cards.join('')}</div>`
+    :`<div class="hg-card"><h3>Minijuegos</h3><div class="hg-muted">Tu profesor aún no ha activado ningún minijuego en esta aula.</div></div>`);
 }
 /* Alumnado NEAE: catálogo de minijuegos adaptados */
 const SUPER_ART='<div style="font-size:64px;line-height:1">🛒</div>';
 function neaeRender(){
   const h=H;if(!h)return;
   const el=document.querySelector('.teacher-tab[data-tab="minigames"]');if(el)el.classList.remove('hg-tab-live');
-  h.root.innerHTML=`<div class="hg-games">${cardHTML('super',SUPER_ART,SP().NAME,
+  h.root.innerHTML=previewNote()+`<div class="hg-games">${cardHTML('super',SUPER_ART,SP().NAME,
     'Ve al súper: suma la cesta, paga con las monedas de tu cartera y da el cambio.',
     '<span class="hg-chip green">Para ti</span>','8 niveles. Haz 3 compras para abrir el siguiente.')}</div>`;
 }
@@ -731,6 +731,13 @@ function play(game){
   if(game==='horses')HG.mount('student',h.classId,h.root,{start:'game',onBack:back});
   else if(game==='perfil')PF().mount('student',h.classId,h.root,{onBack:back});
   else CR.mount('student',h.classId,h.root,{onBack:back});
+}
+/* Modo prueba: aviso fijo arriba de la lista de minijuegos */
+function previewNote(){
+  const h=H;if(!h||!h.preview)return '';
+  return `<div class="pv-note" role="note"><span class="pv-note-ico" aria-hidden="true">🎮</span><div><b>Estás en modo prueba como profesor.</b>
+    Aquí ves qué minijuegos tiene activados esta aula, pero las partidas en directo (carrera de caballos, crucero y ¡Encuentra el misterio!) no se pueden jugar siendo profesor.
+    El Súper de Clase sí puedes probarlo. Para jugar a los demás, entra con una cuenta de alumno.</div></div>`;
 }
 /* Modo prueba: los juegos en directo necesitan una cuenta de alumno de verdad */
 function previewLive(game,back){
