@@ -1057,7 +1057,7 @@ sb.auth.onAuthStateChange((event) => {
 });
 
 /* ============ DATOS LEGALES (COMPLETAR ANTES DE PUBLICAR) ============ */
-const LEGAL_CONTACT_EMAIL = "PENDIENTE-COMPLETAR@tu-dominio.com"; // email de contacto para privacidad y borrado de datos
+const LEGAL_CONTACT_EMAIL = "infoplaybenchi@gmail.com"; // email de contacto para privacidad y borrado de datos
 const LEGAL_NIF = "[PENDIENTE]"; // tu NIF/DNI
 const LEGAL_RESPONSABLE = "Manuel Gil";
 const LEGAL_DOMICILIO = "Vélez-Málaga, Málaga, España";
@@ -1079,15 +1079,15 @@ const LEGAL_CONTENT = {
     <h4>4. Base legal</h4>
     <p>Ejecución de la relación contractual/prestación del servicio solicitado (art. 6.1.b RGPD), tu consentimiento al registrarte (art. 6.1.a RGPD), e interés legítimo para el funcionamiento y seguridad de la plataforma (art. 6.1.f RGPD).</p>
     <h4>5. Datos de menores de edad</h4>
-    <p>Benchi está pensado para usarse en un contexto educativo. Los profesores crean las aulas y dan de alta a su alumnado; respecto a los datos del alumnado, el centro educativo o el profesor actúa como responsable del tratamiento, y Benchi actúa como encargado del tratamiento (art. 28 RGPD), tratando esos datos únicamente para prestar el servicio contratado por el centro/profesor. Si sos alumno o familiar y tenés dudas sobre estos datos, te recomendamos contactar primero con tu centro educativo.</p>
+    <p>Benchi está pensado para usarse en un contexto educativo. Los profesores crean las aulas y dan de alta a su alumnado; respecto a los datos del alumnado, el centro educativo o el profesor actúa como responsable del tratamiento, y Benchi actúa como encargado del tratamiento (art. 28 RGPD), tratando esos datos únicamente para prestar el servicio contratado por el centro/profesor. Si eres alumno o familiar y tienes dudas sobre estos datos, te recomendamos contactar primero con tu centro educativo.</p>
     <h4>6. Con quién compartimos los datos</h4>
     <p>Los datos se almacenan con Supabase Inc., nuestro proveedor de base de datos e infraestructura, que actúa como encargado del tratamiento bajo nuestras instrucciones. Los servidores donde se alojan los datos están ubicados en Londres, Reino Unido — un país que cuenta con decisión de adecuación de la Comisión Europea, por lo que la transferencia no requiere garantías adicionales. La web se aloja y se sirve a través de Vercel Inc. (Estados Unidos), que también presta la analítica de visitas descrita en el apartado 2. No vendemos ni cedemos datos a terceros con fines publicitarios.</p>
     <h4>7. Cuánto tiempo los conservamos</h4>
     <p>Mientras tu cuenta esté activa. Si solicitás la baja o el borrado, eliminamos los datos en un plazo razonable, salvo que debamos conservar algo por obligación legal.</p>
     <h4>8. Tus derechos</h4>
-    <p>Podés ejercer en cualquier momento tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a <b>${LEGAL_CONTACT_EMAIL}</b>. También podés reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>) si considerás que no se respetaron tus derechos.</p>
+    <p>Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a <b>${LEGAL_CONTACT_EMAIL}</b>. También puedes reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>) si considerás que no se respetaron tus derechos.</p>
     <h4>9. Cómo pedir que se borren tus datos</h4>
-    <p>Escribinos a <b>${LEGAL_CONTACT_EMAIL}</b> con el asunto "Solicitud de eliminación de datos" indicando el email con el que te registraste. También podés iniciarlo desde "Mi perfil" con el botón "Solicitar borrado de mis datos".</p>
+    <p>Escríbenos a <b>${LEGAL_CONTACT_EMAIL}</b> con el asunto "Solicitud de eliminación de datos" indicando el email con el que te registraste. También puedes iniciarlo desde "Mi perfil" con el botón "Solicitar borrado de mis datos".</p>
     <h4>10. Cookies</h4>
     <p>Consultá nuestra <a href="#" onclick="showLegalModal('cookies');return false;">Política de Cookies</a>.</p>
     <h4>11. Cambios en esta política</h4>
@@ -1118,7 +1118,7 @@ const LEGAL_CONTENT = {
     <p class="small-muted">Última actualización: ${LEGAL_UPDATED}</p>
     <p>Actualmente Benchi no utiliza cookies de análisis ni de publicidad. Usamos el almacenamiento local del navegador (localStorage) únicamente para mantener tu sesión iniciada, algo estrictamente necesario para el funcionamiento del servicio y que no requiere consentimiento según la normativa de cookies.</p>
     <p>Para saber cuántas personas visitan la web y qué páginas leen usamos Vercel Web Analytics, que funciona sin cookies, no guarda información en tu dispositivo y no te identifica, por lo que no necesita tu consentimiento.</p>
-    <p>Si en el futuro incorporamos herramientas como Google Analytics o Meta Pixel para entender el uso de la plataforma, te lo pediremos expresamente mediante un aviso como el que ves al entrar al sitio, y esas herramientas no se activarán hasta que lo aceptes. Podés cambiar tu decisión en cualquier momento desde el enlace "Preferencias de cookies" en el pie de página.</p>
+    <p>Si en el futuro incorporamos herramientas como Google Analytics o Meta Pixel para entender el uso de la plataforma, te lo pediremos expresamente mediante un aviso como el que ves al entrar al sitio, y esas herramientas no se activarán hasta que lo aceptes. Puedes cambiar tu decisión en cualquier momento desde el enlace "Preferencias de cookies" en el pie de página.</p>
   `
 };
 function showLegalModal(which){
@@ -1133,7 +1133,7 @@ function requestDataDeletion(){
 }
 function deleteDataSection(){
   return `<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--line)">
-    <div class="small-muted" style="margin-bottom:8px">¿Ya no querés usar Benchi? Podés pedir que borremos todos tus datos personales.</div>
+    <div class="small-muted" style="margin-bottom:8px">¿Ya no quieres usar Benchi? Puedes pedir que borremos todos tus datos personales.</div>
     <button class="btn btn-light" onclick="requestDataDeletion()">${ICON('i-trash')} Solicitar borrado de mis datos</button>
   </div>`;
 }
@@ -1532,7 +1532,7 @@ async function doRegister(e, role){
   const email=document.getElementById('regEmail').value.trim();
   const pass=document.getElementById('regPass').value;
   const pass2=document.getElementById('regPass2').value;
-  if(!document.getElementById('regConsent').checked) return authErr('Tenés que aceptar la Política de Privacidad para crear una cuenta.');
+  if(!document.getElementById('regConsent').checked) return authErr('Tienes que aceptar la Política de Privacidad para crear una cuenta.');
   if(pass!==pass2) return authErr('Las contraseñas no coinciden.');
   const { data, error } = await sb.auth.signUp({ email, password: pass });
   if(error) return authErr(error.message);
