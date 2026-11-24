@@ -673,6 +673,14 @@ svg{display:block}
 .about-pledge p{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
 @media (max-width:820px){.about-grid{grid-template-columns:1fr}}
 .about-pledge a{color:var(--primary);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.nav-preview{margin-top:8px;white-space:nowrap;font-size:15px;letter-spacing:-.01em;color:#fff!important;background:linear-gradient(135deg,#635bff,#ff5a9d)!important;box-shadow:0 8px 18px rgba(99,91,255,.25)}
+.nav-preview:hover{filter:brightness(1.06)}
+.preview-bar{position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:11px 22px;background:linear-gradient(90deg,#635bff,#8b5cf6 55%,#ff5a9d);color:#fff;font-size:14px;font-weight:700}
+.preview-bar b{font-weight:900}
+.preview-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.preview-nee{display:flex;align-items:center;gap:7px;cursor:pointer;background:rgba(255,255,255,.18);padding:6px 12px;border-radius:99px;font-size:13px}
+.preview-nee input{accent-color:#fff;width:16px;height:16px;margin:0}
+.preview-exit{background:#fff;color:#4d45d0;border:0;border-radius:99px;padding:8px 14px;font-weight:900;font-size:13px;cursor:pointer}
 .solidario{position:relative;background:linear-gradient(90deg,#635bff,#8b5cf6 55%,#ff5a9d);color:#fff;font-size:14px;line-height:1.4}
 .solidario-inner{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 0;text-align:center}
 .solidario-ico{flex-shrink:0;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.2);font-size:14px}
@@ -967,6 +975,7 @@ svg{display:block}
         <button class="nav-item" data-route="teacher-create" onclick="showDashboard('teacher','create')"><svg class="icon"><use href="#i-plus"/></svg>Crear aula</button>
         <button class="nav-item" data-route="teacher-profile" onclick="showDashboard('teacher','profile')"><svg class="icon"><use href="#i-user"/></svg>Mi perfil</button>
         <button class="nav-item" data-route="teacher-settings" onclick="showDashboard('teacher','settings')"><svg class="icon"><use href="#i-settings"/></svg>Configuración</button>
+        <button class="nav-item nav-preview" onclick="startStudentPreview()" title="Mira tus aulas tal como las ve tu alumnado"><svg class="icon"><use href="#i-game"/></svg>¡Probar como alumno!</button>
       </nav>
       <div class="side-spacer"></div>
       <button class="btn btn-light btn-full" style="margin-bottom:10px" onclick="logout()"><span data-i18n="logout_btn">Cerrar sesión</span></button>
@@ -1021,7 +1030,7 @@ svg{display:block}
 <script src="perfil-temas.js?v=20261104" defer></script>
 <script src="perfil.js?v=20261106" defer></script>
 <script src="letrasia.js?v=20261113" defer></script>
-<script src="crucero.js?v=20261115" defer></script>
+<script src="crucero.js?v=20261124" defer></script>
 <script src="tutorial.js?v=20261115" defer></script>
 <script>
 /* ============ CONFIGURA ESTO CON TUS CLAVES DE SUPABASE (LAS DOS LÍNEAS DE ABAJO) ============ */
@@ -1153,7 +1162,7 @@ function pointsBadgeHTML(points){
   return `<div class="points-badge tier-${pointsTier(points)}"><span class="points-badge-num">${fmt(points)}</span><span class="points-badge-label">${t('word_points')}</span></div>`;
 }
 
-const state = { session:null, profile:null, myClasses:[], teacherClassId:null, teacherClassTab:'students', avatarPickSlot:'cara', studentClassId:null, studentClassTab:'market', equipDraft:null, lang:'es', authMode:'login', authRole:null };
+const state = { session:null, profile:null, myClasses:[], teacherClassId:null, teacherClassTab:'students', avatarPickSlot:'cara', studentClassId:null, studentClassTab:'market', equipDraft:null, lang:'es', authMode:'login', authRole:null, preview:null };
 
 const I18N = {
   es: {
@@ -1559,7 +1568,7 @@ async function doResetPassword(e){
   toast(t('reset_done'));
   await bootAfterAuth();
 }
-async function logout(){ await sb.auth.signOut(); state.session=null; state.profile=null; showLanding(); }
+async function logout(){ state.preview=null; renderPreviewBar(); await sb.auth.signOut(); state.session=null; state.profile=null; showLanding(); }
 
 async function bootAfterAuth(){
   const { data:{ session } } = await sb.auth.getSession();
@@ -1583,6 +1592,15 @@ async function bootAfterAuth(){
 }
 
 async function loadMyClasses(){
+  if(state.preview){
+    // Modo prueba: el profesor ve sus propias aulas como un alumno, con puntos de prueba que no se guardan
+    const { data } = await sb.from('classes').select('*').eq('teacher_id', state.profile.id).order('created_at');
+    state.myClasses = (data||[]).map(c => {
+      if(!(c.id in state.preview.points)) state.preview.points[c.id]=PREVIEW_POINTS;
+      return { ...c, points:state.preview.points[c.id] };
+    });
+    return;
+  }
   if(state.profile.role==='profesor'){
     const { data } = await sb.from('classes').select('*').eq('teacher_id', state.profile.id).order('created_at');
     state.myClasses = data || [];
@@ -1591,6 +1609,42 @@ async function loadMyClasses(){
     state.myClasses = (data||[]).map(r => ({ ...r.classes, points:r.points }));
   }
 }
+
+/* ---------- Modo prueba: «¡Probar como alumno!» ---------- */
+const PREVIEW_POINTS = 500;
+function startStudentPreview(){
+  if(!state.myClasses.length) return toast('Crea primero un aula para probarla como alumno');
+  state.preview = { points:{}, ownedM:new Set(), ownedA:new Set(), neae:false };
+  document.getElementById('studentAvatarSm').innerHTML = avatarImgHTML(state.profile.equipped);
+  document.getElementById('studentUserName').textContent = state.profile.name;
+  document.getElementById('studentUserRole').textContent = 'Alumno · modo prueba';
+  renderPreviewBar();
+  showDashboard('student','home');
+}
+function renderPreviewBar(){
+  const main = document.querySelector('#student .main');
+  let bar = document.getElementById('previewBar');
+  if(!state.preview){ if(bar) bar.remove(); return; }
+  if(!bar){ bar = document.createElement('div'); bar.id='previewBar'; bar.className='preview-bar'; main.prepend(bar); }
+  bar.innerHTML = `<span>👀 <b>Modo prueba:</b> así ve Benchi tu alumnado. Tienes ${PREVIEW_POINTS} puntos de prueba por aula y nada de lo que hagas se guarda.</span>
+    <span class="preview-actions">
+      <label class="preview-nee"><input type="checkbox" ${state.preview.neae?'checked':''} onchange="togglePreviewNee(this.checked)"> Ver como alumno NEE</label>
+      <button class="preview-exit" onclick="exitStudentPreview()">Salir del modo prueba</button>
+    </span>`;
+}
+function togglePreviewNee(on){
+  if(!state.preview) return;
+  state.preview.neae = on;
+  if(state.studentClassId && document.getElementById('mg-root')) MG.mountStudent(state.studentClassId, document.getElementById('mg-root'), { preview:true, neae:on });
+  toast(on ? 'Ahora ves los minijuegos como un alumno NEE' : 'Ahora ves los minijuegos comunes');
+}
+function exitStudentPreview(){
+  state.preview = null;
+  state.studentClassId = null;
+  renderPreviewBar();
+  showDashboard('teacher','home');
+}
+function previewBlocked(){ toast('En el modo prueba esto no está disponible'); }
 
 function toggleMobileNav(type){
   document.getElementById(type).classList.toggle('mobile-nav-open');
@@ -2256,15 +2310,15 @@ function studentHero(){
 async function renderStudent(route, arg){
   const c=document.getElementById('student-content');
   if(route==='home'){
-    const { data:log } = await sb.from('points_log').select('*').eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(6);
+    const { data:log } = state.preview ? { data:[] } : await sb.from('points_log').select('*').eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(6);
     c.innerHTML=studentHero()+studentHeader(t('your_space'),t('keep_going'))+
       `<div class="feature-grid" style="grid-template-columns:1.1fr .9fr;margin-top:0">
        <div class="panel"><div class="panel-title"><h2>${t('my_classes_student')}</h2><button onclick="showDashboard('student','classes')">${t('view_all')}</button></div><div class="class-grid">${state.myClasses.length?state.myClasses.map(studentClassCard).join(''):joinBox()}</div></div>
        <div class="panel"><div class="panel-title"><h2>${t('recent_activity')}</h2><button onclick="showDashboard('student','classes')">${t('view_all')}</button></div>${activityHTML(log)}</div>
       </div>`;
   }else if(route==='classes'){
-    c.innerHTML=studentHeader(t('my_classes_student'),t('my_classes_sub'),'<button class="btn btn-primary" onclick="openJoinClass()">'+ICON('i-plus')+' '+t('join_class_btn')+'</button>')+
-      `<div class="class-grid">${state.myClasses.map(studentClassCard).join('')}${joinBox()}</div>`;
+    c.innerHTML=studentHeader(t('my_classes_student'),t('my_classes_sub'),state.preview?'':'<button class="btn btn-primary" onclick="openJoinClass()">'+ICON('i-plus')+' '+t('join_class_btn')+'</button>')+
+      `<div class="class-grid">${state.myClasses.map(studentClassCard).join('')}${state.preview?'':joinBox()}</div>`;
   }else if(route==='classdetail'){
     await renderStudentClassDetail(arg);
   }else{
@@ -2277,6 +2331,7 @@ function studentClassCard(x,i){
   return `<article class="class-card"><div class="class-banner ${x.color||['banner-purple','banner-cyan','banner-pink'][i%3]}"></div><div class="class-top"><div><div class="class-name">${x.name}</div><div class="class-sub">${x.curso||''}</div></div><span class="pill">${t('lvl_abbr')} ${lv.level}</span></div><div style="margin-top:14px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#757c8e;font-weight:800;margin-bottom:6px"><span>${t('progress_word')}</span><span>${lv.pct}%</span></div><div class="progress"><span style="width:${lv.pct}%"></span></div></div><div class="class-foot"><span>${fmt(x.points||0)} ${t('word_points')}</span><button class="enter-link" onclick="showDashboard('student','classdetail','${x.id}')">${t('enter_arrow')}</button></div></article>`;
 }
 function openJoinClass(){
+  if(state.preview) return previewBlocked();
   modal(t('join_class_btn'), `
     <p class="small-muted">${t('join_class_modal_p')}</p>
     <div class="field"><label>${t('class_code_field')}</label><input id="joinCode" placeholder="Ej. BEN-7X2K" style="text-transform:uppercase"></div>
@@ -2337,9 +2392,9 @@ async function renderStudentClassDetail(classId){
   const [{data:market},{data:avatars},{data:myMarketInv},{data:myAvInv},{data:log}] = await Promise.all([
     sb.from('market_items').select('*').eq('class_id',classId),
     sb.from('avatar_items').select('*').eq('class_id',classId),
-    sb.from('student_market_inventory').select('item_id').eq('student_id',state.profile.id),
-    sb.from('student_avatar_inventory').select('item_id').eq('student_id',state.profile.id),
-    sb.from('points_log').select('*').eq('class_id',classId).eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(50)
+    state.preview ? { data:[...state.preview.ownedM].map(item_id=>({item_id})) } : sb.from('student_market_inventory').select('item_id').eq('student_id',state.profile.id),
+    state.preview ? { data:[...state.preview.ownedA].map(item_id=>({item_id})) } : sb.from('student_avatar_inventory').select('item_id').eq('student_id',state.profile.id),
+    state.preview ? { data:[] } : sb.from('points_log').select('*').eq('class_id',classId).eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(50)
   ]);
   const marketList=market||[], avatarList=avatars||[];
   const ownedM=new Set((myMarketInv||[]).map(x=>x.item_id));
@@ -2389,23 +2444,35 @@ async function renderStudentClassDetail(classId){
     <div class="tab-panel student-tab-panel ${activeTab==='redeemed'?'':'hidden'}" data-panel="redeemed">
       <div class="panel"><div class="panel-title"><h2>${t('my_rewards_panel')}</h2></div>${redeemedRows}</div>
     </div>
-    <div style="display:flex;justify-content:center;margin-top:26px">
+    <div style="display:${state.preview?'none':'flex'};justify-content:center;margin-top:26px">
       <button class="btn btn-light" style="font-size:12px;padding:9px 14px" onclick="confirmLeaveClass('${classId}','${(cls?cls.name:'').replace(/'/g,"\\'")}')">Salir del aula</button>
     </div>`;
   window._renderTab=renderMktTab;
-  MG.mountStudent(classId, document.getElementById('mg-root'));
+  MG.mountStudent(classId, document.getElementById('mg-root'), state.preview ? { preview:true, neae:state.preview.neae } : undefined);
 }
 function switchMktTab(tab){
   document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.getElementById('mktGrid').innerHTML=window._renderTab(tab);
 }
+async function previewBuy(table, itemId, setKey, okMsg){
+  const cid=state.studentClassId;
+  const { data:item } = await sb.from(table).select('cost').eq('id',itemId).single();
+  const cost=item?item.cost||0:0;
+  if(state.preview.points[cid] < cost) return toast('No tienes puntos suficientes');
+  state.preview.points[cid] -= cost;
+  state.preview[setKey].add(itemId);
+  toast(okMsg+' (modo prueba: no se guarda)');
+  await loadMyClasses(); renderStudentClassDetail(cid);
+}
 async function buyMarket(itemId){
+  if(state.preview) return previewBuy('market_items', itemId, 'ownedM', t('reward_redeemed_toast'));
   const { error } = await sb.rpc('buy_market_item',{ p_item:itemId });
   if(error) return toast(error.message);
   toast(t('reward_redeemed_toast'));
   await loadMyClasses(); renderStudentClassDetail(state.studentClassId);
 }
 async function buyAvatar(itemId){
+  if(state.preview) return previewBuy('avatar_items', itemId, 'ownedA', t('skin_unlocked_toast'));
   const { error } = await sb.rpc('buy_avatar_item',{ p_item:itemId });
   if(error) return toast(error.message);
   toast(t('skin_unlocked_toast'));
@@ -2415,8 +2482,15 @@ async function renderStudentProfile(){
   const c=document.getElementById('student-content');
   const total=state.myClasses.reduce((a,x)=>a+(x.points||0),0);
   const lv=levelInfo(total);
-  const { data:inv } = await sb.from('student_avatar_inventory').select('avatar_items(id,name,slot,asset_value,emoji,rareza)').eq('student_id',state.profile.id);
-  const owned=(inv||[]).map(s=>s.avatar_items).filter(Boolean);
+  let owned;
+  if(state.preview){
+    const ids=[...state.preview.ownedA];
+    const { data } = ids.length ? await sb.from('avatar_items').select('id,name,slot,asset_value,emoji,rareza').in('id',ids) : { data:[] };
+    owned=data||[];
+  }else{
+    const { data:inv } = await sb.from('student_avatar_inventory').select('avatar_items(id,name,slot,asset_value,emoji,rareza)').eq('student_id',state.profile.id);
+    owned=(inv||[]).map(s=>s.avatar_items).filter(Boolean);
+  }
   window._ownedAvatars=owned;
   state.equipDraft=null;
   const skinCards=owned.map(a=>{
@@ -2443,7 +2517,7 @@ async function renderStudentProfile(){
     </div>
     <div class="stats" style="margin-top:25px"><div class="stat"><div class="stat-label">${t('word_points_cap')}</div><div class="stat-num">${fmt(total)}</div></div><div class="stat"><div class="stat-label">${t('word_level')}</div><div class="stat-num">${lv.level}</div></div><div class="stat"><div class="stat-label">${t('word_classes_cap')}</div><div class="stat-num">${state.myClasses.length}</div></div><div class="stat"><div class="stat-label">${t('word_skins_cap')}</div><div class="stat-num">${owned.length}</div></div></div>
     <div class="panel-title" style="margin-top:20px"><h2>${t('my_collection')}</h2></div><div class="market-grid">${skinCards}</div>
-    ${deleteDataSection()}</div>`;
+    ${state.preview?'':deleteDataSection()}</div>`;
 }
 function equipPickerGrid(slot){
   const draft=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped,state.equipDraft);
@@ -2468,6 +2542,7 @@ function pickEquip(slot, value){
   document.getElementById('equipPickArea').innerHTML=equipPickerGrid(slot);
 }
 async function saveEquip(){
+  if(state.preview) return toast('En el modo prueba el avatar no se guarda');
   const equipped=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped,state.equipDraft);
   const { error } = await sb.from('profiles').update({ equipped }).eq('id', state.profile.id);
   if(error) return toast(error.message);

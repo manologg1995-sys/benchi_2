@@ -644,11 +644,14 @@ let H=null;   // estado del selector
 const SP=()=>window.SUPER||{mount(){},unmount(){},NAME:'El Súper de Clase'};
 const PF=()=>window.PP||{mount(){},unmount(){},takeDirty(){return false},NAME:'¡Encuentra el misterio!',art(){return ''}};
 function hubStop(){if(H){clearInterval(H.t);H=null}}
-async function mountStudent(classId,root){
+async function mountStudent(classId,root,opts){
   hubStop();HG.unmount();CR.unmount();SP().unmount();PF().unmount();
-  const h=H={role:'student',classId,root,dirty:false,data:null,t:null,neae:null,uid:null};
+  const preview=!!(opts&&opts.preview);
+  const h=H={role:'student',classId,root,dirty:false,data:null,t:null,neae:null,uid:null,preview};
   root.classList.add('hg');
   root.innerHTML='<div class="hg-card hg-muted">Cargando minijuegos…</div>';
+  // Modo prueba del profesor: no es miembro del aula, así que la marca NEE la elige él desde la barra
+  if(preview){h.uid='prueba';h.neae=!!opts.neae;hubList();return}
   // ¿Es alumno NEAE en esta aula? (RLS: el alumno solo ve su propia matrícula)
   const[{data:u},{data:cm}]=await Promise.all([sb.auth.getUser(),sb.from('class_members').select('neae').eq('class_id',classId).maybeSingle()]);
   if(H!==h)return;
@@ -723,10 +726,21 @@ function play(game){
   const h=H;if(!h)return;
   h.view=game;clearInterval(h.t);
   const back=dirty=>{if(H===h)hubList(dirty)};
+  if(h.preview&&game!=='super'){previewLive(game,back);return}
   if(game==='super'){h.root.classList.remove('hg');SP().mount(h.root,{storeKey:h.classId+':'+h.uid,onBack:()=>{h.root.classList.add('hg');back()}});return}
   if(game==='horses')HG.mount('student',h.classId,h.root,{start:'game',onBack:back});
   else if(game==='perfil')PF().mount('student',h.classId,h.root,{onBack:back});
   else CR.mount('student',h.classId,h.root,{onBack:back});
+}
+/* Modo prueba: los juegos en directo necesitan una cuenta de alumno de verdad */
+function previewLive(game,back){
+  const h=H;if(!h)return;
+  const name=game==='horses'?'Carrera de caballos':game==='perfil'?PF().NAME:NAME;
+  h.root.innerHTML=`<div class="hg-card"><h3>${name}</h3>
+    <div class="hg-muted" style="margin:8px 0 14px">En el modo prueba no puedes entrar en una partida en directo, porque no eres alumno de esta aula y los puntos de prueba no existen en el servidor.
+    Para probarla de verdad, abre una ronda desde la pestaña <b>Minijuegos</b> de tu aula y entra con una cuenta de alumno (por ejemplo, desde otro navegador o desde el móvil).</div>
+    <button class="hg-btn primary" id="pv-back">Volver a los minijuegos</button></div>`;
+  h.root.querySelector('#pv-back').onclick=()=>back();
 }
 /* Profesor: pestañas para elegir qué minijuego configurar */
 function mountTeacher(classId,root){
