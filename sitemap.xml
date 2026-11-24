@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.playbenchi.es/</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-24</lastmod>
   </url>
   <url>
     <loc>https://www.playbenchi.es/gamificacion-en-el-aula/</loc>
     <lastmod>2026-10-14</lastmod>
+  </url>
+  <url>
+    <loc>https://www.playbenchi.es/gamificacion-en-primaria/</loc>
+    <lastmod>2026-11-24</lastmod>
   </url>
   <url>
     <loc>https://www.playbenchi.es/motivar-al-alumnado/</loc>
