@@ -594,6 +594,30 @@ svg{display:block}
 
 /* ---------- Avatar illustration catalog ---------- */
 .avatar-catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.skin-hint{color:var(--muted);font-size:13px;margin:-4px 0 14px}
+.skin-cat-h{display:flex;align-items:baseline;gap:8px;margin:20px 0 10px;font-size:15px;font-weight:900}
+.skin-cat-h .skin-count{color:var(--muted);font-size:12px;font-weight:800}
+.skin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
+.skin-card{border:1.5px solid var(--line);border-radius:18px;background:#fff;padding:10px;transition:border-color .15s,box-shadow .15s,opacity .15s}
+.skin-card.on{border-color:#b9b4ff;box-shadow:0 8px 20px rgba(99,91,255,.12)}
+.skin-card:not(.on){background:#fafafd}.skin-card:not(.on) .skin-art{filter:saturate(.55);opacity:.72}.skin-card:not(.on) .skin-name{color:var(--muted)}
+.skin-art{height:104px;border-radius:13px;overflow:hidden;margin-bottom:9px}
+.skin-art img{width:100%;height:100%;object-fit:contain;display:block}
+.skin-name{font-weight:900;font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:space-between}
+.skin-name .rareza-pill{margin:0}
+.skin-switch{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;font-weight:800;color:var(--muted);user-select:none}
+.skin-switch input{position:absolute;opacity:0;width:1px;height:1px}
+.skin-slider{width:38px;height:22px;border-radius:999px;background:#d7d9ea;position:relative;flex-shrink:0;transition:background .15s}
+.skin-slider:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .15s}
+.skin-switch input:checked + .skin-slider{background:var(--primary,#635bff)}
+.skin-switch input:checked + .skin-slider:after{transform:translateX(16px)}
+.skin-switch input:focus-visible + .skin-slider{outline:2px solid var(--primary,#635bff);outline-offset:2px}
+.skin-card.on .skin-switch{color:var(--ink)}
+.skin-price{display:flex;align-items:center;gap:6px;margin-top:8px}
+.skin-price input{width:64px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;font-weight:800;font-size:13px}
+.skin-price span{font-size:12px;color:var(--muted);font-weight:800}
+.skin-price .icon-btn{margin-left:auto;width:30px;height:30px}
+@media (max-width:640px){.skin-grid{grid-template-columns:repeat(2,1fr);gap:9px}.skin-art{height:86px}}
 .avatar-catalog-item{display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:10px 6px;transition:.15s}
 .avatar-catalog-item:hover{border-color:#b7b0ff;box-shadow:0 8px 18px rgba(99,91,255,.13);transform:translateY(-2px)}
 .avatar-catalog-item.selected{border-color:var(--primary);background:#f4f2ff;box-shadow:0 0 0 3px rgba(99,91,255,.14)}
@@ -1254,7 +1278,12 @@ const I18N = {
     no_behaviors:'Sin comportamientos.', delete_btn:'Eliminar', edit_btn:'Editar', name_field:'Nombre', value_field:'± valor', add_behavior_btn:'Añadir comportamiento',
     rewards_panel:'Recompensas', no_rewards:'Sin recompensas.', cost_field:'Coste', featured_label:'Destacada', add_reward_btn:'Añadir recompensa',
     skins_panel:'Tienda de skins', no_skins:'Sin skins.', symbol_field:'Símbolo (ej. ★)',
-    slot_bg:'fondo', slot_face:'cara', slot_hat:'sombrero', slot_acc:'patrón',
+    slot_bg:'fondo', slot_face:'personaje', slot_hat:'cabeza', slot_acc:'cuerpo',
+    skin_cat_all:'Todas', skin_cat_cara:'Personajes', skin_cat_sombrero:'Cabeza', skin_cat_accesorio:'Cuerpo', skin_cat_fondo:'Fondos', skin_cat_otras:'Otras',
+    skin_in_shop:'En mi tienda', skin_pts:'pts', skin_free:'Gratis', skin_price_label:'Precio en puntos',
+    skin_shop_summary:'{n} skins a la venta', skin_shop_hint:'Activa las skins que quieras vender y ponles precio. El alumnado solo ve las activadas. Si desactivas una que alguien ya tiene, la conserva.',
+    skin_added_toast:'Añadida a tu tienda', skin_hidden_toast:'Quitada de la tienda', skin_price_toast:'Precio actualizado',
+    skin_more_btn:'Más opciones',
     rarity_common:'Común', rarity_rare:'Rara', rarity_epic:'Épica', add_skin_btn:'Añadir skin',
     class_history_panel:'Historial del aula', no_movements:'Sin movimientos.', points_applied_toast:'puntos aplicados', manual_adjustment:'Ajuste manual',
     word_level_cap:'NIVEL', active_class_singular:'aula activa', active_class_plural:'aulas activas',
@@ -1361,7 +1390,12 @@ const I18N = {
     no_behaviors:'No behaviors yet.', delete_btn:'Delete', edit_btn:'Edit', name_field:'Name', value_field:'± value', add_behavior_btn:'Add behavior',
     rewards_panel:'Rewards', no_rewards:'No rewards yet.', cost_field:'Cost', featured_label:'Featured', add_reward_btn:'Add reward',
     skins_panel:'Skin shop', no_skins:'No skins yet.', symbol_field:'Symbol (e.g. ★)',
-    slot_bg:'background', slot_face:'face', slot_hat:'hat', slot_acc:'pattern',
+    slot_bg:'background', slot_face:'character', slot_hat:'head', slot_acc:'body',
+    skin_cat_all:'All', skin_cat_cara:'Characters', skin_cat_sombrero:'Head', skin_cat_accesorio:'Body', skin_cat_fondo:'Backgrounds', skin_cat_otras:'Other',
+    skin_in_shop:'In my shop', skin_pts:'pts', skin_free:'Free', skin_price_label:'Price in points',
+    skin_shop_summary:'{n} skins for sale', skin_shop_hint:'Switch on the skins you want to sell and set a price. Students only see the ones switched on. If you switch off a skin someone already owns, they keep it.',
+    skin_added_toast:'Added to your shop', skin_hidden_toast:'Removed from the shop', skin_price_toast:'Price updated',
+    skin_more_btn:'More options',
     rarity_common:'Common', rarity_rare:'Rare', rarity_epic:'Epic', add_skin_btn:'Add skin',
     class_history_panel:'Classroom history', no_movements:'No activity yet.', points_applied_toast:'points applied', manual_adjustment:'Manual adjustment',
     word_level_cap:'LEVEL', active_class_singular:'active classroom', active_class_plural:'active classrooms',
@@ -1952,29 +1986,87 @@ const AVATAR_CATALOG={
     {name:'Violeta',value:'ddc7ff'},{name:'Menta',value:'c7f9e5'}
   ]
 };
-function avatarCatalogChips(slot, classId){
-  // Las skins que ya están en la tienda del aula no se muestran, para no añadirlas dos veces
-  const inShop=new Set(((window._cd&&window._cd.avatars)||[]).filter(a=>a.slot===slot).map(a=>a.asset_value));
-  const list=(AVATAR_CATALOG[slot]||[]).map((it,i)=>({it,i})).filter(x=>!inShop.has(x.it.value));
-  if(!list.length) return `<div class="empty-note">${t('catalog_all_added')}</div>`;
-  return `<div class="avatar-catalog-grid">${list.map(({it,i})=>{
-    const eq = Object.assign(slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value,sombrero:it.top}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value}, {_preview:slot});
-    return `<button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}',this)">
-      <img src="${avatarUrl(eq,72)}" alt="${it.name}">
-      <span>${it.name}</span>
-    </button>`;
-  }).join('')}</div>`;
+/* ===== Escaparate de skins del profesor: todo el catálogo con interruptor y precio ===== */
+const SKIN_CATS=['cara','sombrero','accesorio','fondo'];
+function skinDefaultCost(slot){ return slot==='cara'?0:slot==='fondo'?10:20; }
+function skinRareza(cost){ return cost<=0?'comun':cost<40?'raro':'epico'; }
+function skinRarezaPill(r){ return `<span class="rareza-pill rareza-${r}">${t('rarity_'+(r==='comun'?'common':r==='raro'?'rare':'epic'))}</span>`; }
+function skinRowFor(slot,value){ return ((window._cd&&window._cd.avatars)||[]).find(a=>a.slot===slot&&a.asset_value===value); }
+function skinIsOn(row){ return !!row && row.en_tienda!==false; }
+function skinCardHTML(slot, value, name, classId){
+  const row=skinRowFor(slot,value), on=skinIsOn(row);
+  const key=slot+':'+value;
+  state.skinDraftCost=state.skinDraftCost||{};
+  const cost=row?row.cost:(state.skinDraftCost[key]??skinDefaultCost(slot));
+  const eq={[slot]:value,_preview:slot};
+  const rareza=row?row.rareza:skinRareza(cost);
+  return `<div class="skin-card ${on?'on':''}">
+    <div class="skin-art" style="background:${avatarBgColor(eq)}"><img src="${avatarUrl(eq,160)}" alt="" loading="lazy"></div>
+    <div class="skin-name"><span>${esc(row?row.name:name)}</span>${on?skinRarezaPill(rareza):''}</div>
+    <label class="skin-switch"><input type="checkbox" ${on?'checked':''} onchange="toggleSkin('${slot}','${esc(value)}',this.checked,'${classId}',this)"><span class="skin-slider"></span>${t('skin_in_shop')}</label>
+    <div class="skin-price">
+      <input type="number" min="0" step="5" value="${cost}" aria-label="${t('skin_price_label')}" onchange="setSkinPrice('${slot}','${esc(value)}',this.value,'${classId}')">
+      <span>${cost>0?t('skin_pts'):t('skin_free')}</span>
+      ${row?`<button type="button" class="icon-btn" title="${t('skin_more_btn')}" onclick="editAvatarItem('${row.id}','${classId}')">${ICON('i-edit')}</button>`:''}
+    </div>
+  </div>`;
 }
-async function addCatalogAvatarItem(slot, i, classId, btn){
-  const it=AVATAR_CATALOG[slot][i];
+function skinShopHTML(classId){
+  const cat=state.skinCat||'todas';
   const shop=(window._cd&&window._cd.avatars)||[];
-  if(shop.some(a=>a.slot===slot&&a.asset_value===it.value)) return toast(t('catalog_already'));
-  if(btn){ if(btn.disabled) return; btn.disabled=true; btn.style.opacity='.4'; }   // evita el doble clic
-  const cost = slot==='cara'?0:20;
-  const { error } = await sb.from('avatar_items').insert({ class_id:classId, slot, name:it.name, asset_value:it.value, emoji:'', cost, rareza: cost===0?'comun':'raro', destacado:false, unlock_type: cost>0?'compra':'gratis' });
-  if(error && error.code!=='23505') { if(btn){btn.disabled=false;btn.style.opacity='';} return toast(error.message); }
-  if(error) toast(t('catalog_already'));
-  renderTeacher('classdetail', classId);
+  const onCount=shop.filter(skinIsOn).length;
+  // Skins de la tienda que no están en el catálogo (creadas antes a mano)
+  const known=new Set(SKIN_CATS.flatMap(sl=>(AVATAR_CATALOG[sl]||[]).map(it=>sl+':'+it.value)));
+  const otras=shop.filter(a=>!known.has(a.slot+':'+a.asset_value));
+  const countOf=sl=>{const list=AVATAR_CATALOG[sl]||[];return `${list.filter(it=>skinIsOn(skinRowFor(sl,it.value))).length}/${list.length}`;};
+  const chips=['todas',...SKIN_CATS].map(k=>`<button type="button" class="mkt-tab ${cat===k?'active':''}" onclick="setSkinCat('${k}','${classId}')">${t(k==='todas'?'skin_cat_all':'skin_cat_'+k)}${k==='todas'?'':` <span style="opacity:.6">${countOf(k)}</span>`}</button>`).join('');
+  const section=sl=>`<div class="skin-cat-h">${t('skin_cat_'+sl)} <span class="skin-count">${countOf(sl)} ${t('skin_in_shop').toLowerCase()}</span></div>
+    <div class="skin-grid">${(AVATAR_CATALOG[sl]||[]).map(it=>skinCardHTML(sl,it.value,it.name,classId)).join('')}</div>`;
+  const otrasHTML=otras.length&&(cat==='todas')?`<div class="skin-cat-h">${t('skin_cat_otras')}</div><div class="skin-grid">${otras.map(a=>skinCardHTML(a.slot,a.asset_value,a.name,classId)).join('')}</div>`:'';
+  return `<p class="skin-hint"><b>${t('skin_shop_summary').replace('{n}',onCount)}</b> · ${t('skin_shop_hint')}</p>
+    <div class="mkt-tabs">${chips}</div>
+    ${(cat==='todas'?SKIN_CATS:[cat]).map(section).join('')}${otrasHTML}`;
+}
+function refreshSkinShop(classId){
+  const el=document.getElementById('skinShopArea'); if(el) el.innerHTML=skinShopHTML(classId);
+}
+function setSkinCat(cat, classId){ state.skinCat=cat; refreshSkinShop(classId); }
+async function toggleSkin(slot, value, on, classId, input){
+  if(input) input.disabled=true;
+  const row=skinRowFor(slot,value);
+  const key=slot+':'+value;
+  if(on){
+    if(row){
+      const { error } = await sb.from('avatar_items').update({ en_tienda:true }).eq('id',row.id);
+      if(error){ toast(error.message); return refreshSkinShop(classId); }
+      row.en_tienda=true;
+    }else{
+      const it=(AVATAR_CATALOG[slot]||[]).find(x=>x.value===value);
+      const cost=Math.max(0,parseInt((state.skinDraftCost||{})[key]??skinDefaultCost(slot),10)||0);
+      const { data, error } = await sb.from('avatar_items').insert({ class_id:classId, slot, name:it?it.name:value, asset_value:value, emoji:'', cost, rareza:skinRareza(cost), destacado:false, unlock_type: cost>0?'compra':'gratis', en_tienda:true }).select().single();
+      if(error){ toast(error.message); return refreshSkinShop(classId); }
+      window._cd.avatars.push(data);
+    }
+    toast(t('skin_added_toast'));
+  }else if(row){
+    // No se borra: así quien ya la tiene la conserva. Solo deja de venderse.
+    const { error } = await sb.from('avatar_items').update({ en_tienda:false }).eq('id',row.id);
+    if(error){ toast(error.message); return refreshSkinShop(classId); }
+    row.en_tienda=false;
+    toast(t('skin_hidden_toast'));
+  }
+  refreshSkinShop(classId);
+}
+async function setSkinPrice(slot, value, raw, classId){
+  const cost=Math.max(0,parseInt(raw,10)||0);
+  const row=skinRowFor(slot,value);
+  if(!row){ (state.skinDraftCost=state.skinDraftCost||{})[slot+':'+value]=cost; return refreshSkinShop(classId); }
+  const upd={ cost, rareza:skinRareza(cost), unlock_type: cost>0?'compra':'gratis' };
+  const { error } = await sb.from('avatar_items').update(upd).eq('id',row.id);
+  if(error){ toast(error.message); return refreshSkinShop(classId); }
+  Object.assign(row, upd);
+  toast(t('skin_price_toast'));
+  refreshSkinShop(classId);
 }
 function suggestionChips(list, kind, classId){
   return `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${list.map((x,i)=>
@@ -2000,11 +2092,6 @@ const CLASS_TABS=[
   {key:'minigames',icon:'i-game',label:'tab_minigames'},
   {key:'history',icon:'i-chart',label:'class_history_panel'}
 ];
-function switchAvatarPickSlot(slot, classId){
-  state.avatarPickSlot=slot;
-  document.querySelectorAll('.avatar-pick-tab').forEach(b=>b.classList.toggle('active',b.dataset.slot===slot));
-  document.getElementById('avatarCatalogArea').innerHTML=avatarCatalogChips(slot, classId);
-}
 function switchClassTab(tab){
   const leaving=state.teacherClassTab==='minigames'&&tab!=='minigames';
   state.teacherClassTab=tab;
@@ -2059,18 +2146,6 @@ async function renderClassDetail(classId){
         <button class="icon-btn danger" title="${t('delete_btn')}" onclick="deleteRow('market_items','${m.id}','${classId}')">${ICON('i-trash')}</button>
       </div>
     </div>`).join('')||`<div class="empty-note">${t('no_rewards')}</div>`;
-  const avatarRows=(avatars||[]).map(a=>{
-    const eq=avatarItemPreviewEq(a);
-    const thumb=eq?`<img alt="" src="${avatarUrl(eq,72)}" style="width:100%;height:100%;object-fit:cover;border-radius:13px">`:(a.emoji||'✦');
-    return `<div class="list-card">
-      <div class="list-card-icon" style="font-size:19px;overflow:hidden;padding:0">${thumb}</div>
-      <div class="list-card-body"><div class="list-card-name">${a.name}</div><div class="list-card-meta"><span class="pill">${slotLabel[a.slot]||a.slot}</span><span class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</span>${a.cost>0?`<span class="pill">${a.cost} pts</span>`:`<span class="pill">${a.unlock_type}</span>`}</div></div>
-      <div class="list-card-actions">
-        <button class="icon-btn" title="${t('edit_btn')}" onclick="editAvatarItem('${a.id}','${classId}')">${ICON('i-edit')}</button>
-        <button class="icon-btn danger" title="${t('delete_btn')}" onclick="deleteRow('avatar_items','${a.id}','${classId}')">${ICON('i-trash')}</button>
-      </div>
-    </div>`;
-  }).join('')||`<div class="empty-note">${t('no_skins')}</div>`;
   const logRows=(log||[]).map(l=>{
     const s=(members||[]).find(m=>m.student_id===l.student_id);
     return `<div class="activity-item"><div class="activity-left"><div class="activity-dot ${l.delta<0?'out':''}">${l.delta<0?'−':'+'}</div><div><div class="activity-main">${s?esc(s.profiles.name):'—'} · ${esc(l.reason)}</div><div class="activity-date">${new Date(l.created_at).toLocaleDateString(state.lang==='en'?'en-GB':'es-ES')}</div></div></div><div class="activity-points ${l.delta<0?'minus-p':'plus-p'}">${l.delta>0?'+':''}${l.delta}</div></div>`;
@@ -2121,17 +2196,7 @@ async function renderClassDetail(classId){
     </div>
     <div class="tab-panel ${activeTab==='skins'?'':'hidden'}" data-panel="skins">
       <div class="panel"><div class="panel-title"><h2>${t('skins_panel')}</h2></div>
-        ${avatarRows}
-        <div class="add-card">
-          <div class="add-card-head">${t('add_skin_btn')}</div>
-          <div class="mkt-tabs">
-            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='cara'?'active':''}" data-slot="cara" onclick="switchAvatarPickSlot('cara','${classId}')">${t('slot_face')}</button>
-            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='sombrero'?'active':''}" data-slot="sombrero" onclick="switchAvatarPickSlot('sombrero','${classId}')">${t('slot_hat')}</button>
-            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='accesorio'?'active':''}" data-slot="accesorio" onclick="switchAvatarPickSlot('accesorio','${classId}')">${t('slot_acc')}</button>
-            <button class="mkt-tab avatar-pick-tab ${(state.avatarPickSlot||'cara')==='fondo'?'active':''}" data-slot="fondo" onclick="switchAvatarPickSlot('fondo','${classId}')">${t('slot_bg')}</button>
-          </div>
-          <div id="avatarCatalogArea">${avatarCatalogChips(state.avatarPickSlot||'cara', classId)}</div>
-        </div>
+        <div id="skinShopArea">${skinShopHTML(classId)}</div>
       </div>
     </div>
     <div class="tab-panel ${activeTab==='minigames'?'':'hidden'}" data-panel="minigames">
@@ -2412,7 +2477,7 @@ async function renderStudentClassDetail(classId){
     state.preview ? { data:[...state.preview.ownedA].map(item_id=>({item_id})) } : sb.from('student_avatar_inventory').select('item_id').eq('student_id',state.profile.id),
     state.preview ? { data:[] } : sb.from('points_log').select('*').eq('class_id',classId).eq('student_id',state.profile.id).order('created_at',{ascending:false}).limit(50)
   ]);
-  const marketList=market||[], avatarList=avatars||[];
+  const marketList=market||[], avatarList=(avatars||[]).filter(a=>a.en_tienda!==false);
   const ownedM=new Set((myMarketInv||[]).map(x=>x.item_id));
   const ownedA=new Set((myAvInv||[]).map(x=>x.item_id));
   const redeemedItems=marketList.filter(m=>ownedM.has(m.id));
