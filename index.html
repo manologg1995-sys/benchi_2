@@ -1888,7 +1888,9 @@ const CARA_PRESETS={
 function avatarUrl(equipped, size){
   const eq=Object.assign({}, EQUIP_DEFAULTS, equipped||{});
   const preset=CARA_PRESETS[eq.cara];
-  const top=eq.sombrero||(preset&&preset.topVariant)||'';
+  // En la vista previa de un objeto del cuerpo no se dibuja la parte de arriba de serie,
+  // para que se vea claramente qué se compra
+  const top=eq._preview==='accesorio'?'':(eq.sombrero||(preset&&preset.topVariant)||'');
   const params={
     seed:eq.cara||EQUIP_DEFAULTS.cara,
     topVariant:top,
@@ -1899,6 +1901,13 @@ function avatarUrl(equipped, size){
     backgroundType:'solid',
     radius:50
   };
+  // Vista previa de un objeto: el personaje un poco más pequeño y algo más abajo,
+  // para que las orejas, cuernos, etc. (arriba) y el estampado del cuerpo (abajo) no queden cortados
+  if(eq._preview && eq._preview!=='fondo'){
+    params.scale=0.8;
+    params.radius=0;
+    if(top) params.translateY=7;
+  }
   if(preset){
     params.bodyVariant=preset.bodyVariant;
     params.eyesVariant=preset.eyesVariant;
@@ -1912,9 +1921,11 @@ function avatarUrl(equipped, size){
 function avatarImgHTML(equipped){
   return `<img src="${avatarUrl(equipped,96)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`;
 }
+// Color de fondo del avatar, para rellenar la tarjeta alrededor de la miniatura
+function avatarBgColor(eq){ return '#'+((eq&&eq.fondo)||EQUIP_DEFAULTS.fondo); }
 function avatarItemPreviewEq(item){
   if(!item||!item.asset_value) return null;
-  return { [item.slot]:item.asset_value };
+  return { [item.slot]:item.asset_value, _preview:item.slot };
 }
 const AVATAR_CATALOG={
   cara:[
@@ -1947,7 +1958,7 @@ function avatarCatalogChips(slot, classId){
   const list=(AVATAR_CATALOG[slot]||[]).map((it,i)=>({it,i})).filter(x=>!inShop.has(x.it.value));
   if(!list.length) return `<div class="empty-note">${t('catalog_all_added')}</div>`;
   return `<div class="avatar-catalog-grid">${list.map(({it,i})=>{
-    const eq = slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value,sombrero:it.top}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value};
+    const eq = Object.assign(slot==='fondo'?{fondo:it.value}:slot==='cara'?{cara:it.value,sombrero:it.top}:slot==='sombrero'?{sombrero:it.value}:{accesorio:it.value}, {_preview:slot});
     return `<button type="button" class="avatar-catalog-item" title="${it.name}" onclick="addCatalogAvatarItem('${slot}',${i},'${classId}',this)">
       <img src="${avatarUrl(eq,72)}" alt="${it.name}">
       <span>${it.name}</span>
@@ -2411,8 +2422,8 @@ async function renderStudentClassDetail(classId){
   }
   function cardAvatar(a){
     const eq=avatarItemPreviewEq(a);
-    const thumb=eq?`<img alt="" src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:24px">${a.emoji||'✦'}</div>`;
-    return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div><div class="product-meta"><span class="price">${a.cost>0?a.cost+' '+t('word_points'):a.unlock_type}</span><button class="buy" ${ownedA.has(a.id)||a.unlock_type==='logro'?'disabled':''} onclick="buyAvatar('${a.id}')">${ownedA.has(a.id)?t('already_have'):t('buy_btn')}</button></div></article>`;
+    const thumb=eq?`<img alt="" src="${avatarUrl(eq,160)}" style="width:100%;height:100%;object-fit:contain">`:`<div class="product-icon" style="font-size:24px">${a.emoji||'✦'}</div>`;
+    return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden${eq?';background:'+avatarBgColor(eq):''}">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div><div class="product-meta"><span class="price">${a.cost>0?a.cost+' '+t('word_points'):a.unlock_type}</span><button class="buy" ${ownedA.has(a.id)||a.unlock_type==='logro'?'disabled':''} onclick="buyAvatar('${a.id}')">${ownedA.has(a.id)?t('already_have'):t('buy_btn')}</button></div></article>`;
   }
   function renderMktTab(tab){
     let items=[];
@@ -2500,8 +2511,8 @@ async function renderStudentProfile(){
   state.equipDraft=null;
   const skinCards=owned.map(a=>{
     const eq=avatarItemPreviewEq(a);
-    const thumb=eq?`<img alt="" src="${avatarUrl(eq,96)}" style="width:100%;height:100%;object-fit:cover">`:`<div class="product-icon" style="font-size:22px">${a.emoji||'✦'}</div>`;
-    return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div></article>`;
+    const thumb=eq?`<img alt="" src="${avatarUrl(eq,160)}" style="width:100%;height:100%;object-fit:contain">`:`<div class="product-icon" style="font-size:22px">${a.emoji||'✦'}</div>`;
+    return `<article class="product"><div class="product-art a" style="padding:0;overflow:hidden${eq?';background:'+avatarBgColor(eq):''}">${thumb}</div><div class="rareza-pill rareza-${a.rareza}">${t('rarity_'+(a.rareza==='comun'?'common':a.rareza==='raro'?'rare':'epic'))}</div><div class="product-name">${a.name}</div></article>`;
   }).join('')||`<div class="empty-note">${t('no_skins_yet')}</div>`;
   const equipped=Object.assign({},EQUIP_DEFAULTS,state.profile.equipped);
   c.innerHTML=studentHeader(t('my_profile'),t('my_profile_student_sub'),'<button class="btn btn-light" onclick="showDashboard(\'student\',\'home\')">'+ICON('i-back')+' '+t('word_back')+'</button>')+
